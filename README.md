@@ -47,6 +47,85 @@ npm run build
 npm start
 ```
 
+## WordPress Backend Management
+
+This project now supports WordPress as a content backend for:
+
+- `/` (home banner, process, testimonials)
+- `/services`
+- `/services/[slug]`
+- `/work`
+- `/work/[slug]`
+
+The app fetches data on the server from WordPress REST API and falls back to local hardcoded content if WordPress is not configured or unavailable.
+
+### 1) Configure Environment
+
+Copy `.env.example` to `.env.local` and set:
+
+```bash
+WORDPRESS_API_URL=https://your-domain.com/wp-json/wp/v2
+WORDPRESS_SERVICES_TYPE=services
+WORDPRESS_WORK_TYPE=work
+```
+
+### 2) Run Local WordPress + ACF in Docker
+
+```bash
+cp .env.wordpress.example .env.wordpress
+npm run wp:up
+```
+
+WordPress admin will be available at:
+
+- Site: `http://localhost:8080`
+- Admin: `http://localhost:8080/wp-admin`
+
+The bootstrap script installs and activates **Advanced Custom Fields** automatically.
+
+Stop containers:
+
+```bash
+npm run wp:down
+```
+
+### 3) Connect Next.js to Local WordPress
+
+In `.env.local`:
+
+```bash
+WORDPRESS_API_URL=http://localhost:8080/wp-json/wp/v2
+WORDPRESS_SERVICES_TYPE=services
+WORDPRESS_WORK_TYPE=work
+```
+
+### 4) WordPress Content Model (Admin-Managed)
+
+Create two REST-enabled post types (or reuse existing ones):
+
+- `services`
+- `work`
+- `rivulet_home` (single post used for homepage content)
+
+This repo includes a MU plugin at `infra/wordpress/mu-plugins/rivulet-cms.php` that:
+
+- Registers the above post types
+- Registers ACF field groups for `services`, `work`, and `rivulet_home`
+- Exposes a custom endpoint: `/wp-json/rivulet/v1/home`
+
+Each item can work with only title + excerpt, but ACF fields provide richer control:
+
+- Shared examples: `num`, `tag`, `tags` (array), `short_description`
+- Service-focused: `badge`, `title_prefix`, `title_em`, `tagline`, `category`, `category_id`, `category_num`, `category_title`, `category_desc`
+- Work-focused: `year`, `services` (array), `featured`, `title_html`, `client`, `duration`, `role`, `industry`, `metrics` (array), `metric_labels` (array), `metric_changes` (array), `testimonial_quote`, `testimonial_avatar`, `testimonial_name`, `testimonial_role`
+- Home-focused (`rivulet_home`): banner copy, ticker items, 4 process steps, and up to 6 testimonials
+
+### Git Safety (No WordPress Runtime Files in Push)
+
+- WordPress DB/app runtime are stored in Docker volumes (`wp_db_data`, `wp_app_data`)
+- The repo tracks only configuration and integration code
+- `.gitignore` excludes `.env.wordpress`, SQL dumps, and local export folders
+
 ## Key Decisions
 
 - **All interactive components** use `'use client'` — Three.js and browser APIs can't run on the server.

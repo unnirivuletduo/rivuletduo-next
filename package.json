@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "wp:up": "docker compose --env-file .env.wordpress -f docker-compose.wordpress.yml up -d",
+    "wp:down": "docker compose --env-file .env.wordpress -f docker-compose.wordpress.yml down",
+    "wp:logs": "docker compose --env-file .env.wordpress -f docker-compose.wordpress.yml logs -f"
   },
   "dependencies": {
     "next": "14.2.5",

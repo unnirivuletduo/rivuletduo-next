@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import type { HomeTestimonial } from '@/lib/cms';
 
 const testimonials = [
   { initials: 'AR', text: 'Rivuletduo transformed our online presence. Beautiful, fast, and our conversions jumped 40% in the first month.', name: 'Arjun Rajan', role: 'Founder, Verdant Goods' },
@@ -12,14 +13,19 @@ const DELAY = 4500;
 
 function pad(n: number) { return String(n + 1).padStart(2, '0'); }
 
-export default function Testimonials() {
+type TestimonialsProps = {
+  items?: HomeTestimonial[];
+};
+
+export default function Testimonials({ items }: TestimonialsProps = {}) {
+  const testimonialsData = items && items.length > 0 ? items : testimonials;
   const [current, setCurrent] = useState(0);
   const [anim, setAnim] = useState<{ [key: number]: string }>({ 0: 'rvt__active' });
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const progRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
   const touchXRef = useRef(0);
-  const TOTAL = testimonials.length;
+  const TOTAL = testimonialsData.length;
 
   function goTo(next: number, dir: 'left' | 'right') {
     if (next === current) return;
@@ -75,7 +81,7 @@ export default function Testimonials() {
             if (Math.abs(dx) > 40) { dx < 0 ? nextSlide() : prevSlide(); }
           }}
         >
-          {testimonials.map((t, i) => (
+          {testimonialsData.map((t, i) => (
             <div
               key={i}
               className={`rvt__card ${anim[i] || ''}`}
@@ -95,7 +101,7 @@ export default function Testimonials() {
 
         <div className="rvt__controls">
           <div className="rvt__dots">
-            {testimonials.map((_, i) => (
+            {testimonialsData.map((_, i) => (
               <div
                 key={i}
                 className={`rvt__dot ${i === current ? 'rvt__dot-active' : ''}`}

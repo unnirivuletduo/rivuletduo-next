@@ -21,6 +21,12 @@ pnpm-debug.log*
 .env.development.local
 .env.test.local
 .env.production.local
+.env.wordpress
+.env.wordpress.local
+
+# local WordPress exports/backups
+wordpress-exports/
+*.sql
 
 # macOS
 .DS_Store

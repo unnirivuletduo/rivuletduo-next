@@ -9,8 +9,15 @@ import Process from '@/components/Process';
 import Testimonials from '@/components/Testimonials';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
+import { getHomeContentData, getServicesPageData, getWorkPageData } from '@/lib/cms';
 
-export default function Home() {
+export default async function Home() {
+  const [homeContent, servicesContent, workContent] = await Promise.all([
+    getHomeContentData(),
+    getServicesPageData(),
+    getWorkPageData(),
+  ]);
+
   return (
     <>
       <Cursor />
@@ -22,11 +29,11 @@ export default function Home() {
         <span style={{ opacity: 0.35 }}>/ 04</span>
       </div>
       <Navbar />
-      <Banner />
-      <Services />
-      <Work />
-      <Process />
-      <Testimonials />
+      <Banner content={homeContent.banner} />
+      <Services items={servicesContent ?? undefined} />
+      <Work items={workContent ?? undefined} />
+      <Process stepsData={homeContent.process} />
+      <Testimonials items={homeContent.testimonials} />
       <Contact />
       <Footer />
     </>

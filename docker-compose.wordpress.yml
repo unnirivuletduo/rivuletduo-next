@@ -1,0 +1,57 @@
+services:
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${WORDPRESS_DB_NAME:-wordpress}
+      MYSQL_USER: ${WORDPRESS_DB_USER:-wp}
+      MYSQL_PASSWORD: ${WORDPRESS_DB_PASSWORD:-wp}
+      MYSQL_ROOT_PASSWORD: ${WORDPRESS_DB_ROOT_PASSWORD:-root}
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - wp_db_data:/var/lib/mysql
+
+  wordpress:
+    image: wordpress:6.8.2-php8.2-apache
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "${WORDPRESS_PORT:-8080}:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME:-wordpress}
+      WORDPRESS_DB_USER: ${WORDPRESS_DB_USER:-wp}
+      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD:-wp}
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_HOME', '${WORDPRESS_SITE_URL:-http://localhost:8080}');
+        define('WP_SITEURL', '${WORDPRESS_SITE_URL:-http://localhost:8080}');
+        define('FS_METHOD', 'direct');
+    volumes:
+      - wp_app_data:/var/www/html
+      - ./infra/wordpress/mu-plugins:/var/www/html/wp-content/mu-plugins
+
+  wpcli:
+    image: wordpress:cli-php8.2
+    depends_on:
+      - db
+      - wordpress
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME:-wordpress}
+      WORDPRESS_DB_USER: ${WORDPRESS_DB_USER:-wp}
+      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD:-wp}
+      WORDPRESS_SITE_URL: ${WORDPRESS_SITE_URL:-http://localhost:8080}
+      WORDPRESS_SITE_TITLE: ${WORDPRESS_SITE_TITLE:-Rivuletduo CMS}
+      WORDPRESS_ADMIN_USER: ${WORDPRESS_ADMIN_USER:-admin}
+      WORDPRESS_ADMIN_PASSWORD: ${WORDPRESS_ADMIN_PASSWORD:-admin123456}
+      WORDPRESS_ADMIN_EMAIL: ${WORDPRESS_ADMIN_EMAIL:-admin@example.com}
+    volumes:
+      - wp_app_data:/var/www/html
+      - ./infra/wordpress/mu-plugins:/var/www/html/wp-content/mu-plugins
+      - ./infra/wordpress/scripts:/scripts
+    entrypoint: ["/bin/sh", "-c", "sleep 12 && /scripts/init-wp.sh"]
+
+volumes:
+  wp_db_data:
+  wp_app_data:

@@ -1,5 +1,6 @@
 'use client';
 import { useEffect } from 'react';
+import type { ServiceCategory } from '@/lib/cms';
 
 const services = [
   {
@@ -40,7 +41,21 @@ const services = [
   },
 ];
 
-export default function Services() {
+type ServicesProps = {
+  items?: ServiceCategory[];
+};
+
+export default function Services({ items }: ServicesProps = {}) {
+  const servicesData = items && items.length > 0
+    ? items.flatMap((category) => category.services).slice(0, 6).map((service, index) => ({
+      n: String(index + 1).padStart(2, '0'),
+      title: service.title,
+      desc: service.desc,
+      tags: service.tags,
+      icon: null,
+    }))
+    : services;
+
   useEffect(() => {
     // Reveal on scroll
     const io = new IntersectionObserver((entries) => {
@@ -97,10 +112,10 @@ export default function Services() {
       <div className="section-label rv">Services</div>
       <h2 className="section-h2 rv rv1">What we <em>build</em></h2>
       <div className="services-grid rv rv2">
-        {services.map((s) => (
+        {servicesData.map((s) => (
           <div className="svc" key={s.n}>
             <div className="svc-n">{s.n}</div>
-            <div className="svc-ico">{s.icon}</div>
+            <div className="svc-ico">{s.icon ?? <svg viewBox="0 0 32 32"><rect x="4" y="6" width="24" height="20" rx="2" /><path d="M4 14h24" /><path d="M10 22l4-4 3 3 5-6" /></svg>}</div>
             <h3>{s.title}</h3>
             <p>{s.desc}</p>
             <div className="svc-tags">

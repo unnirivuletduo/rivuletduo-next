@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Cursor from '@/components/Cursor';
+import type { WorkListItem as CmsWorkListItem } from '@/lib/cms';
 
 type WorkItem = {
   id: string;
@@ -100,10 +101,20 @@ const works: WorkItem[] = [
   },
 ];
 
-const filters = ['all', 'E-Commerce', 'SaaS', 'Brand', 'Web App', 'Fintech', 'Platform'];
+type WorkPageProps = {
+  works?: CmsWorkListItem[];
+};
 
-export default function WorkPage() {
+export default function WorkPage({ works: cmsWorks }: WorkPageProps = {}) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const worksData: WorkItem[] = useMemo(
+    () => (cmsWorks && cmsWorks.length > 0 ? cmsWorks : works) as WorkItem[],
+    [cmsWorks],
+  );
+  const filters = useMemo(
+    () => ['all', ...Array.from(new Set(worksData.map((work) => work.category)))],
+    [worksData],
+  );
 
   useEffect(() => {
     document.body.classList.toggle('menu-open', menuOpen);
@@ -349,7 +360,7 @@ export default function WorkPage() {
         });
       };
 
-      works.forEach((w) => mkCard(w.canvasId, w.visualType));
+      worksData.forEach((w) => mkCard(w.canvasId, w.visualType));
     };
 
     initThree();
@@ -359,7 +370,7 @@ export default function WorkPage() {
       cleanups.forEach((fn) => fn());
       document.body.classList.remove('work-page-body');
     };
-  }, []);
+  }, [worksData]);
 
   return (
     <>
@@ -423,7 +434,7 @@ export default function WorkPage() {
       </div>
 
       <div className="work-grid" id="workGrid">
-        {works.map((work) => (
+        {worksData.map((work) => (
           <a href={work.href} className={`wcard ${work.featured ? 'featured' : ''}`} key={work.id} data-category={work.category}>
             <div className="wcard-canvas-wrap"><canvas id={work.canvasId} /><div className="wcard-canvas-overlay" /></div>
             <div className="wcard-num">{work.num}</div><div className="wcard-year">{work.year}</div>

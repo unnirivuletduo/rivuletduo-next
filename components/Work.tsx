@@ -1,5 +1,6 @@
 'use client';
 import { useEffect } from 'react';
+import type { WorkListItem } from '@/lib/cms';
 
 const ArrowIcon = () => (
   <svg viewBox="0 0 12 12"><path d="M1 11L11 1M1 1h10v10" /></svg>
@@ -8,23 +9,36 @@ const ArrowIcon = () => (
 const projects = [
   {
     num: '01', tag: 'E-commerce · Shopify', title: 'Verdant Goods',
-    bg: <svg viewBox="0 0 400 225" fill="none"><circle cx="200" cy="112" r="90" stroke="#15803d" strokeWidth=".5" /><circle cx="200" cy="112" r="55" stroke="#15803d" strokeWidth=".5" /><line x1="110" y1="112" x2="290" y2="112" stroke="#15803d" strokeWidth=".5" /><line x1="200" y1="22" x2="200" y2="202" stroke="#15803d" strokeWidth=".5" /></svg>,
+    bgImage: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1600&q=80',
   },
   {
     num: '02', tag: 'SaaS · Dashboard', title: 'FlowMetrics',
-    bg: <svg viewBox="0 0 400 225" fill="none"><rect x="40" y="30" width="320" height="165" stroke="#15803d" strokeWidth=".5" rx="3" /><rect x="55" y="45" width="120" height="10" rx="1" fill="#15803d" opacity=".2" /><rect x="55" y="90" width="290" height="1" fill="#15803d" opacity=".15" /><rect x="55" y="105" width="90" height="70" rx="2" fill="#15803d" opacity=".08" /><rect x="160" y="105" width="90" height="70" rx="2" fill="#15803d" opacity=".08" /><rect x="265" y="105" width="80" height="70" rx="2" fill="#15803d" opacity=".08" /></svg>,
+    bgImage: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1600&q=80',
   },
   {
     num: '03', tag: 'Brand · Next.js', title: 'Celadon Studio',
-    bg: <svg viewBox="0 0 400 225" fill="none"><path d="M80 112 Q200 30 320 112 Q200 194 80 112Z" stroke="#15803d" strokeWidth=".5" /><circle cx="200" cy="112" r="40" stroke="#15803d" strokeWidth=".5" /></svg>,
+    bgImage: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1600&q=80',
   },
   {
     num: '04', tag: 'Web App · React', title: 'Heliostack',
-    bg: <svg viewBox="0 0 400 225" fill="none"><polygon points="200,30 340,130 270,200 130,200 60,130" stroke="#15803d" strokeWidth=".5" /><polygon points="200,65 305,135 255,185 145,185 95,135" stroke="#15803d" strokeWidth=".5" /></svg>,
+    bgImage: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1600&q=80',
   },
 ];
 
-export default function Work() {
+type WorkProps = {
+  items?: WorkListItem[];
+};
+
+export default function Work({ items }: WorkProps = {}) {
+  const projectsData = items && items.length > 0
+    ? items.slice(0, 4).map((item, idx) => ({
+      num: item.num || String(idx + 1).padStart(2, '0'),
+      tag: item.tag,
+      title: item.title,
+      bgImage: projects[idx % projects.length].bgImage,
+    }))
+    : projects;
+
   useEffect(() => {
     const cards = document.querySelectorAll('.wcard');
 
@@ -33,9 +47,6 @@ export default function Work() {
       card.style.opacity = '0';
       card.style.transform = 'translateY(40px) scale(0.97)';
       card.style.transition = 'none';
-      card.querySelectorAll('.wcard-bg svg path,.wcard-bg svg circle,.wcard-bg svg line,.wcard-bg svg rect,.wcard-bg svg polygon').forEach((el: any) => {
-        try { const l = Math.ceil(el.getTotalLength()) + 4; el.setAttribute('stroke-dasharray', l); el.setAttribute('stroke-dashoffset', l); el.style.transition = 'none'; } catch (e) {}
-      });
     });
 
     function revealCard(card: Element, idx: number) {
@@ -44,15 +55,6 @@ export default function Work() {
         c.style.transition = 'opacity 0.65s cubic-bezier(0.16,1,0.3,1),transform 0.65s cubic-bezier(0.16,1,0.3,1)';
         c.style.opacity = '1';
         c.style.transform = 'translateY(0) scale(1)';
-        card.querySelectorAll('.wcard-bg svg path,.wcard-bg svg circle,.wcard-bg svg line,.wcard-bg svg rect,.wcard-bg svg polygon').forEach((el: any, i) => {
-          setTimeout(() => {
-            const l = parseFloat(el.getAttribute('stroke-dasharray')) || 300;
-            el.setAttribute('stroke-dashoffset', String(l));
-            void el.getBoundingClientRect();
-            el.style.transition = 'stroke-dashoffset 1.4s cubic-bezier(0.16,1,0.3,1)';
-            el.setAttribute('stroke-dashoffset', '0');
-          }, 200 + i * 180);
-        });
         const numEl = card.querySelector('.wcard-num') as HTMLElement;
         if (numEl) {
           const real = numEl.textContent, chars = '0123456789';
@@ -104,9 +106,9 @@ export default function Work() {
       <div className="section-label rv">Selected Work</div>
       <h2 className="section-h2 rv rv1">Projects we&apos;re <em>proud of</em></h2>
       <div className="work-grid">
-        {projects.map((p, i) => (
+        {projectsData.map((p, i) => (
           <div className={`wcard rv rv${(i % 2) + 1}`} key={p.num}>
-            <div className="wcard-bg">{p.bg}</div>
+            <div className="wcard-bg" style={{ backgroundImage: `url(${p.bgImage})` }} />
             <span className="wcard-num">{p.num}</span>
             <div className="wtag">{p.tag}</div>
             <h3>{p.title}</h3>

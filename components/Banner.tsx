@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef } from 'react';
+import type { HomeBannerContent } from '@/lib/cms';
 
 const TICKER_ITEMS = [
   'React & Next.js', 'Tailwind & Motion', 'Node & Express',
@@ -7,7 +8,11 @@ const TICKER_ITEMS = [
   'Performance Optimisation', 'SEO & Analytics',
 ];
 
-export default function Banner() {
+type BannerProps = {
+  content?: HomeBannerContent;
+};
+
+export default function Banner({ content }: BannerProps = {}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const bannerRef = useRef<HTMLDivElement>(null);
 
@@ -279,7 +284,8 @@ export default function Banner() {
     return () => { cleanupFn?.(); };
   }, []);
 
-  const tickerItems = [...TICKER_ITEMS, ...TICKER_ITEMS];
+  const tickerSource = content?.tickerItems?.length ? content.tickerItems : TICKER_ITEMS;
+  const tickerItems = [...tickerSource, ...tickerSource];
 
   return (
     <section id="banner" ref={bannerRef}>
@@ -287,9 +293,15 @@ export default function Banner() {
       <div id="ov" />
 
       <div className="hero">
-        <span className="badge">Est. 2024 &nbsp;·&nbsp; Web Dev Studio</span>
-        <h1 className="headline">We Build<br /><em>Digital</em><br />Experiences</h1>
-        <p className="sub">From pixel-perfect interfaces to scalable full-stack systems — we craft web products that feel as good as they perform.</p>
+        <span className="badge">{content?.badge ?? 'Est. 2024 · Web Dev Studio'}</span>
+        <h1 className="headline">
+          {content?.headlineLine1 ?? 'We Build'}
+          <br />
+          <em>{content?.headlineEmphasis ?? 'Digital'}</em>
+          <br />
+          {content?.headlineLine3 ?? 'Experiences'}
+        </h1>
+        <p className="sub">{content?.subcopy ?? 'From pixel-perfect interfaces to scalable full-stack systems — we craft web products that feel as good as they perform.'}</p>
         <div className="cta-row">
           <a href="/work" className="btn-primary">See Our Work</a>
           <a href="/contact" className="btn-ghost">Get in Touch</a>

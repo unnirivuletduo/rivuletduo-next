@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Cursor from '@/components/Cursor';
+import type { ServiceDetail as CmsServiceDetail } from '@/lib/cms';
 
 type ServiceData = {
   slug: string;
@@ -29,13 +30,19 @@ const services: ServiceData[] = [
   { slug: 'corporate', title: 'Corporate', titleEm: 'Websites', badge: 'Enterprise', num: '14', tagline: 'High-trust corporate web experiences aligned with business goals and governance needs.' },
 ];
 
-function getService(slug: string) {
-  return services.find((s) => s.slug === slug) || services[0];
+function getService(slug: string, list: ServiceData[]) {
+  return list.find((s) => s.slug === slug) || list[0];
 }
 
-export default function ServiceDetailPage({ slug }: { slug: string }) {
+type ServiceDetailPageProps = {
+  slug: string;
+  services?: CmsServiceDetail[];
+};
+
+export default function ServiceDetailPage({ slug, services: cmsServices }: ServiceDetailPageProps) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const service = getService(slug);
+  const serviceCatalog = (cmsServices && cmsServices.length > 0 ? cmsServices : services) as ServiceData[];
+  const service = getService(slug, serviceCatalog);
 
   useEffect(() => {
     document.body.classList.toggle('menu-open', menuOpen);

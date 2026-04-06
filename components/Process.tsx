@@ -1,5 +1,6 @@
 'use client';
 import { useEffect } from 'react';
+import type { HomeProcessStep } from '@/lib/cms';
 
 const steps = [
   {
@@ -64,7 +65,21 @@ const steps = [
   },
 ];
 
-export default function Process() {
+type ProcessProps = {
+  stepsData?: HomeProcessStep[];
+};
+
+export default function Process({ stepsData }: ProcessProps = {}) {
+  const displaySteps = stepsData && stepsData.length > 0
+    ? stepsData.map((step, idx) => ({
+      ...steps[Math.min(idx, steps.length - 1)],
+      n: step.n,
+      title: step.title,
+      desc: step.desc,
+      tags: step.tags,
+    }))
+    : steps;
+
   useEffect(() => {
     const stepEls = Array.from(document.querySelectorAll('.step'));
     const wrap = document.getElementById('ps');
@@ -151,7 +166,7 @@ export default function Process() {
           <h2>How we <em>work</em></h2>
         </div>
         <div className="ps" id="ps">
-          {steps.map((s, i) => (
+          {displaySteps.map((s, i) => (
             <div className="step" data-i={i} key={s.n}>
               <div className="sn">{s.n}</div>
               <div className="sdot" />

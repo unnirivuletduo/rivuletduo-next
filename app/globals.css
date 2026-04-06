@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Space+Mono:wght@400;700&family=Fraunces:ital,wght@0,100;0,300;1,100;1,300&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Fraunces:ital,wght@0,100;0,300;0,400;0,500;0,700;1,100;1,300;1,400;1,500;1,700&family=Instrument+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Inter:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Lora:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&family=Manrope:wght@300;400;500;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Montserrat:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Oswald:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&family=Poppins:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Work+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
 
 *, *::before, *::after {
   margin: 0;
@@ -7,6 +7,10 @@
 }
 
 :root {
+  --title-font: 'Fraunces', serif;
+  --body-font: 'Instrument Sans', sans-serif;
+  --title-weight: 300;
+  --body-weight: 400;
   --lime: #22c55e;
   --lime-d: #15803d;
   --lime-b: #16a34a;
@@ -26,9 +30,144 @@
 html, body {
   width: 100%;
   background: #fff;
-  font-family: 'Instrument Sans', sans-serif;
+  font-family: var(--body-font);
+  font-weight: var(--body-weight);
   overflow-x: hidden;
   cursor: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--title-font) !important;
+  font-weight: var(--title-weight) !important;
+}
+
+p, li, a, span, button, input, textarea, select, label, small {
+  font-family: var(--body-font) !important;
+  font-weight: var(--body-weight) !important;
+}
+
+/* ── FONT SWITCHER ── */
+.font-switcher {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 1400;
+}
+.font-fab {
+  border: 1px solid var(--soft-green);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10px);
+  color: var(--ink);
+  padding: 0.55rem 0.95rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  cursor: none;
+}
+.font-popup {
+  position: absolute;
+  right: 0;
+  bottom: 2.8rem;
+  width: 420px;
+  max-height: min(78vh, 740px);
+  overflow: auto;
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid var(--border);
+  box-shadow: 0 15px 45px rgba(5, 46, 22, 0.12);
+  border-radius: 14px;
+  padding: 1rem;
+}
+.font-popup-head {
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.85rem;
+}
+.font-group {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.75rem;
+  margin-bottom: 0.8rem;
+  background: #fff;
+}
+.font-group-title {
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.6rem;
+}
+.font-popup-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.45rem;
+}
+.font-option {
+  width: 100%;
+  text-align: left;
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--ink);
+  padding: 0.52rem 0.55rem;
+  border-radius: 8px;
+  cursor: none;
+  display: grid;
+  gap: 0.2rem;
+}
+.font-option:hover {
+  border-color: var(--lime-b);
+}
+.font-option.active {
+  border-color: var(--lime-d);
+  background: var(--bg3);
+}
+.font-option-name {
+  font-size: 0.74rem;
+  line-height: 1.2;
+}
+.font-option-preview {
+  font-size: 0.58rem;
+  color: var(--text-muted);
+}
+.font-option-name,
+.font-option-preview {
+  font-family: var(--sample-font) !important;
+}
+.font-weight-wrap {
+  margin-top: 0.62rem;
+}
+.font-weight-wrap label {
+  display: block;
+  font-size: 0.56rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.38rem;
+}
+.font-weight-wrap input[type='range'] {
+  width: 100%;
+  accent-color: var(--lime-d);
+}
+.font-live-preview {
+  border-top: 1px dashed var(--border);
+  margin-top: 0.25rem;
+  padding-top: 0.75rem;
+}
+.font-live-preview h4 {
+  font-family: var(--title-font) !important;
+  font-weight: var(--title-weight) !important;
+  font-size: 1.1rem;
+  color: var(--ink);
+  margin-bottom: 0.35rem;
+}
+.font-live-preview p {
+  font-family: var(--body-font) !important;
+  font-weight: var(--body-weight) !important;
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  line-height: 1.5;
 }
 
 /* ── CUSTOM CURSOR ── */
@@ -558,11 +697,22 @@ canvas#c {
 .wcard-bg {
   position: absolute;
   inset: 0;
-  opacity: 0.08;
-  transition: opacity 0.4s;
+  opacity: 0.72;
+  transition: opacity 0.4s, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: saturate(1.08) contrast(1.08) brightness(1.04);
 }
-.wcard:hover .wcard-bg { opacity: 0.2; }
-.wcard-bg svg { width: 100%; height: 100%; }
+.wcard:hover .wcard-bg { opacity: 0.86; transform: scale(1.04); }
+.wcard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(5, 46, 22, 0.42) 0%, rgba(5, 46, 22, 0.2) 42%, rgba(5, 46, 22, 0.04) 100%);
+  z-index: 1;
+  pointer-events: none;
+}
 .wtag {
   font-size: 0.62rem;
   letter-spacing: 0.18em;
@@ -570,14 +720,16 @@ canvas#c {
   color: var(--lime-d);
   margin-bottom: 0.5rem;
   position: relative;
+  z-index: 2;
   font-family: 'Space Mono', monospace;
 }
 .wcard h3 {
   font-family: 'Fraunces', serif;
   font-weight: 300;
   font-size: 1.5rem;
-  color: var(--ink);
+  color: #fff;
   position: relative;
+  z-index: 2;
 }
 .wcard-num {
   position: absolute;
@@ -585,9 +737,10 @@ canvas#c {
   right: 1.6rem;
   font-size: 0.62rem;
   letter-spacing: 0.2em;
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.86);
   font-family: 'Space Mono', monospace;
-  opacity: 0.4;
+  opacity: 0.75;
+  z-index: 2;
 }
 .warr {
   position: absolute;
@@ -600,6 +753,7 @@ canvas#c {
   align-items: center;
   justify-content: center;
   transition: background 0.25s, border-color 0.25s;
+  z-index: 2;
 }
 .wcard:hover .warr { background: var(--lime-d); border-color: var(--lime-d); }
 .warr svg { width: 12px; height: 12px; stroke: var(--lime-d); fill: none; stroke-width: 2; }
@@ -1225,4 +1379,10 @@ footer {
   .sbg { display: none; }
   .step { grid-template-columns: 72px 68px 1fr; padding: 38px 0; }
   .sicon { width: 56px; height: 56px; }
+  .font-switcher { right: 0.75rem; bottom: 0.75rem; }
+  .font-popup {
+    width: min(92vw, 360px);
+    max-height: 72vh;
+  }
+  .font-popup-list { grid-template-columns: 1fr; }
 }

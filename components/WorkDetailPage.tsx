@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Cursor from '@/components/Cursor';
+import type { WorkDetail as CmsWorkDetail } from '@/lib/cms';
 
 type ProjectData = {
   slug: string;
@@ -154,26 +155,32 @@ const projects: ProjectData[] = [
   },
 ];
 
-function getProject(slug: string) {
-  return projects.find((p) => p.slug === slug) || projects[0];
+function getProject(slug: string, list: ProjectData[]) {
+  return list.find((p) => p.slug === slug) || list[0];
 }
 
-function neighbors(slug: string) {
-  const idx = Math.max(0, projects.findIndex((p) => p.slug === slug));
-  const prev = projects[(idx - 1 + projects.length) % projects.length];
-  const next = projects[(idx + 1) % projects.length];
+function neighbors(list: ProjectData[], slug: string) {
+  const idx = Math.max(0, list.findIndex((p) => p.slug === slug));
+  const prev = list[(idx - 1 + list.length) % list.length];
+  const next = list[(idx + 1) % list.length];
   return { prev, next };
 }
 
-export default function WorkDetailPage({ slug }: { slug: string }) {
+type WorkDetailPageProps = {
+  slug: string;
+  projects?: CmsWorkDetail[];
+};
+
+export default function WorkDetailPage({ slug, projects: cmsProjects }: WorkDetailPageProps) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const project = getProject(slug);
+  const projectCatalog = (cmsProjects && cmsProjects.length > 0 ? cmsProjects : projects) as ProjectData[];
+  const project = getProject(slug, projectCatalog);
 
   useEffect(() => {
     document.body.classList.toggle('menu-open', menuOpen);
     return () => document.body.classList.remove('menu-open');
   }, [menuOpen]);
-  const { prev, next } = neighbors(project.slug);
+  const { prev, next } = neighbors(projectCatalog, project.slug);
 
   useEffect(() => {
     const cleanups: Array<() => void> = [];

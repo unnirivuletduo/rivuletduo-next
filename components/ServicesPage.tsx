@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type ReactNode } from 'react';
 import Cursor from '@/components/Cursor';
+import type { ServiceCategory as CmsServiceCategory } from '@/lib/cms';
 
 type Service = {
   num: string;
@@ -9,7 +10,7 @@ type Service = {
   desc: string;
   tags: string[];
   href: string;
-  icon: ReactNode;
+  icon?: ReactNode;
 };
 
 type Category = {
@@ -163,8 +164,24 @@ const categories: Category[] = [
   },
 ];
 
-export default function ServicesPage() {
+type ServicesPageProps = {
+  categories?: CmsServiceCategory[];
+};
+
+export default function ServicesPage({ categories: cmsCategories }: ServicesPageProps = {}) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const categoriesData: Category[] = (cmsCategories && cmsCategories.length > 0 ? cmsCategories : categories) as Category[];
+  
+  const fallbackIcon = (
+    <svg viewBox="0 0 52 52">
+      <rect x="6" y="8" width="40" height="28" rx="2" />
+      <path d="M6 20h40" />
+      <circle cx="14" cy="14" r="1.8" />
+      <circle cx="21" cy="14" r="1.8" />
+      <circle cx="28" cy="14" r="1.8" />
+      <path d="M14 44l4-6h16l4 6" />
+    </svg>
+  );
 
   useEffect(() => {
     document.body.classList.toggle('menu-open', menuOpen);
@@ -395,7 +412,7 @@ export default function ServicesPage() {
       </div>
 
       <section className="services-section">
-        {categories.map((category) => (
+        {categoriesData.map((category) => (
           <div className="category-block" key={category.id}>
             <div className="cat-header rv" id={category.id}>
               <span className="cat-num">{category.num}</span>
@@ -406,7 +423,7 @@ export default function ServicesPage() {
               {category.services.map((service) => (
                 <a href={service.href} className="svc-card" key={`${category.id}-${service.title}`}>
                   <div className="svc-card-num">{service.num}</div>
-                  <div className="svc-icon">{service.icon}</div>
+                  <div className="svc-icon">{service.icon ?? fallbackIcon}</div>
                   <h3>{service.title}</h3>
                   <p>{service.desc}</p>
                   <div className="svc-tags">

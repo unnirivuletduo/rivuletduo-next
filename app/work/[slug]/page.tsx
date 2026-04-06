@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './work-detail.css';
 import WorkDetailPage from '@/components/WorkDetailPage';
+import { getWorkDetailsData } from '@/lib/cms';
 
 type Props = { params: { slug: string } };
 
@@ -15,6 +16,7 @@ export function generateMetadata({ params }: Props): Metadata {
   };
 }
 
-export default function WorkDetailRoute({ params }: Props) {
-  return <WorkDetailPage slug={params.slug} />;
+export default async function WorkDetailRoute({ params }: Props) {
+  const projects = await getWorkDetailsData();
+  return <WorkDetailPage slug={params.slug} projects={projects ?? undefined} />;
 }

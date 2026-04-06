@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './service-detail.css';
 import ServiceDetailPage from '@/components/ServiceDetailPage';
+import { getServiceDetailsData } from '@/lib/cms';
 
 type Props = { params: { slug: string } };
 
@@ -15,6 +16,7 @@ export function generateMetadata({ params }: Props): Metadata {
   };
 }
 
-export default function ServiceDetailRoute({ params }: Props) {
-  return <ServiceDetailPage slug={params.slug} />;
+export default async function ServiceDetailRoute({ params }: Props) {
+  const services = await getServiceDetailsData();
+  return <ServiceDetailPage slug={params.slug} services={services ?? undefined} />;
 }
