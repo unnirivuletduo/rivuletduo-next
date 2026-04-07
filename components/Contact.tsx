@@ -1,9 +1,51 @@
 'use client';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function Contact() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [subject, setSubject] = useState('');
+  const [message, setMessage] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
+
+  const handleSubmit = async () => {
+    if (!firstName.trim() || !lastName.trim() || !email.trim() || !subject || !message.trim()) {
+      setError('Please fill in all fields.');
+      return;
+    }
+    setError('');
+    setSubmitting(true);
+    
+    const enquiryType = subject === 'Project inquiry' ? 'project' : 'general';
+    const payload = enquiryType === 'project' 
+      ? { enquiryType, firstName, lastName, email, projectDescription: message }
+      : { enquiryType, name: `${firstName} ${lastName}`.trim(), email, message };
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        setError(typeof data?.message === 'string' ? data.message : 'Unable to submit right now.');
+        return;
+      }
+
+      setSuccess(true);
+    } catch {
+      setError('Network error. Please try again in a moment.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   useEffect(() => {
     let cleanupFn: (() => void) | null = null;
@@ -130,35 +172,50 @@ export default function Contact() {
         </div>
 
         <div className="form-card">
-          <div className="form-row">
-            <div className="field">
-              <label>First name</label>
-              <input type="text" placeholder="Alex" />
+          {success ? (
+            <div style={{ textAlign: 'center', padding: '3rem 1rem' }}>
+              <div style={{ background: '#dcfce7', color: '#16a34a', width: '48px', height: '48px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
+                <svg viewBox="0 0 24 24" style={{ width: '24px', height: '24px', fill: 'none', stroke: 'currentColor', strokeWidth: '2', strokeLinecap: 'round', strokeLinejoin: 'round' }}><polyline points="20 6 9 17 4 12" /></svg>
+              </div>
+              <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>Message sent!</h3>
+              <p style={{ color: '#6b7280', fontSize: '0.9rem' }}>We&apos;ve received your message and will get back to you shortly.</p>
             </div>
-            <div className="field">
-              <label>Last name</label>
-              <input type="text" placeholder="Morgan" />
-            </div>
-          </div>
-          <div className="field">
-            <label>Email address</label>
-            <input type="email" placeholder="alex@example.com" />
-          </div>
-          <div className="field">
-            <label>Subject</label>
-            <select defaultValue="">
-              <option value="" disabled>Choose a topic</option>
-              <option>Project inquiry</option>
-              <option>Partnership</option>
-              <option>General question</option>
-              <option>Other</option>
-            </select>
-          </div>
-          <div className="field">
-            <label>Message</label>
-            <textarea placeholder="Tell us about your project…" />
-          </div>
-          <button className="btn-submit">Send Message</button>
+          ) : (
+            <>
+              <div className="form-row">
+                <div className="field">
+                  <label>First name</label>
+                  <input type="text" placeholder="Alex" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+                </div>
+                <div className="field">
+                  <label>Last name</label>
+                  <input type="text" placeholder="Morgan" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                </div>
+              </div>
+              <div className="field">
+                <label>Email address</label>
+                <input type="email" placeholder="alex@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+              </div>
+              <div className="field">
+                <label>Subject</label>
+                <select value={subject} onChange={(e) => setSubject(e.target.value)}>
+                  <option value="" disabled>Choose a topic</option>
+                  <option>Project inquiry</option>
+                  <option>Partnership</option>
+                  <option>General question</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div className="field">
+                <label>Message</label>
+                <textarea placeholder="Tell us about your project…" value={message} onChange={(e) => setMessage(e.target.value)} />
+              </div>
+              {error && <p style={{ color: '#b91c1c', fontSize: '.76rem', marginBottom: '1rem', marginTop: '-0.5rem' }}>{error}</p>}
+              <button className="btn-submit" onClick={handleSubmit} disabled={submitting}>
+                {submitting ? 'Sending...' : 'Send Message'}
+              </button>
+            </>
+          )}
         </div>
       </div>
     </section>
