@@ -39,8 +39,19 @@ export default function ContactPage() {
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [budget, setBudget] = useState('');
   const [desc, setDesc] = useState('');
+  const [projectFirstName, setProjectFirstName] = useState('');
+  const [projectLastName, setProjectLastName] = useState('');
+  const [projectEmail, setProjectEmail] = useState('');
+  const [projectPhone, setProjectPhone] = useState('');
+  const [generalName, setGeneralName] = useState('');
+  const [generalEmail, setGeneralEmail] = useState('');
+  const [generalMessage, setGeneralMessage] = useState('');
   const [projectDone, setProjectDone] = useState(false);
   const [generalDone, setGeneralDone] = useState(false);
+  const [projectSubmitting, setProjectSubmitting] = useState(false);
+  const [generalSubmitting, setGeneralSubmitting] = useState(false);
+  const [projectError, setProjectError] = useState('');
+  const [generalError, setGeneralError] = useState('');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   useEffect(() => {
@@ -265,11 +276,82 @@ export default function ContactPage() {
     };
   }, []);
 
+  const validateEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+
   const validateStepOne = () => {
-    const fn = (document.getElementById('fname') as HTMLInputElement | null)?.value.trim() || '';
-    const ln = (document.getElementById('lname') as HTMLInputElement | null)?.value.trim() || '';
-    const em = (document.getElementById('email') as HTMLInputElement | null)?.value.trim() || '';
-    return !!fn && !!ln && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em);
+    return !!projectFirstName.trim() && !!projectLastName.trim() && validateEmail(projectEmail);
+  };
+
+  const submitProjectBrief = async () => {
+    if (!validateStepOne() || !desc.trim()) {
+      setProjectError('Please complete all required fields before submitting.');
+      return;
+    }
+
+    setProjectError('');
+    setProjectSubmitting(true);
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          enquiryType: 'project',
+          firstName: projectFirstName.trim(),
+          lastName: projectLastName.trim(),
+          email: projectEmail.trim(),
+          phone: projectPhone.trim(),
+          services: selectedServices,
+          budget,
+          projectDescription: desc.trim(),
+        }),
+      });
+
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        setProjectError(typeof data?.message === 'string' ? data.message : 'Unable to submit right now.');
+        return;
+      }
+
+      setProjectDone(true);
+    } catch {
+      setProjectError('Network error. Please try again in a moment.');
+    } finally {
+      setProjectSubmitting(false);
+    }
+  };
+
+  const submitGeneralEnquiry = async () => {
+    if (!generalName.trim() || !validateEmail(generalEmail) || !generalMessage.trim()) {
+      setGeneralError('Please fill all required fields with a valid email.');
+      return;
+    }
+
+    setGeneralError('');
+    setGeneralSubmitting(true);
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          enquiryType: 'general',
+          name: generalName.trim(),
+          email: generalEmail.trim(),
+          message: generalMessage.trim(),
+        }),
+      });
+
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        setGeneralError(typeof data?.message === 'string' ? data.message : 'Unable to submit right now.');
+        return;
+      }
+
+      setGeneralDone(true);
+    } catch {
+      setGeneralError('Network error. Please try again in a moment.');
+    } finally {
+      setGeneralSubmitting(false);
+    }
   };
 
   const toggleService = (s: string) => {
@@ -359,12 +441,13 @@ export default function ContactPage() {
               {step === 1 && (
                 <>
                   <div className="form-row">
-                    <div className="field"><label>First name <span className="req">*</span></label><input id="fname" type="text" placeholder="Alex" /></div>
-                    <div className="field"><label>Last name <span className="req">*</span></label><input id="lname" type="text" placeholder="Morgan" /></div>
+                    <div className="field"><label>First name <span className="req">*</span></label><input id="fname" type="text" placeholder="Alex" value={projectFirstName} onChange={(e) => setProjectFirstName(e.target.value)} /></div>
+                    <div className="field"><label>Last name <span className="req">*</span></label><input id="lname" type="text" placeholder="Morgan" value={projectLastName} onChange={(e) => setProjectLastName(e.target.value)} /></div>
                   </div>
-                  <div className="field"><label>Email address <span className="req">*</span></label><input id="email" type="email" placeholder="alex@example.com" /></div>
-                  <div className="field"><label>Phone</label><input type="tel" placeholder="+1 (555) 000-0000" /></div>
-                  <div className="form-nav"><span className="step-count"><b>01</b> / 03</span><button className="btn-next" onClick={() => validateStepOne() && setStep(2)}>Next — Project Info →</button></div>
+                  <div className="field"><label>Email address <span className="req">*</span></label><input id="email" type="email" placeholder="alex@example.com" value={projectEmail} onChange={(e) => setProjectEmail(e.target.value)} /></div>
+                  <div className="field"><label>Phone</label><input type="tel" placeholder="+1 (555) 000-0000" value={projectPhone} onChange={(e) => setProjectPhone(e.target.value)} /></div>
+                  {projectError && <p style={{ color: '#b91c1c', fontSize: '.76rem', marginTop: '.2rem' }}>{projectError}</p>}
+                  <div className="form-nav"><span className="step-count"><b>01</b> / 03</span><button className="btn-next" onClick={() => validateStepOne() ? setStep(2) : setProjectError('Please add first name, last name, and a valid email.')}>Next — Project Info →</button></div>
                 </>
               )}
 
@@ -389,7 +472,8 @@ export default function ContactPage() {
               {step === 3 && (
                 <>
                   <div className="field"><label>Project description <span className="req">*</span></label><textarea value={desc} onChange={(e) => setDesc(e.target.value.slice(0, 600))} placeholder="Tell us about your project — what you're building, who it's for, and what success looks like for you…" /><div className="char-counter">{desc.length} / 600</div></div>
-                  <button className="btn-submit-main" onClick={() => desc.trim() && setProjectDone(true)}>Send Project Brief ↗</button>
+                  {projectError && <p style={{ color: '#b91c1c', fontSize: '.76rem', marginTop: '.2rem' }}>{projectError}</p>}
+                  <button className="btn-submit-main" onClick={submitProjectBrief} disabled={projectSubmitting}>{projectSubmitting ? 'Sending...' : 'Send Project Brief ↗'}</button>
                   <div className="form-nav" style={{ borderTop: 'none', marginTop: '.8rem', paddingTop: 0, justifyContent: 'flex-start' }}><button className="btn-prev" onClick={() => setStep(2)}>← Back</button><span className="step-count" style={{ marginLeft: 'auto' }}><b>03</b> / 03</span></div>
                 </>
               )}
@@ -407,11 +491,12 @@ export default function ContactPage() {
           {tab === 'general' && !generalDone && (
             <div className="form-body">
               <div className="form-row">
-                <div className="field"><label>Name <span className="req">*</span></label><input type="text" placeholder="Your name" /></div>
-                <div className="field"><label>Email <span className="req">*</span></label><input type="email" placeholder="you@example.com" /></div>
+                <div className="field"><label>Name <span className="req">*</span></label><input type="text" placeholder="Your name" value={generalName} onChange={(e) => setGeneralName(e.target.value)} /></div>
+                <div className="field"><label>Email <span className="req">*</span></label><input type="email" placeholder="you@example.com" value={generalEmail} onChange={(e) => setGeneralEmail(e.target.value)} /></div>
               </div>
-              <div className="field"><label>Message <span className="req">*</span></label><textarea style={{ height: 130 }} placeholder="Your message…" /></div>
-              <button className="btn-submit-main" onClick={() => setGeneralDone(true)}>Send Message ↗</button>
+              <div className="field"><label>Message <span className="req">*</span></label><textarea style={{ height: 130 }} placeholder="Your message…" value={generalMessage} onChange={(e) => setGeneralMessage(e.target.value)} /></div>
+              {generalError && <p style={{ color: '#b91c1c', fontSize: '.76rem', marginTop: '.2rem' }}>{generalError}</p>}
+              <button className="btn-submit-main" onClick={submitGeneralEnquiry} disabled={generalSubmitting}>{generalSubmitting ? 'Sending...' : 'Send Message ↗'}</button>
             </div>
           )}
 

@@ -51,6 +51,20 @@ add_action('init', function () {
         'has_archive' => false,
         'rewrite' => false,
     ]);
+
+    register_post_type('contact_submission', [
+        'labels' => [
+            'name' => 'Contact Submissions',
+            'singular_name' => 'Contact Submission',
+        ],
+        'public' => false,
+        'show_ui' => true,
+        'show_in_rest' => false,
+        'menu_icon' => 'dashicons-email-alt',
+        'supports' => ['title', 'editor', 'custom-fields'],
+        'has_archive' => false,
+        'rewrite' => false,
+    ]);
 });
 
 add_action('rest_api_init', function () {
@@ -110,6 +124,137 @@ add_action('rest_api_init', function () {
                 'banner' => $banner,
                 'process' => $process,
                 'testimonials' => $testimonials,
+            ]);
+        },
+        'permission_callback' => '__return_true',
+    ]);
+
+    register_rest_route('rivulet/v1', '/contact', [
+        'methods' => 'POST',
+        'callback' => function (WP_REST_Request $request) {
+            $secret = defined('RIVULET_CONTACT_SECRET') ? RIVULET_CONTACT_SECRET : getenv('RIVULET_CONTACT_SECRET');
+            if (is_string($secret) && trim($secret) !== '') {
+                $incoming_secret = (string) $request->get_header('x-rivulet-contact-secret');
+                if ($incoming_secret === '' || !hash_equals(trim($secret), $incoming_secret)) {
+                    return new WP_Error('forbidden', 'Invalid contact submission secret.', ['status' => 403]);
+                }
+            }
+
+            $payload = $request->get_json_params();
+            if (!is_array($payload)) {
+                return new WP_Error('invalid_payload', 'Invalid payload.', ['status' => 400]);
+            }
+
+            $enquiry_type = sanitize_key((string) ($payload['enquiryType'] ?? ''));
+            if (!in_array($enquiry_type, ['project', 'general'], true)) {
+                return new WP_Error('invalid_enquiry', 'Invalid enquiry type.', ['status' => 400]);
+            }
+
+            $first_name = sanitize_text_field((string) ($payload['firstName'] ?? ''));
+            $last_name = sanitize_text_field((string) ($payload['lastName'] ?? ''));
+            $name = sanitize_text_field((string) ($payload['name'] ?? ''));
+            $email = sanitize_email((string) ($payload['email'] ?? ''));
+            $phone = sanitize_text_field((string) ($payload['phone'] ?? ''));
+            $budget = sanitize_text_field((string) ($payload['budget'] ?? ''));
+            $project_description = sanitize_textarea_field((string) ($payload['projectDescription'] ?? ''));
+            $message = sanitize_textarea_field((string) ($payload['message'] ?? ''));
+
+            $services_raw = $payload['services'] ?? [];
+            $services = [];
+            if (is_array($services_raw)) {
+                foreach ($services_raw as $service) {
+                    if (!is_string($service)) {
+                        continue;
+                    }
+                    $service = sanitize_text_field($service);
+                    if ($service !== '') {
+                        $services[] = $service;
+                    }
+                }
+            }
+
+            if (!is_email($email)) {
+                return new WP_Error('invalid_email', 'Please enter a valid email.', ['status' => 400]);
+            }
+
+            if ($enquiry_type === 'project') {
+                if ($first_name === '' || $last_name === '' || $project_description === '') {
+                    return new WP_Error('missing_fields', 'Missing required project fields.', ['status' => 400]);
+                }
+            } else {
+                if ($name === '' || $message === '') {
+                    return new WP_Error('missing_fields', 'Missing required general enquiry fields.', ['status' => 400]);
+                }
+            }
+
+            $display_name = $enquiry_type === 'project' ? trim($first_name . ' ' . $last_name) : $name;
+            $title_prefix = $enquiry_type === 'project' ? 'Project Brief' : 'General Enquiry';
+            $submission_title = sprintf('%s - %s - %s', $title_prefix, $display_name ?: 'Unknown', wp_date('Y-m-d H:i'));
+
+            $content_lines = [
+                'Type: ' . $enquiry_type,
+                'Name: ' . ($display_name ?: 'N/A'),
+                'Email: ' . $email,
+                'Phone: ' . ($phone ?: 'N/A'),
+            ];
+
+            if ($enquiry_type === 'project') {
+                $content_lines[] = 'Services: ' . (!empty($services) ? implode(', ', $services) : 'N/A');
+                $content_lines[] = 'Budget: ' . ($budget ?: 'N/A');
+                $content_lines[] = 'Project Description:';
+                $content_lines[] = $project_description;
+            } else {
+                $content_lines[] = 'Message:';
+                $content_lines[] = $message;
+            }
+
+            $post_id = wp_insert_post([
+                'post_type' => 'contact_submission',
+                'post_status' => 'private',
+                'post_title' => $submission_title,
+                'post_content' => implode("\n", $content_lines),
+            ], true);
+
+            if (is_wp_error($post_id)) {
+                return new WP_Error('save_failed', 'Unable to save contact submission.', ['status' => 500]);
+            }
+
+            update_post_meta($post_id, 'enquiry_type', $enquiry_type);
+            update_post_meta($post_id, 'full_name', $display_name);
+            update_post_meta($post_id, 'email', $email);
+            update_post_meta($post_id, 'phone', $phone);
+            update_post_meta($post_id, 'services', $services);
+            update_post_meta($post_id, 'budget', $budget);
+            update_post_meta($post_id, 'project_description', $project_description);
+            update_post_meta($post_id, 'message', $message);
+            $remote_ip = '';
+            if (isset($_SERVER['REMOTE_ADDR']) && is_string($_SERVER['REMOTE_ADDR'])) {
+                $remote_ip = $_SERVER['REMOTE_ADDR'];
+            }
+            $forwarded_for = (string) $request->get_header('x-forwarded-for');
+            update_post_meta($post_id, 'ip_address', sanitize_text_field($forwarded_for !== '' ? $forwarded_for : $remote_ip));
+            update_post_meta($post_id, 'user_agent', sanitize_text_field((string) ($request->get_header('user-agent') ?: '')));
+
+            $notify_to = (string) apply_filters('rivulet_contact_notify_email', get_option('admin_email'), $payload);
+            $notify_subject = sprintf('[Rivulet] %s from %s', ucfirst($enquiry_type), $display_name ?: $email);
+            $notify_sent = wp_mail($notify_to, $notify_subject, implode("\n", $content_lines));
+
+            $ack_subject = 'We received your message - Rivuletduo';
+            $ack_lines = [
+                'Hi ' . ($display_name ?: 'there') . ',',
+                '',
+                'Thanks for reaching out. We have received your enquiry and will get back to you within 24 hours.',
+                '',
+                'Regards,',
+                'Rivuletduo',
+            ];
+            $ack_sent = wp_mail($email, $ack_subject, implode("\n", $ack_lines));
+
+            return rest_ensure_response([
+                'success' => true,
+                'submissionId' => (int) $post_id,
+                'mailSent' => (bool) $notify_sent,
+                'clientMailSent' => (bool) $ack_sent,
             ]);
         },
         'permission_callback' => '__return_true',
