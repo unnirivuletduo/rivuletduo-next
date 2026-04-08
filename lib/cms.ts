@@ -99,7 +99,13 @@ type WpEntity = {
 };
 
 function getWordPressBaseUrl() {
-  return process.env.WORDPRESS_API_URL || process.env.NEXT_PUBLIC_WORDPRESS_API_URL || '';
+  return (
+    process.env.WORDPRESS_API_URL ||
+    process.env.NEXT_PUBLIC_WORDPRESS_API_URL ||
+    process.env.WORDPRESS_URL ||
+    process.env.NEXT_PUBLIC_WORDPRESS_URL ||
+    ''
+  );
 }
 
 function getWordPressRootApiUrl() {
@@ -421,6 +427,147 @@ export async function getHomeContentData(): Promise<HomeContent> {
         name: asString(item?.name, fallback.testimonials[idx]?.name || 'Client Name'),
         role: asString(item?.role, fallback.testimonials[idx]?.role || 'Client Role'),
       })),
+    };
+  } catch {
+    return fallback;
+  }
+}
+
+export type ContactFaq = {
+  q: string;
+  a: string;
+};
+
+export type ContactPageContent = {
+  hero: {
+    eyebrow: string;
+    headline: string;
+    subcopy: string;
+    email: string;
+    phone: string;
+    responseTime: string;
+  };
+  leftPanel: {
+    label: string;
+    headline: string;
+    desc: string;
+    availText: string;
+  };
+  faqs: ContactFaq[];
+  location: {
+    label: string;
+    headline: string;
+    desc: string;
+    studio: string;
+    hours: string;
+    mapLabel: string;
+    mapCoords: string;
+  };
+};
+
+function fallbackContactPageContent(): ContactPageContent {
+  return {
+    hero: {
+      eyebrow: 'Get in touch',
+      headline: "<span>Let's build</span><span>something</span><span><i>worth feeling.</i></span>",
+      subcopy: "Tell us about your project and we'll get back to you within 24 hours. No obligations, no hard sell - just an honest conversation.",
+      email: 'hello@rivuletduo.com',
+      phone: '+1 (555) 000-0000',
+      responseTime: 'Within 24 hours',
+    },
+    leftPanel: {
+      label: 'Why reach out',
+      headline: 'Every great site starts with a <i>conversation</i>',
+      desc: "We'd love to hear from you. Whether you have a fully-formed brief or just a rough idea, we're here to help you figure out the path forward - no jargon, no pressure.",
+      availText: 'Currently accepting new projects',
+    },
+    faqs: [
+      {
+        q: 'How long does a typical project take?',
+        a: "It depends on scope, but as a guide: a branding identity takes 2-3 weeks, a marketing site 4-8 weeks, and a full-stack web application 8-16 weeks. After our discovery call, we'll give you a detailed timeline before any work begins.",
+      },
+      {
+        q: "What's your minimum project size?",
+        a: "We typically work on projects starting from $2,000. Smaller one-off tasks like logo design or a single landing page can sometimes fall below this - just reach out and we'll let you know if it's a good fit.",
+      },
+      {
+        q: 'Do you work with clients internationally?',
+        a: 'Absolutely. Our clients span India, the US, UK, Australia, and the Middle East. We work asynchronously and schedule calls at mutually convenient times - remote collaboration is second nature to us.',
+      },
+      {
+        q: 'What does the payment structure look like?',
+        a: 'We work on a milestone-based payment structure: typically 40% upfront, 40% at design approval, and 20% on final delivery. For larger projects, we can arrange a monthly billing schedule.',
+      },
+      {
+        q: 'Will I own the code and designs after the project?',
+        a: 'Yes. Upon final payment, full intellectual property - including all source code, design files, and assets - transfers entirely to you. No licensing fees, no lock-in, no strings attached.',
+      },
+      {
+        q: 'Do you offer maintenance and support after launch?',
+        a: 'Every project includes a 30-day post-launch support window at no extra cost. After that, we offer flexible monthly retainer plans for ongoing updates, monitoring, and support.',
+      },
+    ],
+    location: {
+      label: 'Where we are',
+      headline: 'Based in <i>India,</i><br />building for the world',
+      desc: 'We work remotely with clients across the globe. Our studio is rooted in Kerala, India - but our work reaches San Francisco, London, Dubai, and beyond.',
+      studio: 'Kerala, India',
+      hours: 'Monday - Friday, 9am - 6pm IST',
+      mapLabel: 'Kerala · India',
+      mapCoords: '10.8505° N, 76.2711° E',
+    },
+  };
+}
+
+function asContactFaqs(value: unknown, fallback: ContactFaq[]) {
+  if (!Array.isArray(value)) return fallback;
+  const normalized = value
+    .map((item) => {
+      const q = asString((item as { q?: unknown })?.q);
+      const a = asString((item as { a?: unknown })?.a);
+      if (!q || !a) return null;
+      return { q, a };
+    })
+    .filter((item): item is ContactFaq => Boolean(item));
+  return normalized.length ? normalized : fallback;
+}
+
+export async function getContactPageData(): Promise<ContactPageContent> {
+  const fallback = fallbackContactPageContent();
+  const rootApi = getWordPressRootApiUrl();
+  if (!rootApi) return fallback;
+
+  try {
+    const response = await fetch(`${rootApi}/rivulet/v1/contact-page`, { cache: 'no-store' });
+    if (!response.ok) return fallback;
+    const data = (await response.json()) as Partial<ContactPageContent> | null;
+    if (!data) return fallback;
+
+    return {
+      hero: {
+        eyebrow: asString(data.hero?.eyebrow, fallback.hero.eyebrow),
+        headline: asString(data.hero?.headline, fallback.hero.headline),
+        subcopy: asString(data.hero?.subcopy, fallback.hero.subcopy),
+        email: asString(data.hero?.email, fallback.hero.email),
+        phone: asString(data.hero?.phone, fallback.hero.phone),
+        responseTime: asString(data.hero?.responseTime, fallback.hero.responseTime),
+      },
+      leftPanel: {
+        label: asString(data.leftPanel?.label, fallback.leftPanel.label),
+        headline: asString(data.leftPanel?.headline, fallback.leftPanel.headline),
+        desc: asString(data.leftPanel?.desc, fallback.leftPanel.desc),
+        availText: asString(data.leftPanel?.availText, fallback.leftPanel.availText),
+      },
+      faqs: asContactFaqs(data.faqs, fallback.faqs),
+      location: {
+        label: asString(data.location?.label, fallback.location.label),
+        headline: asString(data.location?.headline, fallback.location.headline),
+        desc: asString(data.location?.desc, fallback.location.desc),
+        studio: asString(data.location?.studio, fallback.location.studio),
+        hours: asString(data.location?.hours, fallback.location.hours),
+        mapLabel: asString(data.location?.mapLabel, fallback.location.mapLabel),
+        mapCoords: asString(data.location?.mapCoords, fallback.location.mapCoords),
+      },
     };
   } catch {
     return fallback;

@@ -18,7 +18,9 @@ export default function Navbar() {
 
   return (
     <nav id="main-nav">
-      <a href="#" className="nav-logo">Rivuletduo</a>
+      <a href="/" className="nav-logo" aria-label="Rivuletduo home">
+        <img src="/rivulet-logo.svg" alt="Rivuletduo" className="nav-brand-logo" />
+      </a>
       <ul className="nav-links">
         <li><a href="/services">Services</a></li>
         <li><a href="/work">Work</a></li>

@@ -251,7 +251,10 @@ p, li, a, span, button, input, textarea, select, label, small {
   letter-spacing: 0.26em;
   color: var(--lime-d);
   text-decoration: none;
+  display: inline-flex;
+  align-items: center;
 }
+.nav-brand-logo { display: block; width: auto; height: 30px; }
 .nav-links {
   display: flex;
   gap: 2.2rem;
@@ -1311,10 +1314,165 @@ footer {
 }
 .flogo { font-family: 'Fraunces', serif; font-weight: 100; font-size: 1.2rem; color: rgba(255,255,255,0.5); }
 .flogo b { font-style: italic; font-weight: 100; color: var(--lime-soft); }
+.logo, .flogo { display: inline-flex; align-items: center; text-decoration: none; }
+.brand-logo { display: block; width: auto; height: 36px; }
+.brand-logo-footer { display: block; width: auto; height: 30px; }
 .flinks { display: flex; gap: 1.8rem; list-style: none; }
 .flinks a { font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.35); text-decoration: none; transition: color 0.2s; }
 .flinks a:hover { color: var(--lime-soft); }
 .fcopy { font-family: 'Space Mono', monospace; font-size: 0.62rem; color: rgba(255,255,255,0.22); }
+
+/* ── FOOTER V2 ── */
+footer.site-footer,
+body #about-footer.site-footer,
+body #services-footer.site-footer,
+body #work-footer.site-footer,
+body #wd-footer.site-footer,
+body #sd-footer.site-footer,
+body #contact-footer.site-footer {
+  padding: 2.8rem 3.5rem;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+  gap: 2.2rem;
+  align-items: start;
+}
+
+footer.site-footer .footer-col,
+body #about-footer.site-footer .footer-col,
+body #services-footer.site-footer .footer-col,
+body #work-footer.site-footer .footer-col,
+body #wd-footer.site-footer .footer-col,
+body #sd-footer.site-footer .footer-col,
+body #contact-footer.site-footer .footer-col {
+  min-width: 0;
+}
+
+footer.site-footer .footer-brand,
+body #about-footer.site-footer .footer-brand,
+body #services-footer.site-footer .footer-brand,
+body #work-footer.site-footer .footer-brand,
+body #wd-footer.site-footer .footer-brand,
+body #sd-footer.site-footer .footer-brand,
+body #contact-footer.site-footer .footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+footer.site-footer .footer-caption,
+body #about-footer.site-footer .footer-caption,
+body #services-footer.site-footer .footer-caption,
+body #work-footer.site-footer .footer-caption,
+body #wd-footer.site-footer .footer-caption,
+body #sd-footer.site-footer .footer-caption,
+body #contact-footer.site-footer .footer-caption {
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 0.85rem;
+  line-height: 1.7;
+  max-width: 34ch;
+  margin: 0;
+}
+
+footer.site-footer .fhead,
+body #about-footer.site-footer .fhead,
+body #services-footer.site-footer .fhead,
+body #work-footer.site-footer .fhead,
+body #wd-footer.site-footer .fhead,
+body #sd-footer.site-footer .fhead,
+body #contact-footer.site-footer .fhead {
+  margin: 0 0 0.8rem;
+  font-size: 0.67rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.74);
+}
+
+footer.site-footer .flinks,
+body #about-footer.site-footer .flinks,
+body #services-footer.site-footer .flinks,
+body #work-footer.site-footer .flinks,
+body #wd-footer.site-footer .flinks,
+body #sd-footer.site-footer .flinks,
+body #contact-footer.site-footer .flinks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.56rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+footer.site-footer .flinks a,
+body #about-footer.site-footer .flinks a,
+body #services-footer.site-footer .flinks a,
+body #work-footer.site-footer .flinks a,
+body #wd-footer.site-footer .flinks a,
+body #sd-footer.site-footer .flinks a,
+body #contact-footer.site-footer .flinks a {
+  font-size: 0.86rem;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: rgba(255, 255, 255, 0.54);
+  text-decoration: none;
+}
+
+footer.site-footer .flinks a:hover,
+body #about-footer.site-footer .flinks a:hover,
+body #services-footer.site-footer .flinks a:hover,
+body #work-footer.site-footer .flinks a:hover,
+body #wd-footer.site-footer .flinks a:hover,
+body #sd-footer.site-footer .flinks a:hover,
+body #contact-footer.site-footer .flinks a:hover {
+  color: var(--lime-soft);
+}
+
+footer.site-footer .fmeta,
+body #about-footer.site-footer .fmeta,
+body #services-footer.site-footer .fmeta,
+body #work-footer.site-footer .fmeta,
+body #wd-footer.site-footer .fmeta,
+body #sd-footer.site-footer .fmeta,
+body #contact-footer.site-footer .fmeta {
+  color: rgba(255, 255, 255, 0.54);
+  font-size: 0.86rem;
+}
+
+footer.site-footer .f-socials,
+body #about-footer.site-footer .f-socials,
+body #services-footer.site-footer .f-socials,
+body #work-footer.site-footer .f-socials,
+body #wd-footer.site-footer .f-socials,
+body #sd-footer.site-footer .f-socials,
+body #contact-footer.site-footer .f-socials {
+  display: flex;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+  margin-top: 0.8rem;
+}
+
+footer.site-footer .f-socials a,
+body #about-footer.site-footer .f-socials a,
+body #services-footer.site-footer .f-socials a,
+body #work-footer.site-footer .f-socials a,
+body #wd-footer.site-footer .f-socials a,
+body #sd-footer.site-footer .f-socials a,
+body #contact-footer.site-footer .f-socials a {
+  color: rgba(255, 255, 255, 0.46);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+footer.site-footer .f-socials a:hover,
+body #about-footer.site-footer .f-socials a:hover,
+body #services-footer.site-footer .f-socials a:hover,
+body #work-footer.site-footer .f-socials a:hover,
+body #wd-footer.site-footer .f-socials a:hover,
+body #sd-footer.site-footer .f-socials a:hover,
+body #contact-footer.site-footer .f-socials a:hover {
+  color: var(--lime-soft);
+}
 
 /* ── REVEAL ── */
 .rv { opacity: 0; transform: translateY(26px); transition: opacity 0.7s ease, transform 0.7s ease; }
@@ -1385,4 +1543,18 @@ footer {
     max-height: 72vh;
   }
   .font-popup-list { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 960px) {
+  footer.site-footer,
+  body #about-footer.site-footer,
+  body #services-footer.site-footer,
+  body #work-footer.site-footer,
+  body #wd-footer.site-footer,
+  body #sd-footer.site-footer,
+  body #contact-footer.site-footer {
+    padding: 2rem 1.5rem;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
 }

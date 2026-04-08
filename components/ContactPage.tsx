@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import Cursor from '@/components/Cursor';
+import type { ContactPageContent } from '@/lib/cms';
 
 type Faq = { q: string; a: string };
 
-const faqs: Faq[] = [
+const fallbackFaqs: Faq[] = [
   {
     q: 'How long does a typical project take?',
     a: "It depends on scope, but as a guide: a branding identity takes 2–3 weeks, a marketing site 4–8 weeks, and a full-stack web application 8–16 weeks. After our discovery call, we'll give you a detailed timeline before any work begins.",
@@ -32,7 +33,11 @@ const faqs: Faq[] = [
   },
 ];
 
-export default function ContactPage() {
+type ContactPageProps = {
+  content: ContactPageContent;
+};
+
+export default function ContactPage({ content }: ContactPageProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [tab, setTab] = useState<'project' | 'general'>('project');
   const [step, setStep] = useState(1);
@@ -53,6 +58,7 @@ export default function ContactPage() {
   const [projectError, setProjectError] = useState('');
   const [generalError, setGeneralError] = useState('');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const pageFaqs = content.faqs.length ? content.faqs : fallbackFaqs;
 
   useEffect(() => {
     document.body.classList.toggle('menu-open', menuOpen);
@@ -364,7 +370,9 @@ export default function ContactPage() {
       <div className="page-progress"><div className="pp-fill" id="ppFill" /></div>
 
       <nav id="contact-nav">
-        <a href="/" className="logo">rivulet<b>duo</b></a>
+        <a href="/" className="logo" aria-label="Rivuletduo home">
+          <img src="/rivulet-logo.svg" alt="Rivuletduo" className="brand-logo" />
+        </a>
         <ul className="nav-links">
           <li><a href="/services">Services</a></li>
           <li><a href="/work">Work</a></li>
@@ -398,27 +406,27 @@ export default function ContactPage() {
         <div className="hero-vig-bot" />
         <div className="hero-inner">
           <div className="hero-left">
-            <div className="h-eyebrow">Get in touch</div>
-            <h1><span>Let&apos;s build</span><span>something</span><span><i>worth feeling.</i></span></h1>
-            <p className="hero-sub">Tell us about your project and we&apos;ll get back to you within 24 hours. No obligations, no hard sell — just an honest conversation.</p>
+            <div className="h-eyebrow">{content.hero.eyebrow}</div>
+            <h1 dangerouslySetInnerHTML={{ __html: content.hero.headline }} />
+            <h2 className="hero-sub">{content.hero.subcopy}</h2>
           </div>
           <div className="hero-right">
-            <a href="mailto:hello@rivuletduo.com" className="hero-detail"><div className="hd-icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" /><polyline points="2,4 12,13 22,4" /></svg></div><div className="hd-text"><span className="hd-label">Email us</span><span className="hd-value">hello@rivuletduo.com</span></div></a>
-            <a href="tel:+15550000000" className="hero-detail"><div className="hd-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" /></svg></div><div className="hd-text"><span className="hd-label">Call us</span><span className="hd-value">+1 (555) 000-0000</span></div></a>
-            <div className="hero-detail"><div className="hd-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><polyline points="12,6 12,12 16,14" /></svg></div><div className="hd-text"><span className="hd-label">Response time</span><span className="hd-value">Within 24 hours</span></div></div>
+            <a href={`mailto:${content.hero.email}`} className="hero-detail"><div className="hd-icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" /><polyline points="2,4 12,13 22,4" /></svg></div><div className="hd-text"><span className="hd-label">Email us</span><span className="hd-value">{content.hero.email}</span></div></a>
+            <a href={`tel:${content.hero.phone.replace(/[^+\d]/g, '')}`} className="hero-detail"><div className="hd-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" /></svg></div><div className="hd-text"><span className="hd-label">Call us</span><span className="hd-value">{content.hero.phone}</span></div></a>
+            <div className="hero-detail"><div className="hd-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><polyline points="12,6 12,12 16,14" /></svg></div><div className="hd-text"><span className="hd-label">Response time</span><span className="hd-value">{content.hero.responseTime}</span></div></div>
           </div>
         </div>
       </section>
 
       <div className="contact-main">
         <div className="left-panel rv">
-          <div className="panel-label">Why reach out</div>
-          <h2>Every great site starts with a <i>conversation</i></h2>
-          <p>We&apos;d love to hear from you. Whether you have a fully-formed brief or just a rough idea, we&apos;re here to help you figure out the path forward — no jargon, no pressure.</p>
-          <div className="avail-badge"><div className="avail-dot" /><span className="avail-text">Currently accepting new projects</span></div>
+          <div className="panel-label">{content.leftPanel.label}</div>
+          <h2 dangerouslySetInnerHTML={{ __html: content.leftPanel.headline }} />
+          <p>{content.leftPanel.desc}</p>
+          <div className="avail-badge"><div className="avail-dot" /><span className="avail-text">{content.leftPanel.availText}</span></div>
           <div className="contact-methods">
-            <a href="mailto:hello@rivuletduo.com" className="cm-item"><div className="cm-ico"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" /><polyline points="2,4 12,13 22,4" /></svg></div><div className="cm-body"><div className="cm-label">Email</div><div className="cm-value">hello@rivuletduo.com</div></div><div className="cm-arrow"><svg viewBox="0 0 12 12"><path d="M1 11L11 1M1 1h10v10" /></svg></div></a>
-            <a href="tel:+15550000000" className="cm-item"><div className="cm-ico"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" /></svg></div><div className="cm-body"><div className="cm-label">Phone</div><div className="cm-value">+1 (555) 000-0000</div></div><div className="cm-arrow"><svg viewBox="0 0 12 12"><path d="M1 11L11 1M1 1h10v10" /></svg></div></a>
+            <a href={`mailto:${content.hero.email}`} className="cm-item"><div className="cm-ico"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" /><polyline points="2,4 12,13 22,4" /></svg></div><div className="cm-body"><div className="cm-label">Email</div><div className="cm-value">{content.hero.email}</div></div><div className="cm-arrow"><svg viewBox="0 0 12 12"><path d="M1 11L11 1M1 1h10v10" /></svg></div></a>
+            <a href={`tel:${content.hero.phone.replace(/[^+\d]/g, '')}`} className="cm-item"><div className="cm-ico"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" /></svg></div><div className="cm-body"><div className="cm-label">Phone</div><div className="cm-value">{content.hero.phone}</div></div><div className="cm-arrow"><svg viewBox="0 0 12 12"><path d="M1 11L11 1M1 1h10v10" /></svg></div></a>
           </div>
         </div>
 
@@ -514,7 +522,7 @@ export default function ContactPage() {
         <div className="faq-inner">
           <div className="faq-head rv"><div className="faq-label">Common questions</div><h2>Things people <i>often ask</i></h2></div>
           <div className="faq-list rv rv1">
-            {faqs.map((f, i) => (
+            {pageFaqs.map((f, i) => (
               <div className={`faq-item ${openFaq === i ? 'open' : ''}`} key={f.q}>
                 <div className="faq-q" onClick={() => setOpenFaq(openFaq === i ? null : i)}>
                   <span className="faq-q-text">{f.q}</span>
@@ -529,28 +537,62 @@ export default function ContactPage() {
 
       <div className="location-band">
         <div className="rv">
-          <div className="loc-label">Where we are</div>
-          <h2>Based in <i>India,</i><br />building for the world</h2>
-          <p>We work remotely with clients across the globe. Our studio is rooted in Kerala, India — but our work reaches San Francisco, London, Dubai, and beyond.</p>
+          <div className="loc-label">{content.location.label}</div>
+          <h2 dangerouslySetInnerHTML={{ __html: content.location.headline }} />
+          <p>{content.location.desc}</p>
           <div className="loc-details">
-            <div className="loc-row"><div className="loc-ico"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" /></svg></div><div className="loc-text"><span>Studio</span>Kerala, India</div></div>
-            <div className="loc-row"><div className="loc-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><polyline points="12,6 12,12 16,14" /></svg></div><div className="loc-text"><span>Working hours</span>Monday – Friday, 9am – 6pm IST</div></div>
-            <div className="loc-row"><div className="loc-ico"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" /><polyline points="2,4 12,13 22,4" /></svg></div><div className="loc-text"><span>Email</span>hello@rivuletduo.com</div></div>
+            <div className="loc-row"><div className="loc-ico"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" /></svg></div><div className="loc-text"><span>Studio</span>{content.location.studio}</div></div>
+            <div className="loc-row"><div className="loc-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><polyline points="12,6 12,12 16,14" /></svg></div><div className="loc-text"><span>Working hours</span>{content.location.hours}</div></div>
+            <div className="loc-row"><div className="loc-ico"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" /><polyline points="2,4 12,13 22,4" /></svg></div><div className="loc-text"><span>Email</span>{content.hero.email}</div></div>
           </div>
         </div>
         <div className="map-visual rv rv2">
           <canvas id="map-canvas" />
           <div className="map-overlay" />
           <div className="map-pin"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" /></svg></div>
-          <div className="map-label">Kerala · India</div>
-          <div className="map-coords">10.8505° N, 76.2711° E</div>
+          <div className="map-label">{content.location.mapLabel}</div>
+          <div className="map-coords">{content.location.mapCoords}</div>
         </div>
       </div>
 
-      <footer id="contact-footer">
-        <div className="flogo">rivulet<b>duo</b></div>
-        <ul className="flinks"><li><a href="/services">Services</a></li><li><a href="/work">Work</a></li><li><a href="/about">About</a></li><li><a href="/contact">Contact</a></li></ul>
-        <div className="fcopy">© 2026 Rivuletduo. All rights reserved.</div>
+      <footer id="contact-footer" className="site-footer">
+        <div className="footer-col footer-brand">
+          <a href="/" className="flogo" aria-label="Rivuletduo home">
+            <img src="/rivulet-logo.svg" alt="Rivuletduo" className="brand-logo-footer" />
+          </a>
+          <p className="footer-caption">Designing and building memorable digital experiences with precision and care.</p>
+          <div className="fcopy">© 2026 Rivuletduo. All rights reserved.</div>
+        </div>
+        <div className="footer-col">
+          <div className="fhead">Menu</div>
+          <ul className="flinks">
+            <li><a href="/about">About</a></li>
+            <li><a href="/work">Work</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </div>
+        <div className="footer-col">
+          <div className="fhead">Services</div>
+          <ul className="flinks">
+            <li><a href="/services">Web Design</a></li>
+            <li><a href="/services">UI/UX Design</a></li>
+            <li><a href="/services">Web Development</a></li>
+            <li><a href="/services">SEO</a></li>
+          </ul>
+        </div>
+        <div className="footer-col">
+          <div className="fhead">Contact</div>
+          <ul className="flinks">
+            <li><a href="mailto:hello@rivuletduo.com">hello@rivuletduo.com</a></li>
+            <li><a href="tel:+15550000000">+1 (555) 000-0000</a></li>
+            <li><span className="fmeta">Kerala, India</span></li>
+          </ul>
+          <div className="f-socials">
+            <a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a>
+            <a href="https://linkedin.com" target="_blank" rel="noreferrer">LinkedIn</a>
+            <a href="https://behance.net" target="_blank" rel="noreferrer">Behance</a>
+          </div>
+        </div>
       </footer>
     </>
   );
