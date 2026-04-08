@@ -1,0 +1,114 @@
+.pj-modal-backdrop {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.pj-modal-container {
+  background: #ffffff;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.05);
+  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 2.5rem;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px) scale(0.98); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+.pj-modal-close {
+  position: absolute;
+  top: 1.5rem; right: 1.5rem;
+  background: #f1f5f9;
+  border: none;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+  color: #64748b;
+  transition: all 0.2s ease;
+}
+.pj-modal-close:hover { background: #e2e8f0; color: #0f172a; }
+
+.pj-modal-head h2 { font-size: 2rem; font-weight: 500; letter-spacing: -0.03em; margin: 0 0 0.5rem; color: #020617; }
+.pj-modal-head p { font-size: 1.05rem; color: #475569; margin: 0; }
+
+.pj-form-card { margin-top: 2rem; }
+
+.pj-step-indicator { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2.5rem; }
+.pj-si-step { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; font-weight: 500; color: #94a3b8; transition: all 0.3s ease; }
+.pj-si-step.active { color: #0f172a; }
+.pj-si-step.done { color: #16a34a; }
+.pj-si-num { width: 20px; height: 20px; border-radius: 50%; background: #f1f5f9; color: #64748b; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600; }
+.pj-si-step.active .pj-si-num { background: #0f172a; color: #fff; }
+.pj-si-step.done .pj-si-num { background: #16a34a; color: #fff; }
+.pj-si-line { flex: 1; height: 1px; background: #e2e8f0; margin: 0 1rem; }
+
+.pj-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.pj-field { margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 0.4rem; }
+.pj-field label { font-size: 0.85rem; font-weight: 500; color: #0f172a; }
+.req { color: #b91c1c; }
+.pj-field input, .pj-field textarea { width: 100%; padding: 0.85rem 1rem; border-radius: 10px; border: 1px solid #e2e8f0; background: #f8fafc; font-size: 0.95rem; color: #0f172a; box-sizing: border-box; transition: all 0.2s ease; outline: none; }
+.pj-field input:focus, .pj-field textarea:focus { background: #fff; border-color: #22c55e; box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1); }
+.pj-field textarea { height: 140px; resize: vertical; }
+
+.pj-char-counter { font-size: 0.75rem; color: #94a3b8; text-align: right; margin-top: -0.2rem; }
+
+.pj-form-nav { display: flex; align-items: center; justify-content: space-between; padding-top: 1.5rem; border-top: 1px solid #e2e8f0; margin-top: 1rem; }
+.pj-step-count { font-size: 0.85rem; color: #64748b; }
+.pj-step-count b { color: #0f172a; font-weight: 600; }
+.pj-btn-next, .pj-btn-prev { background: transparent; border: none; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.2s ease; }
+.pj-btn-next { color: #16a34a; }
+.pj-btn-next:hover { color: #15803d; }
+.pj-btn-prev { color: #64748b; }
+.pj-btn-prev:hover { color: #0f172a; }
+
+.pj-svc-checks { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
+.pj-svc-check { padding: 0.65rem 1rem; border-radius: 40px; border: 1px solid #e2e8f0; font-size: 0.85rem; color: #475569; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 0.5rem; user-select: none; }
+.pj-svc-check:hover { background: #f8fafc; border-color: #cbd5e1; color: #0f172a; }
+.pj-svc-check.checked { background: #f0fdf4; border-color: #22c55e; color: #15803d; font-weight: 500; }
+.pj-svc-check-box { width: 14px; height: 14px; border-radius: 4px; border: 1px solid #cbd5e1; display: flex; align-items: center; justify-content: center; }
+.pj-svc-check.checked .pj-svc-check-box { background: #22c55e; border-color: #22c55e; }
+
+.pj-budget-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 2rem; }
+.pj-budget-opt { padding: 0.75rem; text-align: center; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 0.85rem; color: #475569; cursor: pointer; transition: all 0.2s ease; }
+.pj-budget-opt:hover { background: #f8fafc; color: #0f172a; }
+.pj-budget-opt.sel { background: #0f172a; border-color: #0f172a; color: #fff; font-weight: 500; }
+
+.pj-btn-submit-main { display: inline-flex; align-items: center; justify-content: center; width: 100%; padding: 1rem; background: #22c55e; color: #fff; font-size: 1rem; font-weight: 500; border: none; border-radius: 10px; cursor: pointer; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+.pj-btn-submit-main:hover:not(:disabled) { background: #16a34a; transform: translateY(-2px); box-shadow: 0 10px 20px -5px rgba(22, 163, 74, 0.4); }
+.pj-btn-submit-main:disabled { opacity: 0.7; cursor: not-allowed; }
+
+.pj-error { color: #b91c1c; font-size: 0.85rem; margin-top: 0.5rem; }
+
+.pj-form-success { text-align: center; padding: 2rem 0; animation: fadeIn 0.4s ease; }
+.pj-success-icon { width: 64px; height: 64px; border-radius: 50%; background: #f0fdf4; color: #22c55e; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; }
+.pj-success-icon svg { width: 32px; height: 32px; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+.pj-form-success h3 { font-size: 1.5rem; font-weight: 500; margin: 0 0 0.5rem; color: #020617; letter-spacing: -0.02em; }
+.pj-form-success p { color: #475569; font-size: 1rem; line-height: 1.6; max-width: 400px; margin: 0 auto; }
+
+@media (max-width: 600px) {
+  .pj-form-row { grid-template-columns: 1fr; gap: 0; }
+  .pj-budget-grid { grid-template-columns: repeat(2, 1fr); }
+  .pj-modal-container { padding: 2rem 1.5rem; }
+}

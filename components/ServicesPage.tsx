@@ -363,7 +363,7 @@ export default function ServicesPage({ categories: cmsCategories }: ServicesPage
           <li><a href="/about">About</a></li>
           <li><a href="/contact">Contact</a></li>
         </ul>
-        <a className="nav-btn" href="/contact">Start a Project</a>
+        <a className="nav-btn" href="#project" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event("open-project-modal")); }}>Start a Project</a>
         <button className={`nav-toggle ${menuOpen ? 'open' : ''}`} aria-label="Toggle menu" aria-expanded={menuOpen} aria-controls="services-mobile-menu" onClick={() => setMenuOpen((v) => !v)}>
           <span />
           <span />
@@ -374,7 +374,7 @@ export default function ServicesPage({ categories: cmsCategories }: ServicesPage
           <a href="/work" onClick={() => setMenuOpen(false)}>Work</a>
           <a href="/about" onClick={() => setMenuOpen(false)}>About</a>
           <a href="/contact" onClick={() => setMenuOpen(false)}>Contact</a>
-          <a href="/contact" onClick={() => setMenuOpen(false)}>Start a Project</a>
+          <a href="#project" onClick={(e) => { e.preventDefault(); setMenuOpen(false); window.dispatchEvent(new Event("open-project-modal")); }}>Start a Project</a>
         </div>
       </nav>
 
@@ -442,7 +442,7 @@ export default function ServicesPage({ categories: cmsCategories }: ServicesPage
           <p className="fb-eyebrow">Why Rivuletduo</p>
           <h2 className="fb-heading">Two minds.<br />One <i>obsession</i>.</h2>
           <p className="fb-body">We&apos;re not an agency — we&apos;re a two-person studio. Every project gets the full, undivided attention of both founders. No junior hand-offs, no cookie-cutter solutions. Just focused, expert craft from start to finish.</p>
-          <a href="/contact" className="fb-cta">Start a conversation <svg viewBox="0 0 12 12"><path d="M1 11L11 1M1 1h10v10" /></svg></a>
+          <a href="#project" className="fb-cta" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event("open-project-modal")); }}>Start a conversation <svg viewBox="0 0 12 12"><path d="M1 11L11 1M1 1h10v10" /></svg></a>
         </div>
         <div className="fb-list">
           <div className="fb-item"><div className="fb-dot" /><div><div className="fb-item-title">Direct founder access</div><div className="fb-item-desc">You speak to the people actually building your product — every time.</div></div></div>
@@ -468,7 +468,7 @@ export default function ServicesPage({ categories: cmsCategories }: ServicesPage
       <div className="cta-band">
         <h2>Ready to build something<br /><i>worth remembering?</i></h2>
         <div className="cta-btns">
-          <a href="/contact" className="btn-g">Start a Project</a>
+          <a href="#project" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event("open-project-modal")); }} className="btn-g">Start a Project</a>
           <a href="/work" className="btn-ghost">View Our Work</a>
         </div>
       </div>

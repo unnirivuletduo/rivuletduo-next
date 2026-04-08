@@ -329,7 +329,7 @@ export default function WorkDetailPage({ slug, projects: cmsProjects }: WorkDeta
           <li><a href="/about">About</a></li>
           <li><a href="/contact">Contact</a></li>
         </ul>
-        <a href="/contact" className="nav-btn">Start a Project</a>
+        <a href="#project" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event("open-project-modal")); }} className="nav-btn">Start a Project</a>
         <button className={`nav-toggle ${menuOpen ? 'open' : ''}`} aria-label="Toggle menu" aria-expanded={menuOpen} aria-controls="work-detail-mobile-menu" onClick={() => setMenuOpen((v) => !v)}>
           <span />
           <span />
@@ -340,7 +340,7 @@ export default function WorkDetailPage({ slug, projects: cmsProjects }: WorkDeta
           <a href="/work" onClick={() => setMenuOpen(false)}>Work</a>
           <a href="/about" onClick={() => setMenuOpen(false)}>About</a>
           <a href="/contact" onClick={() => setMenuOpen(false)}>Contact</a>
-          <a href="/contact" onClick={() => setMenuOpen(false)}>Start a Project</a>
+          <a href="#project" onClick={(e) => { e.preventDefault(); setMenuOpen(false); window.dispatchEvent(new Event("open-project-modal")); }}>Start a Project</a>
         </div>
       </nav>
 

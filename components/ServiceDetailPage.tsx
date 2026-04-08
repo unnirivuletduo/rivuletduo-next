@@ -204,7 +204,7 @@ export default function ServiceDetailPage({ slug, services: cmsServices }: Servi
           <li><a href="/about">About</a></li>
           <li><a href="/contact">Contact</a></li>
         </ul>
-        <a href="/contact" className="nav-btn">Start a Project</a>
+        <a href="#project" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event("open-project-modal")); }} className="nav-btn">Start a Project</a>
         <button className={`nav-toggle ${menuOpen ? 'open' : ''}`} aria-label="Toggle menu" aria-expanded={menuOpen} aria-controls="service-detail-mobile-menu" onClick={() => setMenuOpen((v) => !v)}>
           <span />
           <span />
@@ -215,7 +215,7 @@ export default function ServiceDetailPage({ slug, services: cmsServices }: Servi
           <a href="/work" onClick={() => setMenuOpen(false)}>Work</a>
           <a href="/about" onClick={() => setMenuOpen(false)}>About</a>
           <a href="/contact" onClick={() => setMenuOpen(false)}>Contact</a>
-          <a href="/contact" onClick={() => setMenuOpen(false)}>Start a Project</a>
+          <a href="#project" onClick={(e) => { e.preventDefault(); setMenuOpen(false); window.dispatchEvent(new Event("open-project-modal")); }}>Start a Project</a>
         </div>
       </nav>
 
@@ -243,7 +243,7 @@ export default function ServiceDetailPage({ slug, services: cmsServices }: Servi
               <div className="hero-divider" />
               <div className="hero-meta-item"><span className="hero-meta-num">6yr</span><span className="hero-meta-label">Studio Experience</span></div>
             </div>
-            <div className="hero-btns"><a href="/contact" className="btn-g">Start this project</a><a href="/services" className="btn-ghost">All services</a></div>
+            <div className="hero-btns"><a href="#project" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event("open-project-modal")); }} className="btn-g">Start this project</a><a href="/services" className="btn-ghost">All services</a></div>
           </div>
 
           <div className="hero-visual">
@@ -325,7 +325,7 @@ export default function ServiceDetailPage({ slug, services: cmsServices }: Servi
 
       <div className="page-cta">
         <h2>Ready to build your<br />next <i>website?</i></h2>
-        <div className="cta-btns"><a href="/contact" className="btn-g">Start this project</a><a href="/services" className="btn-ghost">All services</a></div>
+        <div className="cta-btns"><a href="#project" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event("open-project-modal")); }} className="btn-g">Start this project</a><a href="/services" className="btn-ghost">All services</a></div>
       </div>
 
       <footer id="sd-footer">

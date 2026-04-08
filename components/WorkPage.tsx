@@ -384,7 +384,7 @@ export default function WorkPage({ works: cmsWorks }: WorkPageProps = {}) {
           <li><a href="/about">About</a></li>
           <li><a href="/contact">Contact</a></li>
         </ul>
-        <a className="nav-btn" href="/contact">Start a Project</a>
+        <a className="nav-btn" href="#project" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event("open-project-modal")); }}>Start a Project</a>
         <button className={`nav-toggle ${menuOpen ? 'open' : ''}`} aria-label="Toggle menu" aria-expanded={menuOpen} aria-controls="work-mobile-menu" onClick={() => setMenuOpen((v) => !v)}>
           <span />
           <span />
@@ -395,7 +395,7 @@ export default function WorkPage({ works: cmsWorks }: WorkPageProps = {}) {
           <a href="/work" onClick={() => setMenuOpen(false)}>Work</a>
           <a href="/about" onClick={() => setMenuOpen(false)}>About</a>
           <a href="/contact" onClick={() => setMenuOpen(false)}>Contact</a>
-          <a href="/contact" onClick={() => setMenuOpen(false)}>Start a Project</a>
+          <a href="#project" onClick={(e) => { e.preventDefault(); setMenuOpen(false); window.dispatchEvent(new Event("open-project-modal")); }}>Start a Project</a>
         </div>
       </nav>
 
@@ -455,7 +455,7 @@ export default function WorkPage({ works: cmsWorks }: WorkPageProps = {}) {
         <div className="wc-label rv">Start Something New</div>
         <h2 className="wc-h2 rv rv1">Your project<br />could be <em>next</em></h2>
         <p className="wc-sub rv rv2">We take on a small number of projects at a time. When you work with Rivuletduo, you get our full attention.</p>
-        <div className="wc-btns rv rv3"><a className="btn-g" href="/contact">Start a Project</a><a className="btn-ghost" href="/services">View Services</a></div>
+        <div className="wc-btns rv rv3"><a className="btn-g" href="#project" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event("open-project-modal")); }}>Start a Project</a><a className="btn-ghost" href="/services">View Services</a></div>
       </section>
 
       <footer id="work-footer">

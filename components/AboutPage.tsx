@@ -539,7 +539,7 @@ export default function AboutPage({ content }: { content: AboutContent }) {
           <li><a href="/about" className="active">About</a></li>
           <li><a href="/contact">Contact</a></li>
         </ul>
-        <a className="nav-btn" href="/contact">Start a Project</a>
+        <a className="nav-btn" href="#project" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event("open-project-modal")); }}>Start a Project</a>
         <button className={`nav-toggle ${menuOpen ? 'open' : ''}`} aria-label="Toggle menu" aria-expanded={menuOpen} aria-controls="about-mobile-menu" onClick={() => setMenuOpen((v) => !v)}>
           <span />
           <span />
@@ -550,7 +550,7 @@ export default function AboutPage({ content }: { content: AboutContent }) {
           <a href="/work" onClick={() => setMenuOpen(false)}>Work</a>
           <a href="/about" onClick={() => setMenuOpen(false)}>About</a>
           <a href="/contact" onClick={() => setMenuOpen(false)}>Contact</a>
-          <a href="/contact" onClick={() => setMenuOpen(false)}>Start a Project</a>
+          <a href="#project" onClick={(e) => { e.preventDefault(); setMenuOpen(false); window.dispatchEvent(new Event("open-project-modal")); }}>Start a Project</a>
         </div>
       </nav>
 
@@ -724,7 +724,7 @@ export default function AboutPage({ content }: { content: AboutContent }) {
           <h2 className="rv rv1">Ready to <i>build</i><br />something real?</h2>
           <p className="rv rv2">Tell us about your project. We take on a small number of clients at a time — so when you work with Rivuletduo, you get our full attention.</p>
           <div className="cta-btns rv rv3">
-            <a className="btn-g" href="/contact">Start a Project</a>
+            <a className="btn-g" href="#project" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event("open-project-modal")); }}>Start a Project</a>
             <a className="btn-ghost" href="/work">See Our Work</a>
           </div>
         </div>
