@@ -65,6 +65,20 @@ add_action('init', function () {
         'has_archive' => false,
         'rewrite' => false,
     ]);
+
+    register_post_type('rivulet_about', [
+        'labels' => [
+            'name' => 'About Content',
+            'singular_name' => 'About Content',
+        ],
+        'public' => false,
+        'show_ui' => true,
+        'show_in_rest' => true,
+        'menu_icon' => 'dashicons-id',
+        'supports' => ['title', 'custom-fields'],
+        'has_archive' => false,
+        'rewrite' => false,
+    ]);
 });
 
 add_action('rest_api_init', function () {
@@ -259,6 +273,117 @@ add_action('rest_api_init', function () {
         },
         'permission_callback' => '__return_true',
     ]);
+
+    register_rest_route('rivulet/v1', '/about', [
+        'methods' => 'GET',
+        'callback' => function () {
+            $post = get_posts([
+                'post_type' => 'rivulet_about',
+                'post_status' => 'publish',
+                'posts_per_page' => 1,
+            ]);
+
+            if (empty($post)) {
+                return rest_ensure_response([
+                    'hero' => [],
+                    'tickerItems' => [],
+                    'story' => [],
+                    'values' => [],
+                    'team' => [],
+                    'timeline' => [],
+                    'philosophy' => [],
+                    'stack' => [],
+                ]);
+            }
+
+            $id = $post[0]->ID;
+
+            $hero = [
+                'headline' => (string) get_field('about_hero_headline', $id),
+                'subheadline' => (string) get_field('about_hero_subheadline', $id),
+            ];
+            $stats = [];
+            for ($i = 1; $i <= 3; $i++) {
+                $num = (string) get_field("about_hero_stat_{$i}_num", $id);
+                if ($num !== '') {
+                    $stats[] = ['n' => $num, 'l' => (string) get_field("about_hero_stat_{$i}_label", $id)];
+                }
+            }
+            $hero['stats'] = $stats;
+
+            $tickerItems = array_values(array_filter(array_map('trim', preg_split('/\r\n|\r|\n|,/', (string) get_field('about_ticker_items', $id)))));
+
+            $story = [
+                'paragraphs' => array_values(array_filter(array_map('trim', preg_split('/\r\n|\r|\n/', (string) get_field('about_story_paragraphs', $id))))),
+                'badgeYear' => (string) get_field('about_story_badge_year', $id),
+                'badgeLabel' => (string) get_field('about_story_badge_label', $id),
+            ];
+
+            $values = [];
+            for ($i = 1; $i <= 6; $i++) {
+                $title = (string) get_field("about_value_{$i}_title", $id);
+                if ($title !== '') {
+                    $values[] = [
+                        'title' => $title,
+                        'desc' => (string) get_field("about_value_{$i}_desc", $id),
+                    ];
+                }
+            }
+
+            $team = [];
+            for ($i = 1; $i <= 2; $i++) {
+                $name = (string) get_field("about_team_{$i}_name", $id);
+                if ($name !== '') {
+                    $team[] = [
+                        'role' => (string) get_field("about_team_{$i}_role", $id),
+                        'name' => $name,
+                        'bio' => (string) get_field("about_team_{$i}_bio", $id),
+                        'skills' => array_values(array_filter(array_map('trim', preg_split('/\r\n|\r|\n|,/', (string) get_field("about_team_{$i}_skills", $id))))),
+                    ];
+                }
+            }
+
+            $timeline = [];
+            for ($i = 1; $i <= 6; $i++) {
+                $year = (string) get_field("about_timeline_{$i}_year", $id);
+                if ($year !== '') {
+                    $timeline[] = [
+                        'year' => $year,
+                        'title' => (string) get_field("about_timeline_{$i}_title", $id),
+                        'desc' => (string) get_field("about_timeline_{$i}_desc", $id),
+                    ];
+                }
+            }
+
+            $philosophy = [
+                'quote' => (string) get_field('about_philosophy_quote', $id),
+                'attr' => (string) get_field('about_philosophy_attr', $id),
+            ];
+
+            $stack = [];
+            for ($i = 1; $i <= 4; $i++) {
+                $cat = (string) get_field("about_stack_{$i}_cat", $id);
+                if ($cat !== '') {
+                    $stack[] = [
+                        'cat' => $cat,
+                        'items' => array_values(array_filter(array_map('trim', preg_split('/\r\n|\r|\n|,/', (string) get_field("about_stack_{$i}_items", $id))))),
+                    ];
+                }
+            }
+
+            return rest_ensure_response([
+                'hero' => $hero,
+                'tickerItems' => $tickerItems,
+                'story' => $story,
+                'values' => $values,
+                'team' => $team,
+                'timeline' => $timeline,
+                'philosophy' => $philosophy,
+                'stack' => $stack,
+            ]);
+        },
+        'permission_callback' => '__return_true',
+    ]);
 });
 
 add_action('acf/init', function () {
@@ -342,5 +467,53 @@ add_action('acf/init', function () {
         'title' => 'Rivulet Home Content Fields',
         'fields' => $home_fields,
         'location' => [[['param' => 'post_type', 'operator' => '==', 'value' => 'rivulet_home']]],
+    ]);
+
+    $about_fields = [
+        ['key' => 'field_about_hero_headline', 'label' => 'Hero Headline', 'name' => 'about_hero_headline', 'type' => 'text'],
+        ['key' => 'field_about_hero_subheadline', 'label' => 'Hero Subheadline', 'name' => 'about_hero_subheadline', 'type' => 'textarea'],
+    ];
+
+    for ($i = 1; $i <= 3; $i++) {
+        $about_fields[] = ['key' => "field_about_hero_stat_{$i}_num", 'label' => "Hero Stat {$i} Number", 'name' => "about_hero_stat_{$i}_num", 'type' => 'text'];
+        $about_fields[] = ['key' => "field_about_hero_stat_{$i}_label", 'label' => "Hero Stat {$i} Label", 'name' => "about_hero_stat_{$i}_label", 'type' => 'text'];
+    }
+
+    $about_fields[] = ['key' => 'field_about_ticker_items', 'label' => 'Ticker Items (comma separated)', 'name' => 'about_ticker_items', 'type' => 'textarea'];
+    $about_fields[] = ['key' => 'field_about_story_paragraphs', 'label' => 'Story Paragraphs (separate by newline)', 'name' => 'about_story_paragraphs', 'type' => 'textarea'];
+    $about_fields[] = ['key' => 'field_about_story_badge_year', 'label' => 'Story Badge Year', 'name' => 'about_story_badge_year', 'type' => 'text'];
+    $about_fields[] = ['key' => 'field_about_story_badge_label', 'label' => 'Story Badge Label', 'name' => 'about_story_badge_label', 'type' => 'text'];
+
+    for ($i = 1; $i <= 6; $i++) {
+        $about_fields[] = ['key' => "field_about_value_{$i}_title", 'label' => "Value {$i} Title", 'name' => "about_value_{$i}_title", 'type' => 'text'];
+        $about_fields[] = ['key' => "field_about_value_{$i}_desc", 'label' => "Value {$i} Description", 'name' => "about_value_{$i}_desc", 'type' => 'textarea'];
+    }
+
+    for ($i = 1; $i <= 2; $i++) {
+        $about_fields[] = ['key' => "field_about_team_{$i}_role", 'label' => "Team Member {$i} Role", 'name' => "about_team_{$i}_role", 'type' => 'text'];
+        $about_fields[] = ['key' => "field_about_team_{$i}_name", 'label' => "Team Member {$i} Name", 'name' => "about_team_{$i}_name", 'type' => 'text'];
+        $about_fields[] = ['key' => "field_about_team_{$i}_bio", 'label' => "Team Member {$i} Bio", 'name' => "about_team_{$i}_bio", 'type' => 'textarea'];
+        $about_fields[] = ['key' => "field_about_team_{$i}_skills", 'label' => "Team Member {$i} Skills (comma separated)", 'name' => "about_team_{$i}_skills", 'type' => 'textarea'];
+    }
+
+    for ($i = 1; $i <= 6; $i++) {
+        $about_fields[] = ['key' => "field_about_timeline_{$i}_year", 'label' => "Timeline {$i} Year", 'name' => "about_timeline_{$i}_year", 'type' => 'text'];
+        $about_fields[] = ['key' => "field_about_timeline_{$i}_title", 'label' => "Timeline {$i} Title", 'name' => "about_timeline_{$i}_title", 'type' => 'text'];
+        $about_fields[] = ['key' => "field_about_timeline_{$i}_desc", 'label' => "Timeline {$i} Description", 'name' => "about_timeline_{$i}_desc", 'type' => 'textarea'];
+    }
+
+    $about_fields[] = ['key' => 'field_about_philosophy_quote', 'label' => 'Philosophy Quote', 'name' => 'about_philosophy_quote', 'type' => 'textarea'];
+    $about_fields[] = ['key' => 'field_about_philosophy_attr', 'label' => 'Philosophy Attribution', 'name' => 'about_philosophy_attr', 'type' => 'text'];
+
+    for ($i = 1; $i <= 4; $i++) {
+        $about_fields[] = ['key' => "field_about_stack_{$i}_cat", 'label' => "Stack Category {$i}", 'name' => "about_stack_{$i}_cat", 'type' => 'text'];
+        $about_fields[] = ['key' => "field_about_stack_{$i}_items", 'label' => "Stack Items {$i} (comma separated)", 'name' => "about_stack_{$i}_items", 'type' => 'textarea'];
+    }
+
+    acf_add_local_field_group([
+        'key' => 'group_rivulet_about_content',
+        'title' => 'Rivulet About Content Fields',
+        'fields' => $about_fields,
+        'location' => [[['param' => 'post_type', 'operator' => '==', 'value' => 'rivulet_about']]],
     ]);
 });

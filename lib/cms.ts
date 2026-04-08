@@ -426,3 +426,144 @@ export async function getHomeContentData(): Promise<HomeContent> {
     return fallback;
   }
 }
+
+export type AboutHero = {
+  headline: string;
+  subheadline: string;
+  stats: { n: string; l: string }[];
+};
+
+export type AboutStory = {
+  paragraphs: string[];
+  badgeYear: string;
+  badgeLabel: string;
+};
+
+export type AboutValue = {
+  title: string;
+  desc: string;
+};
+
+export type AboutTeamMember = {
+  role: string;
+  name: string;
+  bio: string;
+  skills: string[];
+};
+
+export type AboutTimelineItem = {
+  year: string;
+  title: string;
+  desc: string;
+};
+
+export type AboutPhilosophy = {
+  quote: string;
+  attr: string;
+};
+
+export type AboutStackCategory = {
+  cat: string;
+  items: string[];
+};
+
+export type AboutContent = {
+  hero: AboutHero;
+  tickerItems: string[];
+  story: AboutStory;
+  values: AboutValue[];
+  team: AboutTeamMember[];
+  timeline: AboutTimelineItem[];
+  philosophy: AboutPhilosophy;
+  stack: AboutStackCategory[];
+};
+
+function fallbackAboutContent(): AboutContent {
+  return {
+    hero: {
+      headline: 'Two minds,<br />one <i>vision</i>',
+      subheadline: 'We are Rivuletduo — a tight-knit studio where engineering precision meets design intuition. We build the web experiences people remember.',
+      stats: [
+        { n: '48+', l: 'Projects' },
+        { n: '6yr', l: 'Experience' },
+        { n: '100%', l: 'Satisfaction' },
+      ],
+    },
+    tickerItems: ['Two Person Studio', 'Kerala, India', 'Remote Friendly', 'Founded 2019', 'Open to Collaboration', 'Full-Stack Craft', 'Two Person Studio', 'Kerala, India', 'Remote Friendly', 'Founded 2019', 'Open to Collaboration', 'Full-Stack Craft'],
+    story: {
+      paragraphs: [
+        'Rivuletduo was born from a shared obsession — the belief that a website is never just a website. It is a living thing: it breathes, it moves, it speaks before a word is read.',
+        'We met building side projects late into the night, each bringing a different half of the equation. One thinking in pixels and space, the other in systems and logic. The result was something neither could build alone.',
+        'Since 2019 we have partnered with startups, creative agencies, and ambitious founders who refuse to settle for ordinary. Every project we take on becomes a reflection of that ethos — deliberate, precise, and made to last.'
+      ],
+      badgeYear: '2019',
+      badgeLabel: 'Founded',
+    },
+    values: [
+      { title: 'Craft over speed', desc: 'We would rather take an extra day and deliver something extraordinary than rush a mediocre product. Quality is non-negotiable — every line of code, every spacing decision earns its place.' },
+      { title: 'Radical transparency', desc: 'No black boxes, no magic tricks. We communicate every decision, every constraint, every trade-off — so you always know exactly where your project stands and why.' },
+      { title: 'Performance is design', desc: 'A slow website is a broken website. We treat Core Web Vitals and load time as design constraints from day one — not an afterthought patched on before launch.' },
+      { title: 'Data-informed decisions', desc: 'Every layout choice, every CTA placement, every interaction is grounded in real user behaviour and business metrics. We design with purpose, not guesswork.' },
+      { title: 'Long-term thinking', desc: 'We build for the next five years, not the next sprint. Scalable architecture, clean handoffs, and comprehensive documentation are not optional extras — they are our standard.' },
+      { title: 'Partnership, not service', desc: 'We do not hand you a finished file and disappear. We become embedded in your product\'s story — advisors, builders, and advocates for the long haul.' }
+    ],
+    team: [
+      { role: 'Co-Founder · Design & Frontend', name: 'Aryan Mehta', bio: 'Aryan leads visual direction and frontend architecture. He obsesses over type, motion, and the invisible moments between interactions that make an interface feel alive.', skills: ['Figma', 'React', 'Three.js', 'CSS Animation', 'UI Systems'] },
+      { role: 'Co-Founder · Engineering & Strategy', name: 'Rahul Nair', bio: 'Rahul architects the systems that make everything run. He lives in the spaces between database query and rendered pixel — finding the optimisation no-one else thought to look for.', skills: ['Next.js', 'Node.js', 'PostgreSQL', 'GraphQL', 'DevOps'] }
+    ],
+    timeline: [
+      { year: '2019', title: 'The beginning', desc: 'Two developers, one shared Notion doc, and a stubborn conviction that small studios could outperform large agencies. Rivuletduo takes its first client project.' },
+      { year: '2020', title: 'Going fully remote', desc: 'We formalise a fully remote workflow and onboard our first international clients. The studio doubles its project count in twelve months.' },
+      { year: '2021', title: 'First e-commerce milestone', desc: 'Verdant Goods launches — our most ambitious Shopify build to date. Conversion rates jump 40% within the first quarter, setting a new benchmark for our e-commerce practice.' },
+      { year: '2022', title: 'Three.js & immersive web', desc: 'We invest deeply in WebGL and immersive interfaces. FlowMetrics launches with a fully 3D data dashboard — a project featured in three design publications.' },
+      { year: '2024', title: '48 projects shipped', desc: 'We reach 48 shipped projects, zero compromised deadlines, and a client satisfaction rate we are quietly proud of. Every one of those clients has our direct number.' }
+    ],
+    philosophy: {
+      quote: "The web is the most intimate canvas ever invented. It can see you, respond to you, change for you. We think that demands more than most studios are willing to give.",
+      attr: "Aryan & Rahul — Rivuletduo"
+    },
+    stack: [
+      { cat: 'Design', items: ['Figma', 'Framer', 'Adobe Illustrator', 'Lottie / Rive', 'Spline'] },
+      { cat: 'Frontend', items: ['React / Next.js', 'Three.js / GSAP', 'TypeScript', 'Tailwind CSS', 'Framer Motion'] },
+      { cat: 'Backend', items: ['Node.js / Express', 'PostgreSQL', 'GraphQL', 'Prisma ORM', 'Supabase'] },
+      { cat: 'CMS & Infra', items: ['Sanity.io', 'Contentful', 'Vercel / Netlify', 'Shopify / WooCommerce', 'AWS S3 / CloudFront'] }
+    ]
+  };
+}
+
+export async function getAboutContentData(): Promise<AboutContent> {
+  const fallback = fallbackAboutContent();
+  const rootApi = getWordPressRootApiUrl();
+  if (!rootApi) return fallback;
+
+  try {
+    const response = await fetch(`${rootApi}/rivulet/v1/about`, { next: { revalidate: 120 } });
+    if (!response.ok) return fallback;
+    const data = (await response.json()) as Partial<AboutContent> | null;
+    if (!data) return fallback;
+
+    return {
+      hero: {
+        headline: asString(data.hero?.headline, fallback.hero.headline),
+        subheadline: asString(data.hero?.subheadline, fallback.hero.subheadline),
+        stats: Array.isArray(data.hero?.stats) && data.hero?.stats.length > 0 ? data.hero.stats : fallback.hero.stats,
+      },
+      tickerItems: asStringArray(data.tickerItems, fallback.tickerItems),
+      story: {
+        paragraphs: asStringArray(data.story?.paragraphs, fallback.story.paragraphs),
+        badgeYear: asString(data.story?.badgeYear, fallback.story.badgeYear),
+        badgeLabel: asString(data.story?.badgeLabel, fallback.story.badgeLabel),
+      },
+      values: Array.isArray(data.values) && data.values.length > 0 ? data.values : fallback.values,
+      team: Array.isArray(data.team) && data.team.length > 0 ? data.team : fallback.team,
+      timeline: Array.isArray(data.timeline) && data.timeline.length > 0 ? data.timeline : fallback.timeline,
+      philosophy: {
+        quote: asString(data.philosophy?.quote, fallback.philosophy.quote),
+        attr: asString(data.philosophy?.attr, fallback.philosophy.attr),
+      },
+      stack: Array.isArray(data.stack) && data.stack.length > 0 ? data.stack : fallback.stack,
+    };
+  } catch {
+    return fallback;
+  }
+}

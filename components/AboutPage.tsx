@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import Cursor from '@/components/Cursor';
+import type { AboutContent } from '@/lib/cms';
 
-export default function AboutPage() {
+export default function AboutPage({ content }: { content: AboutContent }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -560,8 +561,8 @@ export default function AboutPage() {
 
         <div className="hero-copy">
           <div className="h-eyebrow">About the Studio</div>
-          <h1>Two minds,<br />one <i>vision</i></h1>
-          <p className="h-sub">We are Rivuletduo — a tight-knit studio where engineering precision meets design intuition. We build the web experiences people remember.</p>
+          <h1 dangerouslySetInnerHTML={{ __html: content.hero.headline }} />
+          <p className="h-sub" dangerouslySetInnerHTML={{ __html: content.hero.subheadline }} />
         </div>
 
         <div className="h-scroll">
@@ -570,15 +571,15 @@ export default function AboutPage() {
         </div>
 
         <div className="hero-stats">
-          <div className="hs"><span className="hs-n">48+</span><span className="hs-l">Projects</span></div>
-          <div className="hs"><span className="hs-n">6yr</span><span className="hs-l">Experience</span></div>
-          <div className="hs"><span className="hs-n">100%</span><span className="hs-l">Satisfaction</span></div>
+          {content.hero.stats.map((s, idx) => (
+            <div className="hs" key={idx}><span className="hs-n">{s.n}</span><span className="hs-l">{s.l}</span></div>
+          ))}
         </div>
       </div>
 
       <div className="ticker-wrap">
         <div className="ticker">
-          {['Two Person Studio', 'Kerala, India', 'Remote Friendly', 'Founded 2019', 'Open to Collaboration', 'Full-Stack Craft', 'Two Person Studio', 'Kerala, India', 'Remote Friendly', 'Founded 2019', 'Open to Collaboration', 'Full-Stack Craft'].map((item, idx) => (
+          {content.tickerItems.map((item, idx) => (
             <span key={idx} className="ticker-item">{item}<span className="tdot" /></span>
           ))}
         </div>
@@ -589,16 +590,16 @@ export default function AboutPage() {
         <h2 className="rv rv1">Where we <i>began</i></h2>
         <div className="story-inner">
           <div className="story-left rv rv2">
-            <p>Rivuletduo was born from a shared obsession — the belief that a website is never just a website. It is a living thing: it breathes, it moves, it <i>speaks</i> before a word is read.</p>
-            <p>We met building side projects late into the night, each bringing a different half of the equation. One thinking in pixels and space, the other in systems and logic. The result was something neither could build alone.</p>
-            <p>Since 2019 we have partnered with startups, creative agencies, and ambitious founders who refuse to settle for ordinary. Every project we take on becomes a reflection of that ethos — deliberate, precise, and made to last.</p>
+            {content.story.paragraphs.map((p, idx) => (
+              <p key={idx} dangerouslySetInnerHTML={{ __html: p }} />
+            ))}
           </div>
           <div className="story-right rv rv3">
             <div className="story-visual">
               <canvas id="story-canvas" />
               <div className="story-badge">
-                <div className="story-badge-n">2019</div>
-                <div className="story-badge-l">Founded</div>
+                <div className="story-badge-n">{content.story.badgeYear}</div>
+                <div className="story-badge-l">{content.story.badgeLabel}</div>
               </div>
               <div className="story-tag">Est. Kerala</div>
             </div>
@@ -610,42 +611,25 @@ export default function AboutPage() {
         <div className="label rv">What We Stand For</div>
         <h2 className="rv rv1">Our <i>principles</i></h2>
         <div className="values-grid">
-          <div className="val rv rv1">
-            <div className="val-n">01</div>
-            <div className="val-ico"><svg viewBox="0 0 44 44"><path d="M22 6 L38 14 L38 30 L22 38 L6 30 L6 14 Z" /><circle cx="22" cy="22" r="5" /><line x1="22" y1="6" x2="22" y2="17" /><line x1="22" y1="27" x2="22" y2="38" /><line x1="6" y1="14" x2="17" y2="19" /><line x1="27" y1="25" x2="38" y2="30" /></svg></div>
-            <h3>Craft over speed</h3>
-            <p>We would rather take an extra day and deliver something extraordinary than rush a mediocre product. Quality is non-negotiable — every line of code, every spacing decision earns its place.</p>
-          </div>
-          <div className="val rv rv2">
-            <div className="val-n">02</div>
-            <div className="val-ico"><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="16" /><path d="M14 22 C14 17 17.5 13 22 13 C26.5 13 30 17 30 22" /><path d="M18 22 C18 19 19.8 16.5 22 16.5" /><circle cx="22" cy="22" r="3" /></svg></div>
-            <h3>Radical transparency</h3>
-            <p>No black boxes, no magic tricks. We communicate every decision, every constraint, every trade-off — so you always know exactly where your project stands and why.</p>
-          </div>
-          <div className="val rv rv3">
-            <div className="val-n">03</div>
-            <div className="val-ico"><svg viewBox="0 0 44 44"><path d="M10 34 L22 8 L34 34" /><path d="M14.5 26 L29.5 26" /><path d="M22 8 L22 34" /></svg></div>
-            <h3>Performance is design</h3>
-            <p>A slow website is a broken website. We treat Core Web Vitals and load time as design constraints from day one — not an afterthought patched on before launch.</p>
-          </div>
-          <div className="val rv rv1">
-            <div className="val-n">04</div>
-            <div className="val-ico"><svg viewBox="0 0 44 44"><rect x="8" y="20" width="10" height="16" rx="2" /><rect x="17" y="12" width="10" height="24" rx="2" /><rect x="26" y="16" width="10" height="20" rx="2" /><line x1="8" y1="36" x2="36" y2="36" /></svg></div>
-            <h3>Data-informed decisions</h3>
-            <p>Every layout choice, every CTA placement, every interaction is grounded in real user behaviour and business metrics. We design with purpose, not guesswork.</p>
-          </div>
-          <div className="val rv rv2">
-            <div className="val-n">05</div>
-            <div className="val-ico"><svg viewBox="0 0 44 44"><path d="M22 8 C14 8 8 14 8 22 C8 30 14 36 22 36" /><path d="M22 8 C30 8 36 14 36 22 C36 30 30 36 22 36" /><line x1="8" y1="22" x2="36" y2="22" /><path d="M15 13 Q22 18 29 13" /><path d="M15 31 Q22 26 29 31" /></svg></div>
-            <h3>Long-term thinking</h3>
-            <p>We build for the next five years, not the next sprint. Scalable architecture, clean handoffs, and comprehensive documentation are not optional extras — they are our standard.</p>
-          </div>
-          <div className="val rv rv3">
-            <div className="val-n">06</div>
-            <div className="val-ico"><svg viewBox="0 0 44 44"><circle cx="22" cy="16" r="7" /><path d="M10 36 C10 29.4 15.4 24 22 24 C28.6 24 34 29.4 34 36" /><path d="M32 10 C33.5 12 34 14.5 33 17" /><path d="M36 8 C38.5 11.5 39 16 37 20" /></svg></div>
-            <h3>Partnership, not service</h3>
-            <p>We do not hand you a finished file and disappear. We become embedded in your product&apos;s story — advisors, builders, and advocates for the long haul.</p>
-          </div>
+          {content.values.map((v, idx) => {
+            const icons = [
+              <svg key="1" viewBox="0 0 44 44"><path d="M22 6 L38 14 L38 30 L22 38 L6 30 L6 14 Z" /><circle cx="22" cy="22" r="5" /><line x1="22" y1="6" x2="22" y2="17" /><line x1="22" y1="27" x2="22" y2="38" /><line x1="6" y1="14" x2="17" y2="19" /><line x1="27" y1="25" x2="38" y2="30" /></svg>,
+              <svg key="2" viewBox="0 0 44 44"><circle cx="22" cy="22" r="16" /><path d="M14 22 C14 17 17.5 13 22 13 C26.5 13 30 17 30 22" /><path d="M18 22 C18 19 19.8 16.5 22 16.5" /><circle cx="22" cy="22" r="3" /></svg>,
+              <svg key="3" viewBox="0 0 44 44"><path d="M10 34 L22 8 L34 34" /><path d="M14.5 26 L29.5 26" /><path d="M22 8 L22 34" /></svg>,
+              <svg key="4" viewBox="0 0 44 44"><rect x="8" y="20" width="10" height="16" rx="2" /><rect x="17" y="12" width="10" height="24" rx="2" /><rect x="26" y="16" width="10" height="20" rx="2" /><line x1="8" y1="36" x2="36" y2="36" /></svg>,
+              <svg key="5" viewBox="0 0 44 44"><path d="M22 8 C14 8 8 14 8 22 C8 30 14 36 22 36" /><path d="M22 8 C30 8 36 14 36 22 C36 30 30 36 22 36" /><line x1="8" y1="22" x2="36" y2="22" /><path d="M15 13 Q22 18 29 13" /><path d="M15 31 Q22 26 29 31" /></svg>,
+              <svg key="6" viewBox="0 0 44 44"><circle cx="22" cy="16" r="7" /><path d="M10 36 C10 29.4 15.4 24 22 24 C28.6 24 34 29.4 34 36" /><path d="M32 10 C33.5 12 34 14.5 33 17" /><path d="M36 8 C38.5 11.5 39 16 37 20" /></svg>
+            ];
+            const cls = `val rv rv${(idx % 3) + 1}`;
+            return (
+              <div className={cls} key={idx}>
+                <div className="val-n">{String(idx + 1).padStart(2, '0')}</div>
+                <div className="val-ico">{icons[idx % 6]}</div>
+                <h3>{v.title}</h3>
+                <p>{v.desc}</p>
+              </div>
+            );
+          })}
         </div>
       </section>
 
@@ -654,32 +638,21 @@ export default function AboutPage() {
         <h2 className="rv rv1">Meet the <i>duo</i></h2>
         <div className="team-intro rv rv2"><p>Two people. Complementary strengths. A shared standard of care that runs through every project we touch.</p></div>
         <div className="team-grid">
-          <div className="tcard rv rv1">
-            <div className="tcard-vis"><canvas className="tcard-canvas" id="tc1" /><div className="tcard-overlay" /></div>
-            <div className="tcard-info">
-              <div className="tcard-role">Co-Founder · Design & Frontend</div>
-              <div className="tcard-name">Aryan Mehta</div>
-              <p className="tcard-bio">Aryan leads visual direction and frontend architecture. He obsesses over type, motion, and the invisible moments between interactions that make an interface feel <em>alive</em>.</p>
-              <div className="tcard-skills"><span className="tskill">Figma</span><span className="tskill">React</span><span className="tskill">Three.js</span><span className="tskill">CSS Animation</span><span className="tskill">UI Systems</span></div>
+          {content.team.map((t, idx) => (
+            <div className={`tcard rv rv${(idx % 2) + 1}`} key={idx}>
+              <div className="tcard-vis"><canvas className="tcard-canvas" id={`tc${idx + 1}`} /><div className="tcard-overlay" /></div>
+              <div className="tcard-info">
+                <div className="tcard-role">{t.role}</div>
+                <div className="tcard-name">{t.name}</div>
+                <p className="tcard-bio" dangerouslySetInnerHTML={{ __html: t.bio }} />
+                <div className="tcard-skills">{t.skills.map(s => <span key={s} className="tskill">{s}</span>)}</div>
+              </div>
+              <div className="tcard-social">
+                <div className="tsoc"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z" /><rect x="2" y="9" width="4" height="12" /><circle cx="4" cy="4" r="2" /></svg></div>
+                <div className="tsoc"><svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22" /></svg></div>
+              </div>
             </div>
-            <div className="tcard-social">
-              <div className="tsoc"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z" /><rect x="2" y="9" width="4" height="12" /><circle cx="4" cy="4" r="2" /></svg></div>
-              <div className="tsoc"><svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22" /></svg></div>
-            </div>
-          </div>
-          <div className="tcard rv rv2">
-            <div className="tcard-vis"><canvas className="tcard-canvas" id="tc2" /><div className="tcard-overlay" /></div>
-            <div className="tcard-info">
-              <div className="tcard-role">Co-Founder · Engineering & Strategy</div>
-              <div className="tcard-name">Rahul Nair</div>
-              <p className="tcard-bio">Rahul architects the systems that make everything run. He lives in the spaces between database query and rendered pixel — finding the optimisation no-one else thought to look for.</p>
-              <div className="tcard-skills"><span className="tskill">Next.js</span><span className="tskill">Node.js</span><span className="tskill">PostgreSQL</span><span className="tskill">GraphQL</span><span className="tskill">DevOps</span></div>
-            </div>
-            <div className="tcard-social">
-              <div className="tsoc"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z" /><rect x="2" y="9" width="4" height="12" /><circle cx="4" cy="4" r="2" /></svg></div>
-              <div className="tsoc"><svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22" /></svg></div>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
 
@@ -688,28 +661,59 @@ export default function AboutPage() {
         <h2 className="rv rv1">Built <i>over time</i></h2>
         <div className="tl-track" id="tl-track">
           <div className="tl-line" />
-          <div className="tl-item"><div className="tl-left"><div className="tl-year">2019</div><div className="tl-content"><div className="tl-title">The beginning</div><p className="tl-desc">Two developers, one shared Notion doc, and a stubborn conviction that small studios could outperform large agencies. Rivuletduo takes its first client project.</p></div></div><div className="tl-center"><div className="tl-dot" /></div><div className="tl-right" /></div>
-          <div className="tl-item"><div className="tl-left" /><div className="tl-center"><div className="tl-dot" /></div><div className="tl-right"><div className="tl-year">2020</div><div className="tl-content"><div className="tl-title">Going fully remote</div><p className="tl-desc">We formalise a fully remote workflow and onboard our first international clients. The studio doubles its project count in twelve months.</p></div></div></div>
-          <div className="tl-item"><div className="tl-left"><div className="tl-year">2021</div><div className="tl-content"><div className="tl-title">First e-commerce milestone</div><p className="tl-desc">Verdant Goods launches — our most ambitious Shopify build to date. Conversion rates jump 40% within the first quarter, setting a new benchmark for our e-commerce practice.</p></div></div><div className="tl-center"><div className="tl-dot" /></div><div className="tl-right" /></div>
-          <div className="tl-item"><div className="tl-left" /><div className="tl-center"><div className="tl-dot" /></div><div className="tl-right"><div className="tl-year">2022</div><div className="tl-content"><div className="tl-title">Three.js & immersive web</div><p className="tl-desc">We invest deeply in WebGL and immersive interfaces. FlowMetrics launches with a fully 3D data dashboard — a project featured in three design publications.</p></div></div></div>
-          <div className="tl-item"><div className="tl-left"><div className="tl-year">2024</div><div className="tl-content"><div className="tl-title">48 projects shipped</div><p className="tl-desc">We reach 48 shipped projects, zero compromised deadlines, and a client satisfaction rate we are quietly proud of. Every one of those clients has our direct number.</p></div></div><div className="tl-center"><div className="tl-dot" /></div><div className="tl-right" /></div>
+          {content.timeline.map((item, idx) => {
+            const isLeft = idx % 2 === 0;
+            return (
+              <div className="tl-item" key={idx}>
+                <div className="tl-left">
+                  {isLeft && (
+                    <>
+                      <div className="tl-year">{item.year}</div>
+                      <div className="tl-content">
+                        <div className="tl-title">{item.title}</div>
+                        <p className="tl-desc">{item.desc}</p>
+                      </div>
+                    </>
+                  )}
+                </div>
+                <div className="tl-center"><div className="tl-dot" /></div>
+                <div className="tl-right">
+                  {!isLeft && (
+                    <>
+                      <div className="tl-year">{item.year}</div>
+                      <div className="tl-content">
+                        <div className="tl-title">{item.title}</div>
+                        <p className="tl-desc">{item.desc}</p>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </section>
 
       <section id="philosophy">
         <span className="phil-mark rv">&quot;</span>
-        <p className="phil-text rv rv1">The web is the most <em>intimate</em> canvas ever invented. It can see you, respond to you, change for you. We think that demands more than most studios are willing to give.</p>
-        <div className="phil-attr rv rv2">Aryan & Rahul — Rivuletduo</div>
+        <p className="phil-text rv rv1" dangerouslySetInnerHTML={{ __html: content.philosophy.quote }} />
+        <div className="phil-attr rv rv2" dangerouslySetInnerHTML={{ __html: content.philosophy.attr }} />
       </section>
 
       <section id="stack">
         <div className="label rv">How We Build</div>
         <h2 className="rv rv1">Our <i>stack</i></h2>
         <div className="stack-grid rv rv2">
-          <div className="stack-cat"><div className="stack-cat-label">Design</div><div className="stack-items"><div className="stack-item">Figma</div><div className="stack-item">Framer</div><div className="stack-item">Adobe Illustrator</div><div className="stack-item">Lottie / Rive</div><div className="stack-item">Spline</div></div></div>
-          <div className="stack-cat"><div className="stack-cat-label">Frontend</div><div className="stack-items"><div className="stack-item">React / Next.js</div><div className="stack-item">Three.js / GSAP</div><div className="stack-item">TypeScript</div><div className="stack-item">Tailwind CSS</div><div className="stack-item">Framer Motion</div></div></div>
-          <div className="stack-cat"><div className="stack-cat-label">Backend</div><div className="stack-items"><div className="stack-item">Node.js / Express</div><div className="stack-item">PostgreSQL</div><div className="stack-item">GraphQL</div><div className="stack-item">Prisma ORM</div><div className="stack-item">Supabase</div></div></div>
-          <div className="stack-cat"><div className="stack-cat-label">CMS & Infra</div><div className="stack-items"><div className="stack-item">Sanity.io</div><div className="stack-item">Contentful</div><div className="stack-item">Vercel / Netlify</div><div className="stack-item">Shopify / WooCommerce</div><div className="stack-item">AWS S3 / CloudFront</div></div></div>
+          {content.stack.map((group, idx) => (
+            <div className="stack-cat" key={idx}>
+              <div className="stack-cat-label">{group.cat}</div>
+              <div className="stack-items">
+                {group.items.map(item => (
+                  <div className="stack-item" key={item}>{item}</div>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
