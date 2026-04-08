@@ -601,7 +601,7 @@ export default function AboutPage({ content }: { content: AboutContent }) {
                 <div className="story-badge-n">{content.story.badgeYear}</div>
                 <div className="story-badge-l">{content.story.badgeLabel}</div>
               </div>
-              <div className="story-tag">Est. Kerala</div>
+              <div className="story-tag">Est. New Zealand</div>
             </div>
           </div>
         </div>
@@ -758,7 +758,7 @@ export default function AboutPage({ content }: { content: AboutContent }) {
           <ul className="flinks">
             <li><a href="mailto:hello@rivuletduo.com">hello@rivuletduo.com</a></li>
             <li><a href="tel:+15550000000">+1 (555) 000-0000</a></li>
-            <li><span className="fmeta">Kerala, India</span></li>
+            <li><span className="fmeta">New Zealand</span></li>
           </ul>
           <div className="f-socials">
             <a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a>

@@ -492,7 +492,7 @@ function fallbackContactPageContent(): ContactPageContent {
       },
       {
         q: 'Do you work with clients internationally?',
-        a: 'Absolutely. Our clients span India, the US, UK, Australia, and the Middle East. We work asynchronously and schedule calls at mutually convenient times - remote collaboration is second nature to us.',
+        a: 'Absolutely. Our clients span New Zealand, the US, UK, Australia, and the Middle East. We work asynchronously and schedule calls at mutually convenient times - remote collaboration is second nature to us.',
       },
       {
         q: 'What does the payment structure look like?',
@@ -509,12 +509,12 @@ function fallbackContactPageContent(): ContactPageContent {
     ],
     location: {
       label: 'Where we are',
-      headline: 'Based in <i>India,</i><br />building for the world',
-      desc: 'We work remotely with clients across the globe. Our studio is rooted in Kerala, India - but our work reaches San Francisco, London, Dubai, and beyond.',
-      studio: 'Kerala, India',
-      hours: 'Monday - Friday, 9am - 6pm IST',
-      mapLabel: 'Kerala · India',
-      mapCoords: '10.8505° N, 76.2711° E',
+      headline: 'Based in <i>New Zealand,</i><br />building for the world',
+      desc: 'We work remotely with clients across the globe. Our studio is rooted in New Zealand - but our work reaches San Francisco, London, Dubai, and beyond.',
+      studio: 'New Zealand',
+      hours: 'Monday - Friday, 9am - 6pm NZST',
+      mapLabel: 'New Zealand',
+      mapCoords: '41.2865° S, 174.7762° E',
     },
   };
 }
@@ -636,7 +636,7 @@ function fallbackAboutContent(): AboutContent {
         { n: '100%', l: 'Satisfaction' },
       ],
     },
-    tickerItems: ['Two Person Studio', 'Kerala, India', 'Remote Friendly', 'Founded 2019', 'Open to Collaboration', 'Full-Stack Craft', 'Two Person Studio', 'Kerala, India', 'Remote Friendly', 'Founded 2019', 'Open to Collaboration', 'Full-Stack Craft'],
+    tickerItems: ['Two Person Studio', 'New Zealand', 'Remote Friendly', 'Founded 2019', 'Open to Collaboration', 'Full-Stack Craft', 'Two Person Studio', 'New Zealand', 'Remote Friendly', 'Founded 2019', 'Open to Collaboration', 'Full-Stack Craft'],
     story: {
       paragraphs: [
         'Rivuletduo was born from a shared obsession — the belief that a website is never just a website. It is a living thing: it breathes, it moves, it speaks before a word is read.',

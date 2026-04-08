@@ -486,7 +486,7 @@ export default function WorkPage({ works: cmsWorks }: WorkPageProps = {}) {
           <ul className="flinks">
             <li><a href="mailto:hello@rivuletduo.com">hello@rivuletduo.com</a></li>
             <li><a href="tel:+15550000000">+1 (555) 000-0000</a></li>
-            <li><span className="fmeta">Kerala, India</span></li>
+            <li><span className="fmeta">New Zealand</span></li>
           </ul>
           <div className="f-socials">
             <a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a>

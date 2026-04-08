@@ -17,7 +17,7 @@ const fallbackFaqs: Faq[] = [
   },
   {
     q: 'Do you work with clients internationally?',
-    a: 'Absolutely. Our clients span India, the US, UK, Australia, and the Middle East. We work asynchronously and schedule calls at mutually convenient times — remote collaboration is second nature to us.',
+    a: 'Absolutely. Our clients span New Zealand, the US, UK, Australia, and the Middle East. We work asynchronously and schedule calls at mutually convenient times — remote collaboration is second nature to us.',
   },
   {
     q: 'What does the payment structure look like?',
@@ -585,7 +585,7 @@ export default function ContactPage({ content }: ContactPageProps) {
           <ul className="flinks">
             <li><a href="mailto:hello@rivuletduo.com">hello@rivuletduo.com</a></li>
             <li><a href="tel:+15550000000">+1 (555) 000-0000</a></li>
-            <li><span className="fmeta">Kerala, India</span></li>
+            <li><span className="fmeta">New Zealand</span></li>
           </ul>
           <div className="f-socials">
             <a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a>
