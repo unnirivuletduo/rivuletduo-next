@@ -178,7 +178,7 @@ p, li, a, span, button, input, textarea, select, label, small {
   background: var(--lime-d);
   border-radius: 50%;
   pointer-events: none;
-  z-index: 9999;
+  z-index: 100001;
   transform: translate(-50%, -50%);
 }
 #cur-ring {
@@ -188,7 +188,7 @@ p, li, a, span, button, input, textarea, select, label, small {
   border: 1px solid rgba(22, 163, 74, 0.3);
   border-radius: 50%;
   pointer-events: none;
-  z-index: 9998;
+  z-index: 100000;
   transform: translate(-50%, -50%);
   transition: width 0.22s, height 0.22s, border-color 0.22s;
 }
