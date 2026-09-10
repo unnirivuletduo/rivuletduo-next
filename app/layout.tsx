@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import FontSwitcher from '@/components/FontSwitcher';
 import ProjectBriefModal from '@/components/ProjectBriefModal';
 import './globals.css';
 
@@ -13,7 +12,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body>
         {children}
-        <FontSwitcher />
         <ProjectBriefModal />
       </body>
     </html>
