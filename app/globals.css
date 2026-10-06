@@ -1439,3 +1439,16 @@ footer.site-footer p.footer-partner a:hover { border-bottom-color: var(--lime-so
 @media (max-width: 860px) {
   #banner .scroll-btn { display: none; }
 }
+
+/* Phones: hero stats as three equal, centred columns across the full width */
+@media (max-width: 860px) {
+  #banner .stats {
+    left: 6vw;
+    right: 6vw;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    gap: 0;
+  }
+  #banner .stat { text-align: center; padding: 0 0.4rem; }
+  #banner .stat-l { letter-spacing: 0.18em; margin-top: 2px; }
+}

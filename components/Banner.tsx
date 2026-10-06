@@ -34,11 +34,19 @@ export default function Banner({ content }: BannerProps = {}) {
       renderer.setClearColor(0xffffff, 1);
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 200);
-      camera.position.z = 30;
+      // Desktop keeps the original framing (camera at z=30). On phones the "RD" (~23.6 units wide)
+      // would overflow, so the camera pulls back until it fills about 65% of the screen width.
+      const BASE_Z = 30, RD_WIDTH = 23.6, MOBILE_SHARE = 0.65;
+      const camOffset = { value: 0 };
+      const dotScale = { value: 1 }; // stays 1 on desktop; slightly larger dots when the camera is pulled back
 
       function onResize() {
         renderer.setSize(W(), H());
         camera.aspect = W() / H();
+        const fitZ = RD_WIDTH / (MOBILE_SHARE * 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.aspect);
+        camera.position.z = W() < 768 ? Math.max(BASE_Z, fitZ) : BASE_Z;
+        camOffset.value = camera.position.z - BASE_Z;
+        dotScale.value = Math.sqrt(camera.position.z / BASE_Z);
         camera.updateProjectionMatrix();
       }
       onResize();
@@ -108,9 +116,10 @@ export default function Banner({ content }: BannerProps = {}) {
       geo.setAttribute('aSz', new THREE.BufferAttribute(aSz, 1));
 
       const pMat = new THREE.ShaderMaterial({
-        vertexShader: `attribute vec3 aCol;attribute float aSz;varying vec3 vC;varying float vAlpha;
+        uniforms: { uOff: camOffset, uDot: dotScale },
+        vertexShader: `uniform float uOff;uniform float uDot;attribute vec3 aCol;attribute float aSz;varying vec3 vC;varying float vAlpha;
         void main(){vC=aCol;vec4 mv=modelViewMatrix*vec4(position,1.0);float dist=-mv.z;
-        gl_PointSize=aSz*(500.0/dist);vAlpha=smoothstep(0.0,3.5,dist)*(1.0-smoothstep(65.0,95.0,dist));
+        gl_PointSize=aSz*(500.0/dist)*uDot;vAlpha=smoothstep(0.0,3.5,dist)*(1.0-smoothstep(65.0+uOff,95.0+uOff,dist));
         gl_Position=projectionMatrix*mv;}`,
         fragmentShader: `varying vec3 vC;varying float vAlpha;
         void main(){vec2 uv=gl_PointCoord-.5;float d=length(uv);if(d>.5)discard;
