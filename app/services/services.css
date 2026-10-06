@@ -1,14 +1,14 @@
 .services-page-body i,.services-page-body em{font-style:italic!important;color:var(--lime-d)!important}
 .services-page-body{background:var(--bg);color:var(--text-primary)}
-#services-nav{position:fixed;inset:0 0 auto;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.5rem 3.5rem;transition:background .4s,backdrop-filter .4s}
-#services-nav.stuck{background:rgba(255,255,255,.92);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);box-shadow:0 1px 0 var(--border)}
-#services-nav .logo{font-family:'Fraunces',serif;font-weight:100;font-size:1.4rem;color:var(--ink);letter-spacing:.03em;text-decoration:none}
-#services-nav .logo b{font-weight:100;font-style:italic;color:var(--lime-d)}
-#services-nav .nav-links{display:flex;gap:2.2rem;list-style:none}
-#services-nav .nav-links a{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color .2s}
-#services-nav .nav-links a:hover,#services-nav .nav-links a.active{color:var(--lime-d)}
-#services-nav .nav-btn{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;padding:.6rem 1.5rem;border:1px solid var(--soft-green);color:var(--lime-d);background:transparent;cursor:none;transition:background .2s,color .2s,border-color .2s;text-decoration:none}
-#services-nav .nav-btn:hover{background:var(--lime-d);border-color:var(--lime-d);color:#fff}
+
+
+
+
+
+
+
+
+
 .page-hero{position:relative;height:58vh;min-height:420px;display:flex;align-items:flex-end;overflow:hidden;background:#fff;padding:0 3.5rem 4rem}
 #services-hero-canvas{position:absolute;inset:0;width:100%;height:100%}
 .hero-vignette{position:absolute;inset:0;background:radial-gradient(ellipse 80% 80% at 50% 50%,transparent 20%,rgba(255,255,255,.78) 100%);pointer-events:none}
@@ -115,7 +115,7 @@
 .rv.on{opacity:1;transform:none}
 .rv1{transition-delay:.08s}.rv2{transition-delay:.16s}.rv3{transition-delay:.24s}
 @media(max-width:900px){
-  #services-nav{padding:1.2rem 1.5rem}#services-nav .nav-links{display:none}
+  
   .page-hero{padding:0 1.5rem 3rem}
   .intro-band{grid-template-columns:1fr;gap:2.5rem;padding:4rem 1.5rem}
   .services-section{padding:0 1.5rem 5rem}

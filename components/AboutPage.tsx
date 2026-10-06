@@ -1,17 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Cursor from '@/components/Cursor';
 import type { AboutContent } from '@/lib/cms';
 import Footer from '@/components/Footer';
+import Navbar from '@/components/Navbar';
 
 export default function AboutPage({ content }: { content: AboutContent }) {
-  const [menuOpen, setMenuOpen] = useState(false);
 
-  useEffect(() => {
-    document.body.classList.toggle('menu-open', menuOpen);
-    return () => document.body.classList.remove('menu-open');
-  }, [menuOpen]);
 
   useEffect(() => {
     let disposed = false;
@@ -58,10 +54,6 @@ export default function AboutPage({ content }: { content: AboutContent }) {
         cleanups.push(() => cancelAnimationFrame(raf));
       }
 
-      const nav = document.getElementById('about-nav');
-      const onScrollNav = () => nav?.classList.toggle('stuck', window.scrollY > 60);
-      window.addEventListener('scroll', onScrollNav);
-      cleanups.push(() => window.removeEventListener('scroll', onScrollNav));
 
       const revIO = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
@@ -507,28 +499,7 @@ export default function AboutPage({ content }: { content: AboutContent }) {
   return (
     <>
       <Cursor />
-      <nav id="about-nav">
-        <a href="/" className="logo" aria-label="Rivuletduo home"><img src="/rivulet-logo.svg" alt="Rivuletduo" className="brand-logo" /></a>
-        <ul className="nav-links">
-          <li><a href="/services">Services</a></li>
-          <li><a href="/work">Work</a></li>
-          <li><a href="/about" className="active">About</a></li>
-          <li><a href="/contact">Contact</a></li>
-        </ul>
-        <a className="nav-btn" href="#project" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event("open-project-modal")); }}>Start a Project</a>
-        <button className={`nav-toggle ${menuOpen ? 'open' : ''}`} aria-label="Toggle menu" aria-expanded={menuOpen} aria-controls="about-mobile-menu" onClick={() => setMenuOpen((v) => !v)}>
-          <span />
-          <span />
-          <span />
-        </button>
-        <div id="about-mobile-menu" className={`nav-mobile-menu ${menuOpen ? 'open' : ''}`}>
-          <a href="/services" onClick={() => setMenuOpen(false)}>Services</a>
-          <a href="/work" onClick={() => setMenuOpen(false)}>Work</a>
-          <a href="/about" onClick={() => setMenuOpen(false)}>About</a>
-          <a href="/contact" onClick={() => setMenuOpen(false)}>Contact</a>
-          <a href="#project" onClick={(e) => { e.preventDefault(); setMenuOpen(false); window.dispatchEvent(new Event("open-project-modal")); }}>Start a Project</a>
-        </div>
-      </nav>
+      <Navbar active="about" />
 
       <div className="about-hero" id="about-hero">
         <canvas id="hero-canvas" />

@@ -66,7 +66,7 @@ export default function GlobalParticles() {
   return (
     <canvas
       ref={canvasRef}
-      style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 200 }}
+      style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 90 }}
     />
   );
 }

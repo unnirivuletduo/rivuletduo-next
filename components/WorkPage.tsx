@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import Cursor from '@/components/Cursor';
 import type { WorkListItem as CmsWorkListItem } from '@/lib/cms';
 import Footer from '@/components/Footer';
+import Navbar from '@/components/Navbar';
 import { yearsInBusiness } from '@/lib/site';
 
 type WorkItem = {
@@ -184,7 +185,6 @@ type WorkPageProps = {
 };
 
 export default function WorkPage({ works: cmsWorks }: WorkPageProps = {}) {
-  const [menuOpen, setMenuOpen] = useState(false);
   const worksData: WorkItem[] = useMemo(
     () => (cmsWorks && cmsWorks.length > 0 ? cmsWorks : works) as WorkItem[],
     [cmsWorks],
@@ -194,19 +194,12 @@ export default function WorkPage({ works: cmsWorks }: WorkPageProps = {}) {
     [worksData],
   );
 
-  useEffect(() => {
-    document.body.classList.toggle('menu-open', menuOpen);
-    return () => document.body.classList.remove('menu-open');
-  }, [menuOpen]);
 
   useEffect(() => {
     let disposed = false;
     const cleanups: Array<() => void> = [];
     document.body.classList.add('work-page-body');
 
-    const onNavScroll = () => document.getElementById('work-nav')?.classList.toggle('stuck', window.scrollY > 60);
-    window.addEventListener('scroll', onNavScroll);
-    cleanups.push(() => window.removeEventListener('scroll', onNavScroll));
 
     const io = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -454,28 +447,7 @@ export default function WorkPage({ works: cmsWorks }: WorkPageProps = {}) {
     <>
       <Cursor />
 
-      <nav id="work-nav">
-        <a href="/" className="logo" aria-label="Rivuletduo home"><img src="/rivulet-logo.svg" alt="Rivuletduo" className="brand-logo" /></a>
-        <ul className="nav-links">
-          <li><a href="/services">Services</a></li>
-          <li><a href="/work" className="active">Work</a></li>
-          <li><a href="/about">About</a></li>
-          <li><a href="/contact">Contact</a></li>
-        </ul>
-        <a className="nav-btn" href="#project" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event("open-project-modal")); }}>Start a Project</a>
-        <button className={`nav-toggle ${menuOpen ? 'open' : ''}`} aria-label="Toggle menu" aria-expanded={menuOpen} aria-controls="work-mobile-menu" onClick={() => setMenuOpen((v) => !v)}>
-          <span />
-          <span />
-          <span />
-        </button>
-        <div id="work-mobile-menu" className={`nav-mobile-menu ${menuOpen ? 'open' : ''}`}>
-          <a href="/services" onClick={() => setMenuOpen(false)}>Services</a>
-          <a href="/work" onClick={() => setMenuOpen(false)}>Work</a>
-          <a href="/about" onClick={() => setMenuOpen(false)}>About</a>
-          <a href="/contact" onClick={() => setMenuOpen(false)}>Contact</a>
-          <a href="#project" onClick={(e) => { e.preventDefault(); setMenuOpen(false); window.dispatchEvent(new Event("open-project-modal")); }}>Start a Project</a>
-        </div>
-      </nav>
+      <Navbar active="work" />
 
       <div className="hero" id="hero">
         <canvas id="work-hero-canvas" />

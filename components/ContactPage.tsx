@@ -4,13 +4,13 @@ import { useEffect, useState } from 'react';
 import Cursor from '@/components/Cursor';
 import type { ContactPageContent } from '@/lib/cms';
 import Footer from '@/components/Footer';
+import Navbar from '@/components/Navbar';
 
 type ContactPageProps = {
   content: ContactPageContent;
 };
 
 export default function ContactPage({ content }: ContactPageProps) {
-  const [menuOpen, setMenuOpen] = useState(false);
   const [tab, setTab] = useState<'project' | 'general'>('project');
   const [step, setStep] = useState(1);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
@@ -31,10 +31,6 @@ export default function ContactPage({ content }: ContactPageProps) {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const pageFaqs = content.faqs;
 
-  useEffect(() => {
-    document.body.classList.toggle('menu-open', menuOpen);
-    return () => document.body.classList.remove('menu-open');
-  }, [menuOpen]);
 
   useEffect(() => {
     let disposed = false;
@@ -42,7 +38,6 @@ export default function ContactPage({ content }: ContactPageProps) {
     document.body.classList.add('contact-page-body');
 
     const onScroll = () => {
-      document.getElementById('contact-nav')?.classList.toggle('stuck', window.scrollY > 60);
       const h = document.documentElement.scrollHeight - window.innerHeight;
       const fill = document.getElementById('ppFill');
       if (fill) fill.style.height = `${((window.scrollY / (h || 1)) * 100).toFixed(2)}%`;
@@ -341,30 +336,7 @@ export default function ContactPage({ content }: ContactPageProps) {
       <Cursor />
       <div className="page-progress"><div className="pp-fill" id="ppFill" /></div>
 
-      <nav id="contact-nav">
-        <a href="/" className="logo" aria-label="Rivuletduo home">
-          <img src="/rivulet-logo.svg" alt="Rivuletduo" className="brand-logo" />
-        </a>
-        <ul className="nav-links">
-          <li><a href="/services">Services</a></li>
-          <li><a href="/work">Work</a></li>
-          <li><a href="/about">About</a></li>
-          <li><a href="/contact" className="active">Contact</a></li>
-        </ul>
-        <a href="#project" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event("open-project-modal")); }} className="nav-btn">Start a Project</a>
-        <button className={`nav-toggle ${menuOpen ? 'open' : ''}`} aria-label="Toggle menu" aria-expanded={menuOpen} aria-controls="contact-mobile-menu" onClick={() => setMenuOpen((v) => !v)}>
-          <span />
-          <span />
-          <span />
-        </button>
-        <div id="contact-mobile-menu" className={`nav-mobile-menu ${menuOpen ? 'open' : ''}`}>
-          <a href="/services" onClick={() => setMenuOpen(false)}>Services</a>
-          <a href="/work" onClick={() => setMenuOpen(false)}>Work</a>
-          <a href="/about" onClick={() => setMenuOpen(false)}>About</a>
-          <a href="/contact" onClick={() => setMenuOpen(false)}>Contact</a>
-          <a href="#project" onClick={(e) => { e.preventDefault(); setMenuOpen(false); window.dispatchEvent(new Event("open-project-modal")); }}>Start a Project</a>
-        </div>
-      </nav>
+      <Navbar active="contact" />
 
       <div className="breadcrumb">
         <a href="/">Home</a>

@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import Cursor from '@/components/Cursor';
 import type { ServiceCategory as CmsServiceCategory } from '@/lib/cms';
 import Footer from '@/components/Footer';
+import Navbar from '@/components/Navbar';
 import { yearsInBusiness } from '@/lib/site';
 
 type Service = {
@@ -130,7 +131,6 @@ type ServicesPageProps = {
 };
 
 export default function ServicesPage({ categories: cmsCategories }: ServicesPageProps = {}) {
-  const [menuOpen, setMenuOpen] = useState(false);
   const categoriesData: Category[] = (cmsCategories && cmsCategories.length > 0 ? cmsCategories : categories) as Category[];
   
   const fallbackIcon = (
@@ -144,10 +144,6 @@ export default function ServicesPage({ categories: cmsCategories }: ServicesPage
     </svg>
   );
 
-  useEffect(() => {
-    document.body.classList.toggle('menu-open', menuOpen);
-    return () => document.body.classList.remove('menu-open');
-  }, [menuOpen]);
 
   useEffect(() => {
     let disposed = false;
@@ -155,7 +151,6 @@ export default function ServicesPage({ categories: cmsCategories }: ServicesPage
     document.body.classList.add('services-page-body');
 
     const onScrollNav = () => {
-      document.getElementById('services-nav')?.classList.toggle('stuck', window.scrollY > 60);
     };
     window.addEventListener('scroll', onScrollNav);
     cleanups.push(() => window.removeEventListener('scroll', onScrollNav));
@@ -316,28 +311,7 @@ export default function ServicesPage({ categories: cmsCategories }: ServicesPage
     <>
       <Cursor />
 
-      <nav id="services-nav">
-        <a href="/" className="logo" aria-label="Rivuletduo home"><img src="/rivulet-logo.svg" alt="Rivuletduo" className="brand-logo" /></a>
-        <ul className="nav-links">
-          <li><a href="/services" className="active">Services</a></li>
-          <li><a href="/work">Work</a></li>
-          <li><a href="/about">About</a></li>
-          <li><a href="/contact">Contact</a></li>
-        </ul>
-        <a className="nav-btn" href="#project" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event("open-project-modal")); }}>Start a Project</a>
-        <button className={`nav-toggle ${menuOpen ? 'open' : ''}`} aria-label="Toggle menu" aria-expanded={menuOpen} aria-controls="services-mobile-menu" onClick={() => setMenuOpen((v) => !v)}>
-          <span />
-          <span />
-          <span />
-        </button>
-        <div id="services-mobile-menu" className={`nav-mobile-menu ${menuOpen ? 'open' : ''}`}>
-          <a href="/services" onClick={() => setMenuOpen(false)}>Services</a>
-          <a href="/work" onClick={() => setMenuOpen(false)}>Work</a>
-          <a href="/about" onClick={() => setMenuOpen(false)}>About</a>
-          <a href="/contact" onClick={() => setMenuOpen(false)}>Contact</a>
-          <a href="#project" onClick={(e) => { e.preventDefault(); setMenuOpen(false); window.dispatchEvent(new Event("open-project-modal")); }}>Start a Project</a>
-        </div>
-      </nav>
+      <Navbar active="services" />
 
       <div className="page-hero">
         <canvas id="services-hero-canvas" />

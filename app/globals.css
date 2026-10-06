@@ -145,6 +145,8 @@ p, li, a, span, button, input, textarea, select, label, small {
   transition: color 0.2s;
 }
 .nav-links a:hover { color: var(--lime-d); }
+.nav-links a.active,
+.nav-mobile-menu a.active { color: var(--lime-d); }
 .nav-btn {
   font-family: 'Space Mono', monospace;
   font-size: 0.62rem;
@@ -1367,40 +1369,11 @@ body #contact-footer.site-footer .f-socials a:hover {
 
 @media (max-width: 960px) {
   body.menu-open { overflow: hidden; }
+  #main-nav { padding: 1.1rem 1.5rem; }
   #main-nav .nav-links,
-  #about-nav .nav-links,
-  #services-nav .nav-links,
-  #work-nav .nav-links,
-  #contact-nav .nav-links,
-  #wd-nav .nav-links,
-  #sd-nav .nav-links,
-  #main-nav .nav-btn,
-  #about-nav .nav-btn,
-  #services-nav .nav-btn,
-  #work-nav .nav-btn,
-  #contact-nav .nav-btn,
-  #wd-nav .nav-btn,
-  #sd-nav .nav-btn {
-    display: none;
-  }
-  #main-nav .nav-toggle,
-  #about-nav .nav-toggle,
-  #services-nav .nav-toggle,
-  #work-nav .nav-toggle,
-  #contact-nav .nav-toggle,
-  #wd-nav .nav-toggle,
-  #sd-nav .nav-toggle {
-    display: inline-flex;
-  }
-  #main-nav .nav-mobile-menu,
-  #about-nav .nav-mobile-menu,
-  #services-nav .nav-mobile-menu,
-  #work-nav .nav-mobile-menu,
-  #contact-nav .nav-mobile-menu,
-  #wd-nav .nav-mobile-menu,
-  #sd-nav .nav-mobile-menu {
-    display: block;
-  }
+  #main-nav .nav-btn { display: none; }
+  #main-nav .nav-toggle { display: inline-flex; }
+  #main-nav .nav-mobile-menu { display: block; }
 }
 
 @media (max-width: 860px) {
@@ -1414,7 +1387,7 @@ body #contact-footer.site-footer .f-socials a:hover {
   .hero { padding: 0 6vw; }
   .stats { right: 6vw; gap: 1.6rem; bottom: 5.5rem; }
   .sbg { display: none; }
-  .step { grid-template-columns: 72px 68px 1fr; padding: 38px 0; }
+  .step { grid-template-columns: 72px 68px minmax(0, 1fr); padding: 38px 0; }
   .sicon { width: 56px; height: 56px; }
 }
 
@@ -1453,3 +1426,16 @@ footer.site-footer p.footer-partner a {
 footer.site-footer p.footer-partner a:hover { border-bottom-color: var(--lime-soft); }
 
 #work .work-more { margin-top: 2.5rem; text-align: center; }
+
+/* Phones: tighter "How we work" steps so the text column fits */
+@media (max-width: 480px) {
+  .step { grid-template-columns: 44px 52px minmax(0, 1fr); }
+  .scontent { padding-left: 16px; min-width: 0; }
+  .step h4 { font-size: clamp(1.7rem, 9vw, 2.4rem); }
+  .sicon { width: 44px; height: 44px; }
+}
+
+/* Phones: the hero stats sit where "Scroll Down" would be, so hide the scroll cue */
+@media (max-width: 860px) {
+  #banner .scroll-btn { display: none; }
+}

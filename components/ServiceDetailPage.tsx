@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Cursor from '@/components/Cursor';
 import type { ServiceDetail as CmsServiceDetail } from '@/lib/cms';
 import Footer from '@/components/Footer';
+import Navbar from '@/components/Navbar';
 import { yearsInBusiness } from '@/lib/site';
 import { fallbackServiceDetails as services } from '@/lib/details-data';
 import { serviceContent, defaultServiceContent, type Heading } from '@/lib/service-content';
@@ -41,7 +42,6 @@ type ServiceDetailPageProps = {
 };
 
 export default function ServiceDetailPage({ slug, services: cmsServices }: ServiceDetailPageProps) {
-  const [menuOpen, setMenuOpen] = useState(false);
   const serviceCatalog = (cmsServices && cmsServices.length > 0 ? cmsServices : services) as ServiceData[];
   const service = getService(slug, serviceCatalog);
   const content = serviceContent[service.slug] ?? defaultServiceContent;
@@ -49,16 +49,11 @@ export default function ServiceDetailPage({ slug, services: cmsServices }: Servi
     .map((r) => serviceCatalog.find((x) => x.slug === r))
     .filter((x): x is ServiceData => Boolean(x));
 
-  useEffect(() => {
-    document.body.classList.toggle('menu-open', menuOpen);
-    return () => document.body.classList.remove('menu-open');
-  }, [menuOpen]);
 
   useEffect(() => {
     const cleanups: Array<() => void> = [];
 
     const onScroll = () => {
-      document.getElementById('sd-nav')?.classList.toggle('stuck', window.scrollY > 60);
       const h = document.documentElement.scrollHeight - window.innerHeight;
       const fill = document.getElementById('ppFill');
       if (fill) fill.style.height = `${(window.scrollY / (h || 1)) * 100}%`;
@@ -201,28 +196,7 @@ export default function ServiceDetailPage({ slug, services: cmsServices }: Servi
       <Cursor />
       <div className="page-progress"><div className="pp-fill" id="ppFill" /></div>
 
-      <nav id="sd-nav">
-        <a href="/" className="logo" aria-label="Rivuletduo home"><img src="/rivulet-logo.svg" alt="Rivuletduo" className="brand-logo" /></a>
-        <ul className="nav-links">
-          <li><a href="/services" className="active">Services</a></li>
-          <li><a href="/work">Work</a></li>
-          <li><a href="/about">About</a></li>
-          <li><a href="/contact">Contact</a></li>
-        </ul>
-        <a href="#project" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event("open-project-modal")); }} className="nav-btn">Start a Project</a>
-        <button className={`nav-toggle ${menuOpen ? 'open' : ''}`} aria-label="Toggle menu" aria-expanded={menuOpen} aria-controls="service-detail-mobile-menu" onClick={() => setMenuOpen((v) => !v)}>
-          <span />
-          <span />
-          <span />
-        </button>
-        <div id="service-detail-mobile-menu" className={`nav-mobile-menu ${menuOpen ? 'open' : ''}`}>
-          <a href="/services" onClick={() => setMenuOpen(false)}>Services</a>
-          <a href="/work" onClick={() => setMenuOpen(false)}>Work</a>
-          <a href="/about" onClick={() => setMenuOpen(false)}>About</a>
-          <a href="/contact" onClick={() => setMenuOpen(false)}>Contact</a>
-          <a href="#project" onClick={(e) => { e.preventDefault(); setMenuOpen(false); window.dispatchEvent(new Event("open-project-modal")); }}>Start a Project</a>
-        </div>
-      </nav>
+      <Navbar active="services" />
 
       <div className="breadcrumb">
         <a href="/">Home</a>

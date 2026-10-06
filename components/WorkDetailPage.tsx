@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Cursor from '@/components/Cursor';
 import type { WorkDetail as CmsWorkDetail } from '@/lib/cms';
 import Footer from '@/components/Footer';
+import Navbar from '@/components/Navbar';
 import { fallbackWorkDetails as projects } from '@/lib/details-data';
 
 type ProjectData = CmsWorkDetail;
@@ -26,7 +27,6 @@ type WorkDetailPageProps = {
 };
 
 export default function WorkDetailPage({ slug, projects: cmsProjects }: WorkDetailPageProps) {
-  const [menuOpen, setMenuOpen] = useState(false);
   const projectCatalog = (cmsProjects && cmsProjects.length > 0 ? cmsProjects : projects) as ProjectData[];
   const project = getProject(slug, projectCatalog);
   const overviewHeading = project.overviewHeading ?? ['About the ', 'project'];
@@ -37,17 +37,12 @@ export default function WorkDetailPage({ slug, projects: cmsProjects }: WorkDeta
   ];
   const hasScreens = showcase.some((item) => item.image);
 
-  useEffect(() => {
-    document.body.classList.toggle('menu-open', menuOpen);
-    return () => document.body.classList.remove('menu-open');
-  }, [menuOpen]);
   const { prev, next } = neighbors(projectCatalog, project.slug);
 
   useEffect(() => {
     const cleanups: Array<() => void> = [];
 
     const onScroll = () => {
-      document.getElementById('wd-nav')?.classList.toggle('stuck', window.scrollY > 60);
       const h = document.documentElement.scrollHeight - window.innerHeight;
       const fill = document.getElementById('ppFill');
       if (fill) fill.style.height = `${(window.scrollY / (h || 1)) * 100}%`;
@@ -182,28 +177,7 @@ export default function WorkDetailPage({ slug, projects: cmsProjects }: WorkDeta
       <Cursor />
       <div className="pp"><div className="pp-fill" id="ppFill" /></div>
 
-      <nav id="wd-nav">
-        <a href="/" className="logo" aria-label="Rivuletduo home"><img src="/rivulet-logo.svg" alt="Rivuletduo" className="brand-logo" /></a>
-        <ul className="nav-links">
-          <li><a href="/services">Services</a></li>
-          <li><a href="/work" className="active">Work</a></li>
-          <li><a href="/about">About</a></li>
-          <li><a href="/contact">Contact</a></li>
-        </ul>
-        <a href="#project" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event("open-project-modal")); }} className="nav-btn">Start a Project</a>
-        <button className={`nav-toggle ${menuOpen ? 'open' : ''}`} aria-label="Toggle menu" aria-expanded={menuOpen} aria-controls="work-detail-mobile-menu" onClick={() => setMenuOpen((v) => !v)}>
-          <span />
-          <span />
-          <span />
-        </button>
-        <div id="work-detail-mobile-menu" className={`nav-mobile-menu ${menuOpen ? 'open' : ''}`}>
-          <a href="/services" onClick={() => setMenuOpen(false)}>Services</a>
-          <a href="/work" onClick={() => setMenuOpen(false)}>Work</a>
-          <a href="/about" onClick={() => setMenuOpen(false)}>About</a>
-          <a href="/contact" onClick={() => setMenuOpen(false)}>Contact</a>
-          <a href="#project" onClick={(e) => { e.preventDefault(); setMenuOpen(false); window.dispatchEvent(new Event("open-project-modal")); }}>Start a Project</a>
-        </div>
-      </nav>
+      <Navbar active="work" />
 
       <div className="breadcrumb">
         <a href="/">Home</a>

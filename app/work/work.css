@@ -1,13 +1,13 @@
 .work-page-body i,.work-page-body em{font-style:italic!important;color:var(--lime-d)!important}
-#work-nav{position:fixed;inset:0 0 auto;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:1.5rem 3.5rem;transition:background .4s,backdrop-filter .4s}
-#work-nav.stuck{background:rgba(255,255,255,.92);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);box-shadow:0 1px 0 var(--border)}
-#work-nav .logo{font-family:'Fraunces',serif;font-weight:100;font-size:1.4rem;color:var(--lime-d);letter-spacing:.03em;text-decoration:none}
-#work-nav .logo b{font-weight:100;font-style:italic;color:var(--lime-d)}
-#work-nav .nav-links{display:flex;gap:2.2rem;list-style:none}
-#work-nav .nav-links a{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color .2s}
-#work-nav .nav-links a:hover,#work-nav .nav-links a.active{color:var(--lime-d)}
-#work-nav .nav-btn{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;padding:.6rem 1.5rem;border:1px solid var(--soft-green);color:var(--lime-d);background:transparent;cursor:none;transition:background .2s,color .2s,border-color .2s;font-family:'Instrument Sans',sans-serif;text-decoration:none}
-#work-nav .nav-btn:hover{background:var(--lime-d);border-color:var(--lime-d);color:#fff}
+
+
+
+
+
+
+
+
+
 .rv{opacity:0;transform:translateY(22px);transition:opacity .65s ease,transform .65s ease}.rv.on{opacity:1;transform:none}
 .rv1{transition-delay:.08s}.rv2{transition-delay:.16s}.rv3{transition-delay:.24s}.rv4{transition-delay:.32s}
 @keyframes up{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
@@ -76,7 +76,7 @@ h1 em{display:block;color:var(--lime-d)!important}
 .btn-g:hover{background:var(--lime);transform:translateY(-2px)}
 .btn-ghost{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;padding:.9rem 2.4rem;background:transparent;color:var(--lime-d);border:1px solid var(--soft-green);cursor:none;transition:border-color .2s,color .2s,transform .18s;font-family:'Instrument Sans',sans-serif;text-decoration:none}
 .btn-ghost:hover{border-color:var(--lime-d);transform:translateY(-2px)}
-@media(max-width:900px){#work-nav{padding:1.2rem 1.5rem}#work-nav .nav-links{display:none}.hero-inner{grid-template-columns:1fr;padding:0 1.5rem}.hero-stats{display:none}.hero-watermark{display:none}.filter-bar{padding:2rem 1.5rem}.work-grid{grid-template-columns:1fr;padding:2rem 1.5rem 4rem}.wcard.featured{grid-column:unset}.w-cta{padding:5rem 1.5rem}.wc-btns{flex-direction:column;align-items:center}#work-footer{padding:2rem 1.5rem;flex-direction:column;text-align:center}#work-footer .flinks{justify-content:center}}
+@media(max-width:900px){.hero-inner{grid-template-columns:1fr;padding:0 1.5rem}.hero-stats{display:none}.hero-watermark{display:none}.filter-bar{padding:2rem 1.5rem}.work-grid{grid-template-columns:1fr;padding:2rem 1.5rem 4rem}.wcard.featured{grid-column:unset}.w-cta{padding:5rem 1.5rem}.wc-btns{flex-direction:column;align-items:center}#work-footer{padding:2rem 1.5rem;flex-direction:column;text-align:center}#work-footer .flinks{justify-content:center}}
 
 .wcard-img{display:block;width:100%;height:100%;object-fit:cover;object-position:top center}
 /* Home-page card shape in globals.css must not apply to Work page cards */
