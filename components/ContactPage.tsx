@@ -3,35 +3,7 @@
 import { useEffect, useState } from 'react';
 import Cursor from '@/components/Cursor';
 import type { ContactPageContent } from '@/lib/cms';
-
-type Faq = { q: string; a: string };
-
-const fallbackFaqs: Faq[] = [
-  {
-    q: 'How long does a typical project take?',
-    a: "It depends on scope, but as a guide: a branding identity takes 2–3 weeks, a marketing site 4–8 weeks, and a full-stack web application 8–16 weeks. After our discovery call, we'll give you a detailed timeline before any work begins.",
-  },
-  {
-    q: "What's your minimum project size?",
-    a: "We typically work on projects starting from $2,000. Smaller one-off tasks like logo design or a single landing page can sometimes fall below this — just reach out and we'll let you know if it's a good fit.",
-  },
-  {
-    q: 'Do you work with clients internationally?',
-    a: 'Absolutely. Our clients span New Zealand, the US, UK, Australia, and the Middle East. We work asynchronously and schedule calls at mutually convenient times — remote collaboration is second nature to us.',
-  },
-  {
-    q: 'What does the payment structure look like?',
-    a: 'We work on a milestone-based payment structure: typically 40% upfront, 40% at design approval, and 20% on final delivery. For larger projects, we can arrange a monthly billing schedule.',
-  },
-  {
-    q: 'Will I own the code and designs after the project?',
-    a: 'Yes. Upon final payment, full intellectual property — including all source code, design files, and assets — transfers entirely to you. No licensing fees, no lock-in, no strings attached.',
-  },
-  {
-    q: 'Do you offer maintenance and support after launch?',
-    a: 'Every project includes a 30-day post-launch support window at no extra cost. After that, we offer flexible monthly retainer plans for ongoing updates, monitoring, and support.',
-  },
-];
+import Footer from '@/components/Footer';
 
 type ContactPageProps = {
   content: ContactPageContent;
@@ -42,7 +14,6 @@ export default function ContactPage({ content }: ContactPageProps) {
   const [tab, setTab] = useState<'project' | 'general'>('project');
   const [step, setStep] = useState(1);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
-  const [budget, setBudget] = useState('');
   const [desc, setDesc] = useState('');
   const [projectFirstName, setProjectFirstName] = useState('');
   const [projectLastName, setProjectLastName] = useState('');
@@ -58,7 +29,7 @@ export default function ContactPage({ content }: ContactPageProps) {
   const [projectError, setProjectError] = useState('');
   const [generalError, setGeneralError] = useState('');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const pageFaqs = content.faqs.length ? content.faqs : fallbackFaqs;
+  const pageFaqs = content.faqs;
 
   useEffect(() => {
     document.body.classList.toggle('menu-open', menuOpen);
@@ -302,12 +273,12 @@ export default function ContactPage({ content }: ContactPageProps) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           enquiryType: 'project',
+          source: 'Contact page – project brief',
           firstName: projectFirstName.trim(),
           lastName: projectLastName.trim(),
           email: projectEmail.trim(),
           phone: projectPhone.trim(),
           services: selectedServices,
-          budget,
           projectDescription: desc.trim(),
         }),
       });
@@ -340,6 +311,7 @@ export default function ContactPage({ content }: ContactPageProps) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           enquiryType: 'general',
+          source: 'Contact page – general enquiry',
           name: generalName.trim(),
           email: generalEmail.trim(),
           message: generalMessage.trim(),
@@ -412,7 +384,7 @@ export default function ContactPage({ content }: ContactPageProps) {
           </div>
           <div className="hero-right">
             <a href={`mailto:${content.hero.email}`} className="hero-detail"><div className="hd-icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" /><polyline points="2,4 12,13 22,4" /></svg></div><div className="hd-text"><span className="hd-label">Email us</span><span className="hd-value">{content.hero.email}</span></div></a>
-            <a href={`tel:${content.hero.phone.replace(/[^+\d]/g, '')}`} className="hero-detail"><div className="hd-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" /></svg></div><div className="hd-text"><span className="hd-label">Call us</span><span className="hd-value">{content.hero.phone}</span></div></a>
+            {content.hero.phone && (<a href={`tel:${content.hero.phone.replace(/[^+\d]/g, '')}`} className="hero-detail"><div className="hd-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" /></svg></div><div className="hd-text"><span className="hd-label">Call us</span><span className="hd-value">{content.hero.phone}</span></div></a>)}
             <div className="hero-detail"><div className="hd-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><polyline points="12,6 12,12 16,14" /></svg></div><div className="hd-text"><span className="hd-label">Response time</span><span className="hd-value">{content.hero.responseTime}</span></div></div>
           </div>
         </div>
@@ -426,7 +398,7 @@ export default function ContactPage({ content }: ContactPageProps) {
           <div className="avail-badge"><div className="avail-dot" /><span className="avail-text">{content.leftPanel.availText}</span></div>
           <div className="contact-methods">
             <a href={`mailto:${content.hero.email}`} className="cm-item"><div className="cm-ico"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" /><polyline points="2,4 12,13 22,4" /></svg></div><div className="cm-body"><div className="cm-label">Email</div><div className="cm-value">{content.hero.email}</div></div><div className="cm-arrow"><svg viewBox="0 0 12 12"><path d="M1 11L11 1M1 1h10v10" /></svg></div></a>
-            <a href={`tel:${content.hero.phone.replace(/[^+\d]/g, '')}`} className="cm-item"><div className="cm-ico"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" /></svg></div><div className="cm-body"><div className="cm-label">Phone</div><div className="cm-value">{content.hero.phone}</div></div><div className="cm-arrow"><svg viewBox="0 0 12 12"><path d="M1 11L11 1M1 1h10v10" /></svg></div></a>
+            {content.hero.phone && (<a href={`tel:${content.hero.phone.replace(/[^+\d]/g, '')}`} className="cm-item"><div className="cm-ico"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" /></svg></div><div className="cm-body"><div className="cm-label">Phone</div><div className="cm-value">{content.hero.phone}</div></div><div className="cm-arrow"><svg viewBox="0 0 12 12"><path d="M1 11L11 1M1 1h10v10" /></svg></div></a>)}
           </div>
         </div>
 
@@ -453,7 +425,7 @@ export default function ContactPage({ content }: ContactPageProps) {
                     <div className="field"><label>Last name <span className="req">*</span></label><input id="lname" type="text" placeholder="Morgan" value={projectLastName} onChange={(e) => setProjectLastName(e.target.value)} /></div>
                   </div>
                   <div className="field"><label>Email address <span className="req">*</span></label><input id="email" type="email" placeholder="alex@example.com" value={projectEmail} onChange={(e) => setProjectEmail(e.target.value)} /></div>
-                  <div className="field"><label>Phone</label><input type="tel" placeholder="+1 (555) 000-0000" value={projectPhone} onChange={(e) => setProjectPhone(e.target.value)} /></div>
+                  <div className="field"><label>Phone</label><input type="tel" placeholder="+64 21 123 4567" value={projectPhone} onChange={(e) => setProjectPhone(e.target.value)} /></div>
                   {projectError && <p style={{ color: '#b91c1c', fontSize: '.76rem', marginTop: '.2rem' }}>{projectError}</p>}
                   <div className="form-nav"><span className="step-count"><b>01</b> / 03</span><button className="btn-next" onClick={() => validateStepOne() ? setStep(2) : setProjectError('Please add first name, last name, and a valid email.')}>Next — Project Info →</button></div>
                 </>
@@ -463,14 +435,8 @@ export default function ContactPage({ content }: ContactPageProps) {
                 <>
                   <div className="field"><label>Services you&apos;re interested in <span className="req">*</span></label></div>
                   <div className="svc-checks">
-                    {['Web Design', 'UI/UX Design', 'Web Development', 'Mobile App', 'E-Commerce', 'Branding', 'SEO', 'Animation / 3D'].map((s) => (
+                    {['Custom Software', 'Web Design', 'Mobile App', 'E-Commerce', 'SEO', 'UI/UX Design', 'Branding & Logo', 'Corporate Website'].map((s) => (
                       <div key={s} className={`svc-check ${selectedServices.includes(s) ? 'checked' : ''}`} onClick={() => toggleService(s)}><div className="svc-check-box" />{s}</div>
-                    ))}
-                  </div>
-                  <div className="field"><label>Estimated budget</label></div>
-                  <div className="budget-grid">
-                    {['< $2k', '$2k–$5k', '$5k–$10k', '$10k–$20k', '$20k+', "Let's discuss"].map((b) => (
-                      <div key={b} className={`budget-opt ${budget === b ? 'sel' : ''}`} onClick={() => setBudget(b)}>{b}</div>
                     ))}
                   </div>
                   <div className="form-nav"><button className="btn-prev" onClick={() => setStep(1)}>← Back</button><span className="step-count"><b>02</b> / 03</span><button className="btn-next" onClick={() => setStep(3)}>Next — Tell us more →</button></div>
@@ -541,7 +507,7 @@ export default function ContactPage({ content }: ContactPageProps) {
           <h2 dangerouslySetInnerHTML={{ __html: content.location.headline }} />
           <p>{content.location.desc}</p>
           <div className="loc-details">
-            <div className="loc-row"><div className="loc-ico"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" /></svg></div><div className="loc-text"><span>Studio</span>{content.location.studio}</div></div>
+            <div className="loc-row"><div className="loc-ico"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" /></svg></div><div className="loc-text"><span>Location</span>{content.location.studio}</div></div>
             <div className="loc-row"><div className="loc-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><polyline points="12,6 12,12 16,14" /></svg></div><div className="loc-text"><span>Working hours</span>{content.location.hours}</div></div>
             <div className="loc-row"><div className="loc-ico"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" /><polyline points="2,4 12,13 22,4" /></svg></div><div className="loc-text"><span>Email</span>{content.hero.email}</div></div>
           </div>
@@ -555,45 +521,7 @@ export default function ContactPage({ content }: ContactPageProps) {
         </div>
       </div>
 
-      <footer id="contact-footer" className="site-footer">
-        <div className="footer-col footer-brand">
-          <a href="/" className="flogo" aria-label="Rivuletduo home">
-            <img src="/rivulet-logo.svg" alt="Rivuletduo" className="brand-logo-footer" />
-          </a>
-          <p className="footer-caption">Designing and building memorable digital experiences with precision and care.</p>
-          <div className="fcopy">© 2026 Rivuletduo. All rights reserved.</div>
-        </div>
-        <div className="footer-col">
-          <div className="fhead">Menu</div>
-          <ul className="flinks">
-            <li><a href="/about">About</a></li>
-            <li><a href="/work">Work</a></li>
-            <li><a href="/contact">Contact</a></li>
-          </ul>
-        </div>
-        <div className="footer-col">
-          <div className="fhead">Services</div>
-          <ul className="flinks">
-            <li><a href="/services">Web Design</a></li>
-            <li><a href="/services">UI/UX Design</a></li>
-            <li><a href="/services">Web Development</a></li>
-            <li><a href="/services">SEO</a></li>
-          </ul>
-        </div>
-        <div className="footer-col">
-          <div className="fhead">Contact</div>
-          <ul className="flinks">
-            <li><a href="mailto:hello@rivuletduo.com">hello@rivuletduo.com</a></li>
-            <li><a href="tel:+15550000000">+1 (555) 000-0000</a></li>
-            <li><span className="fmeta">New Zealand</span></li>
-          </ul>
-          <div className="f-socials">
-            <a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a>
-            <a href="https://linkedin.com" target="_blank" rel="noreferrer">LinkedIn</a>
-            <a href="https://behance.net" target="_blank" rel="noreferrer">Behance</a>
-          </div>
-        </div>
-      </footer>
+      <Footer id="contact-footer" />
     </>
   );
 }

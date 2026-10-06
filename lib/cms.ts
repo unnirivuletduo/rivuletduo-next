@@ -1,3 +1,5 @@
+import { SITE, yearsInBusiness } from '@/lib/site';
+
 export type ServiceCard = {
   num: string;
   title: string;
@@ -37,6 +39,7 @@ export type WorkListItem = {
   featured?: boolean;
   canvasId: string;
   visualType: 'ecommerce' | 'dashboard' | 'brand' | 'webapp' | 'landing' | 'platform';
+  image?: string;
 };
 
 export type WorkDetail = {
@@ -59,6 +62,10 @@ export type WorkDetail = {
   testAv: string;
   testName: string;
   testRole: string;
+  liveUrl?: string;
+  overviewHeading?: [string, string, string?];
+  overview?: string[];
+  showcase?: { label: string; text: string; image?: string }[];
 };
 
 export type HomeBannerContent = {
@@ -142,14 +149,16 @@ function asString(value: unknown, fallback = '') {
 }
 
 function asStringArray(value: unknown, fallback: string[] = []) {
-  if (typeof value === 'string' && value.trim()) {
-    return value
+  let items: string[] = [];
+  if (typeof value === 'string') {
+    items = value
       .split(/\r?\n|,/)
       .map((item) => item.trim())
       .filter(Boolean);
+  } else if (Array.isArray(value)) {
+    items = value.filter((item): item is string => typeof item === 'string' && item.trim().length > 0);
   }
-  if (!Array.isArray(value)) return fallback;
-  return value.filter((item): item is string => typeof item === 'string' && item.trim().length > 0);
+  return items.length > 0 ? items : fallback;
 }
 
 function firstWords(title: string) {
@@ -294,29 +303,19 @@ export async function getWorkDetailsData(): Promise<WorkDetail[] | null> {
       tag: asString(acf.tag, 'Case Study'),
       num: asString(acf.num, `${String(idx + 1).padStart(2, '0')} / ${String(items.length).padStart(2, '0')}`),
       tagline: asString(acf.tagline, stripHtml(item.excerpt?.rendered) || 'Project managed from WordPress.'),
-      client: asString(acf.client, 'Client Name'),
+      client: asString(acf.client, shortName),
       year: asString(acf.year, item.date?.slice(0, 4) || '2026'),
-      duration: asString(acf.duration, '8 weeks'),
+      duration: asString(acf.duration),
       role: asString(acf.role, 'Design + Development'),
-      industry: asString(acf.industry, 'Technology'),
+      industry: asString(acf.industry),
       tags,
-      metrics: asStringArray(acf.metrics, ['+30%', '2.0s', '95', '8wk']).slice(0, 4),
-      mLabels: asStringArray(acf.metric_labels, ['Conversion', 'Load Time', 'Lighthouse', 'Timeline']).slice(0, 4),
-      mChanges: asStringArray(acf.metric_changes, ['Improved', 'Optimized', 'Performance', 'On schedule']).slice(0, 4),
-      testQuote: asString(acf.testimonial_quote, 'Working with Rivuletduo was smooth from kickoff to launch.'),
-      testAv: asString(acf.testimonial_avatar, 'RD'),
-      testName: asString(acf.testimonial_name, 'Client Team'),
-      testRole: asString(acf.testimonial_role, 'Project Lead'),
-    };
-  }).map((project) => {
-    const metrics = project.metrics.length === 4 ? project.metrics : [...project.metrics, '+0%', '2.0s', '95', '8wk'].slice(0, 4);
-    const mLabels = project.mLabels.length === 4 ? project.mLabels : [...project.mLabels, 'Conversion', 'Load Time', 'Lighthouse', 'Timeline'].slice(0, 4);
-    const mChanges = project.mChanges.length === 4 ? project.mChanges : [...project.mChanges, 'Improved', 'Optimized', 'Performance', 'On schedule'].slice(0, 4);
-    return {
-      ...project,
-      metrics,
-      mLabels,
-      mChanges,
+      metrics: asStringArray(acf.metrics).slice(0, 4),
+      mLabels: asStringArray(acf.metric_labels).slice(0, 4),
+      mChanges: asStringArray(acf.metric_changes).slice(0, 4),
+      testQuote: asString(acf.testimonial_quote),
+      testAv: asString(acf.testimonial_avatar),
+      testName: asString(acf.testimonial_name),
+      testRole: asString(acf.testimonial_role),
     };
   });
 }
@@ -324,20 +323,21 @@ export async function getWorkDetailsData(): Promise<WorkDetail[] | null> {
 function fallbackHomeContent(): HomeContent {
   return {
     banner: {
-      badge: 'Est. 2024 · Web Dev Studio',
+      badge: `Est. ${SITE.foundedYear} · Software Development · New Zealand`,
       headlineLine1: 'We Build',
-      headlineEmphasis: 'Digital',
-      headlineLine3: 'Experiences',
-      subcopy: 'From pixel-perfect interfaces to scalable full-stack systems — we craft web products that feel as good as they perform.',
+      headlineEmphasis: 'Software',
+      headlineLine3: 'That Scales',
+      subcopy: 'Rivuletduo is a New Zealand software development company. We design, build and grow custom software, websites, mobile apps and online stores — with SEO and performance built in from day one.',
       tickerItems: [
-        'React & Next.js',
-        'Tailwind & Motion',
-        'Node & Express',
-        'PostgreSQL & Supabase',
-        'UI / UX Design',
-        'API Architecture',
-        'Performance Optimisation',
+        'Custom Software',
+        'Web Applications',
+        'Website Development',
+        'Mobile Apps',
+        'E-Commerce',
         'SEO & Analytics',
+        'UI / UX Design',
+        'Cloud & API Integration',
+        'Maintenance & Support',
       ],
     },
     process: [
@@ -361,9 +361,9 @@ function fallbackHomeContent(): HomeContent {
       },
       {
         n: '04',
-        title: 'Launch & Support',
-        desc: 'Smooth handoff, comprehensive training, and ongoing support baked into every engagement. We stay long after go-live — for good.',
-        tags: ['Deploy', 'Training', 'Support'],
+        title: 'Launch & Grow',
+        desc: 'Deployment, SEO setup, analytics and training, with ongoing support baked into every engagement. We stay long after go-live to help you grow.',
+        tags: ['Deploy', 'SEO', 'Support'],
       },
     ],
     testimonials: [
@@ -375,7 +375,7 @@ function fallbackHomeContent(): HomeContent {
       },
       {
         initials: 'SM',
-        text: 'A complex dashboard in two weeks, on budget, zero compromise on quality. Genuinely impressive duo.',
+        text: 'A complex dashboard in two weeks, on budget, zero compromise on quality. Genuinely impressive team.',
         name: 'Sofia Mercer',
         role: 'CTO, FlowMetrics',
       },
@@ -421,7 +421,7 @@ export async function getHomeContentData(): Promise<HomeContent> {
         desc: asString(step?.desc, fallback.process[idx]?.desc || 'Process step description'),
         tags: asStringArray(step?.tags, fallback.process[idx]?.tags || ['Process']),
       })),
-      testimonials: (Array.isArray(data.testimonials) ? data.testimonials : fallback.testimonials).slice(0, 8).map((item, idx) => ({
+      testimonials: (Array.isArray(data.testimonials) && data.testimonials.length > 0 ? data.testimonials : fallback.testimonials).slice(0, 8).map((item, idx) => ({
         initials: asString(item?.initials, fallback.testimonials[idx]?.initials || 'RD'),
         text: asString(item?.text, fallback.testimonials[idx]?.text || 'Great partnership and results.'),
         name: asString(item?.name, fallback.testimonials[idx]?.name || 'Client Name'),
@@ -465,56 +465,58 @@ export type ContactPageContent = {
   };
 };
 
+export const CONTACT_FAQS: ContactFaq[] = [
+  {
+    q: 'How long does a typical project take?',
+    a: "It depends on scope, but as a guide: a branding identity takes 2–3 weeks, a marketing website 4–8 weeks and a custom web application 8–16 weeks. Mobile apps and larger software platforms vary more. After our discovery call, we'll give you a detailed timeline before any work begins.",
+  },
+  {
+    q: 'Do you work with clients outside New Zealand?',
+    a: "Absolutely. We're based in Auckland and build software, websites and apps for clients in the US, UK, Australia and around the world. We schedule calls at times that suit your time zone — remote collaboration is second nature to us.",
+  },
+  {
+    q: 'Can you work on an existing website or app?',
+    a: 'Yes. We can audit, fix, improve or extend existing websites, apps and software — including performance and SEO problems — or recommend a rebuild when that makes more sense.',
+  },
+  {
+    q: 'Will I own the code and designs after the project?',
+    a: 'Yes. Upon final payment, full intellectual property — including all source code, design files and assets — transfers entirely to you. No licensing fees, no lock-in, no strings attached.',
+  },
+  {
+    q: 'Do you offer maintenance and support after launch?',
+    a: 'Yes. We offer ongoing support and maintenance plans covering updates, security, monitoring, improvements and SEO, so your website or software keeps performing long after launch.',
+  },
+  {
+    q: 'What happens after I send an enquiry?',
+    a: "We'll reply within 24 hours to arrange a short discovery call. After that, we'll send a clear proposal outlining scope, approach and timeline — with no obligation to go ahead.",
+  },
+];
+
 function fallbackContactPageContent(): ContactPageContent {
   return {
     hero: {
       eyebrow: 'Get in touch',
-      headline: "<span>Let's build</span><span>something</span><span><i>worth feeling.</i></span>",
-      subcopy: "Tell us about your project and we'll get back to you within 24 hours. No obligations, no hard sell - just an honest conversation.",
-      email: 'hello@rivuletduo.com',
-      phone: '+1 (555) 000-0000',
+      headline: "<span>Let's talk about</span><span>your next</span><span><i>project.</i></span>",
+      subcopy: "Tell us about your project and we'll get back to you within 24 hours. No obligations, no hard sell — just an honest conversation.",
+      email: SITE.email,
+      phone: SITE.phone,
       responseTime: 'Within 24 hours',
     },
     leftPanel: {
       label: 'Why reach out',
-      headline: 'Every great site starts with a <i>conversation</i>',
-      desc: "We'd love to hear from you. Whether you have a fully-formed brief or just a rough idea, we're here to help you figure out the path forward - no jargon, no pressure.",
+      headline: 'Every great project starts with a <i>conversation</i>',
+      desc: "We'd love to hear from you. Whether you have a detailed brief or just a rough idea, we'll help you work out the best path forward — no jargon, no pressure.",
       availText: 'Currently accepting new projects',
     },
-    faqs: [
-      {
-        q: 'How long does a typical project take?',
-        a: "It depends on scope, but as a guide: a branding identity takes 2-3 weeks, a marketing site 4-8 weeks, and a full-stack web application 8-16 weeks. After our discovery call, we'll give you a detailed timeline before any work begins.",
-      },
-      {
-        q: "What's your minimum project size?",
-        a: "We typically work on projects starting from $2,000. Smaller one-off tasks like logo design or a single landing page can sometimes fall below this - just reach out and we'll let you know if it's a good fit.",
-      },
-      {
-        q: 'Do you work with clients internationally?',
-        a: 'Absolutely. Our clients span New Zealand, the US, UK, Australia, and the Middle East. We work asynchronously and schedule calls at mutually convenient times - remote collaboration is second nature to us.',
-      },
-      {
-        q: 'What does the payment structure look like?',
-        a: 'We work on a milestone-based payment structure: typically 40% upfront, 40% at design approval, and 20% on final delivery. For larger projects, we can arrange a monthly billing schedule.',
-      },
-      {
-        q: 'Will I own the code and designs after the project?',
-        a: 'Yes. Upon final payment, full intellectual property - including all source code, design files, and assets - transfers entirely to you. No licensing fees, no lock-in, no strings attached.',
-      },
-      {
-        q: 'Do you offer maintenance and support after launch?',
-        a: 'Every project includes a 30-day post-launch support window at no extra cost. After that, we offer flexible monthly retainer plans for ongoing updates, monitoring, and support.',
-      },
-    ],
+    faqs: CONTACT_FAQS,
     location: {
       label: 'Where we are',
-      headline: 'Based in <i>New Zealand,</i><br />building for the world',
-      desc: 'We work remotely with clients across the globe. Our studio is rooted in New Zealand - but our work reaches San Francisco, London, Dubai, and beyond.',
-      studio: 'New Zealand',
-      hours: 'Monday - Friday, 9am - 6pm NZST',
-      mapLabel: 'New Zealand',
-      mapCoords: '41.2865° S, 174.7762° E',
+      headline: 'Based in <i>Auckland,</i><br />building for the world',
+      desc: 'Our team is rooted in Auckland, New Zealand, and our work reaches clients across New Zealand, the US, the UK, Australia and beyond. We collaborate remotely, wherever you are.',
+      studio: SITE.location,
+      hours: 'Monday – Friday, 9am – 6pm NZT',
+      mapLabel: 'Auckland, NZ',
+      mapCoords: '36.8485° S, 174.7633° E',
     },
   };
 }
@@ -598,12 +600,6 @@ export type AboutTeamMember = {
   skills: string[];
 };
 
-export type AboutTimelineItem = {
-  year: string;
-  title: string;
-  desc: string;
-};
-
 export type AboutPhilosophy = {
   quote: string;
   attr: string;
@@ -620,7 +616,6 @@ export type AboutContent = {
   story: AboutStory;
   values: AboutValue[];
   team: AboutTeamMember[];
-  timeline: AboutTimelineItem[];
   philosophy: AboutPhilosophy;
   stack: AboutStackCategory[];
 };
@@ -628,22 +623,22 @@ export type AboutContent = {
 function fallbackAboutContent(): AboutContent {
   return {
     hero: {
-      headline: 'Two minds,<br />one <i>vision</i>',
-      subheadline: 'We are Rivuletduo — a tight-knit studio where engineering precision meets design intuition. We build the web experiences people remember.',
+      headline: 'Built in New Zealand,<br />trusted <i>worldwide</i>',
+      subheadline: 'Rivuletduo is a New Zealand software development company. Since 2021 we have helped businesses in New Zealand, the US, the UK and Australia design, build and grow custom software, websites, mobile apps and online stores.',
       stats: [
-        { n: '48+', l: 'Projects' },
-        { n: '6yr', l: 'Experience' },
-        { n: '100%', l: 'Satisfaction' },
+        { n: `${yearsInBusiness()}yr`, l: 'Experience' },
+        { n: '4+', l: 'Countries Served' },
+        { n: 'NZ', l: 'Based' },
       ],
     },
-    tickerItems: ['Two Person Studio', 'New Zealand', 'Remote Friendly', 'Founded 2019', 'Open to Collaboration', 'Full-Stack Craft', 'Two Person Studio', 'New Zealand', 'Remote Friendly', 'Founded 2019', 'Open to Collaboration', 'Full-Stack Craft'],
+    tickerItems: ['Software Development', 'Based in New Zealand', `Founded ${SITE.foundedYear}`, 'Clients Worldwide', 'Web · Mobile · E-Commerce', 'SEO Built In'],
     story: {
       paragraphs: [
-        'Rivuletduo was born from a shared obsession — the belief that a website is never just a website. It is a living thing: it breathes, it moves, it speaks before a word is read.',
-        'We met building side projects late into the night, each bringing a different half of the equation. One thinking in pixels and space, the other in systems and logic. The result was something neither could build alone.',
-        'Since 2019 we have partnered with startups, creative agencies, and ambitious founders who refuse to settle for ordinary. Every project we take on becomes a reflection of that ethos — deliberate, precise, and made to last.'
+        `Rivuletduo started in New Zealand in ${SITE.foundedYear} with a simple belief: businesses deserve software that is built properly — fast, reliable, easy to use and designed around how they actually work.`,
+        'Since then we have grown into a full-service software development company, designing and building custom web applications, websites, mobile apps and online stores for startups, small businesses and established organisations.',
+        'Our home is New Zealand, but our clients are not limited by geography. We work with businesses across New Zealand, the US, the UK and Australia — and every project gets the same care, whether it is a first website or a complex software platform.',
       ],
-      badgeYear: '2019',
+      badgeYear: String(SITE.foundedYear),
       badgeLabel: 'Founded',
     },
     values: [
@@ -654,26 +649,16 @@ function fallbackAboutContent(): AboutContent {
       { title: 'Long-term thinking', desc: 'We build for the next five years, not the next sprint. Scalable architecture, clean handoffs, and comprehensive documentation are not optional extras — they are our standard.' },
       { title: 'Partnership, not service', desc: 'We do not hand you a finished file and disappear. We become embedded in your product\'s story — advisors, builders, and advocates for the long haul.' }
     ],
-    team: [
-      { role: 'Co-Founder · Design & Frontend', name: 'Aryan Mehta', bio: 'Aryan leads visual direction and frontend architecture. He obsesses over type, motion, and the invisible moments between interactions that make an interface feel alive.', skills: ['Figma', 'React', 'Three.js', 'CSS Animation', 'UI Systems'] },
-      { role: 'Co-Founder · Engineering & Strategy', name: 'Rahul Nair', bio: 'Rahul architects the systems that make everything run. He lives in the spaces between database query and rendered pixel — finding the optimisation no-one else thought to look for.', skills: ['Next.js', 'Node.js', 'PostgreSQL', 'GraphQL', 'DevOps'] }
-    ],
-    timeline: [
-      { year: '2019', title: 'The beginning', desc: 'Two developers, one shared Notion doc, and a stubborn conviction that small studios could outperform large agencies. Rivuletduo takes its first client project.' },
-      { year: '2020', title: 'Going fully remote', desc: 'We formalise a fully remote workflow and onboard our first international clients. The studio doubles its project count in twelve months.' },
-      { year: '2021', title: 'First e-commerce milestone', desc: 'Verdant Goods launches — our most ambitious Shopify build to date. Conversion rates jump 40% within the first quarter, setting a new benchmark for our e-commerce practice.' },
-      { year: '2022', title: 'Three.js & immersive web', desc: 'We invest deeply in WebGL and immersive interfaces. FlowMetrics launches with a fully 3D data dashboard — a project featured in three design publications.' },
-      { year: '2024', title: '48 projects shipped', desc: 'We reach 48 shipped projects, zero compromised deadlines, and a client satisfaction rate we are quietly proud of. Every one of those clients has our direct number.' }
-    ],
+    team: [],
     philosophy: {
-      quote: "The web is the most intimate canvas ever invented. It can see you, respond to you, change for you. We think that demands more than most studios are willing to give.",
-      attr: "Aryan & Rahul — Rivuletduo"
+      quote: 'Good software disappears into the work it supports. Our job is to make technology feel effortless for the people who use it — and dependable for the businesses that rely on it.',
+      attr: 'Rivuletduo'
     },
     stack: [
-      { cat: 'Design', items: ['Figma', 'Framer', 'Adobe Illustrator', 'Lottie / Rive', 'Spline'] },
-      { cat: 'Frontend', items: ['React / Next.js', 'Three.js / GSAP', 'TypeScript', 'Tailwind CSS', 'Framer Motion'] },
-      { cat: 'Backend', items: ['Node.js / Express', 'PostgreSQL', 'GraphQL', 'Prisma ORM', 'Supabase'] },
-      { cat: 'CMS & Infra', items: ['Sanity.io', 'Contentful', 'Vercel / Netlify', 'Shopify / WooCommerce', 'AWS S3 / CloudFront'] }
+      { cat: 'Design', items: ['Figma', 'Framer', 'Adobe Illustrator', 'Lottie / Rive', 'Storybook'] },
+      { cat: 'Web & Mobile', items: ['React / Next.js', 'React Native', 'TypeScript', 'Tailwind CSS', 'Three.js / GSAP'] },
+      { cat: 'Backend & Cloud', items: ['Node.js / Express', 'PostgreSQL', 'GraphQL / REST', 'Supabase', 'AWS / Vercel'] },
+      { cat: 'CMS, Commerce & SEO', items: ['WordPress', 'Sanity / Contentful', 'Shopify / WooCommerce', 'Stripe', 'Search Console / GA4'] }
     ]
   };
 }
@@ -703,7 +688,6 @@ export async function getAboutContentData(): Promise<AboutContent> {
       },
       values: Array.isArray(data.values) && data.values.length > 0 ? data.values : fallback.values,
       team: Array.isArray(data.team) && data.team.length > 0 ? data.team : fallback.team,
-      timeline: Array.isArray(data.timeline) && data.timeline.length > 0 ? data.timeline : fallback.timeline,
       philosophy: {
         quote: asString(data.philosophy?.quote, fallback.philosophy.quote),
         attr: asString(data.philosophy?.attr, fallback.philosophy.attr),

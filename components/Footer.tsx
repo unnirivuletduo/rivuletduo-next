@@ -1,10 +1,13 @@
-export default function Footer() {
+import { SITE, telHref } from '@/lib/site';
+
+export default function Footer({ id }: { id?: string }) {
   return (
-    <footer className="site-footer">
+    <footer id={id} className="site-footer">
       <div className="footer-col footer-brand">
         <a href="/" className="flogo" aria-label="Rivuletduo home"><img src="/rivulet-logo.svg" alt="Rivuletduo" className="brand-logo-footer" /></a>
         <p className="footer-caption">Designing and building memorable digital experiences with precision and care.</p>
-        <div className="fcopy">© 2026 Rivuletduo. All rights reserved.</div>
+        <p className="footer-partner">In partnership with <a href="https://brandalchemy.co.nz" target="_blank" rel="noopener">Brand Alchemy</a></p>
+        <div className="fcopy">© {new Date().getFullYear()} {SITE.name}. All rights reserved.</div>
       </div>
 
       <div className="footer-col">
@@ -19,19 +22,19 @@ export default function Footer() {
       <div className="footer-col">
         <div className="fhead">Services</div>
         <ul className="flinks">
-          <li><a href="/services">Web Design</a></li>
-          <li><a href="/services">UI/UX Design</a></li>
-          <li><a href="/services">Web Development</a></li>
-          <li><a href="/services">SEO</a></li>
+          <li><a href="/services/webdesign">Web Design</a></li>
+          <li><a href="/services/ui">UI/UX Design</a></li>
+          <li><a href="/services/webdev">Custom Software</a></li>
+          <li><a href="/services/seo">SEO</a></li>
         </ul>
       </div>
 
       <div className="footer-col">
         <div className="fhead">Contact</div>
         <ul className="flinks">
-          <li><a href="mailto:hello@rivuletduo.com">hello@rivuletduo.com</a></li>
-          <li><a href="tel:+15550000000">+1 (555) 000-0000</a></li>
-          <li><span className="fmeta">New Zealand</span></li>
+          <li><a href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
+          {SITE.phone && <li><a href={telHref(SITE.phone)}>{SITE.phone}</a></li>}
+          <li><span className="fmeta">{SITE.location}</span></li>
         </ul>
         <div className="f-socials">
           <a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a>

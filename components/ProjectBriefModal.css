@@ -90,10 +90,6 @@
 .pj-svc-check-box { width: 14px; height: 14px; border-radius: 4px; border: 1px solid #cbd5e1; display: flex; align-items: center; justify-content: center; }
 .pj-svc-check.checked .pj-svc-check-box { background: #22c55e; border-color: #22c55e; }
 
-.pj-budget-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 2rem; }
-.pj-budget-opt { padding: 0.75rem; text-align: center; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 0.85rem; color: #475569; cursor: pointer; transition: all 0.2s ease; }
-.pj-budget-opt:hover { background: #f8fafc; color: #0f172a; }
-.pj-budget-opt.sel { background: #0f172a; border-color: #0f172a; color: #fff; font-weight: 500; }
 
 .pj-btn-submit-main { display: inline-flex; align-items: center; justify-content: center; width: 100%; padding: 1rem; background: #22c55e; color: #fff; font-size: 1rem; font-weight: 500; border: none; border-radius: 10px; cursor: pointer; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
 .pj-btn-submit-main:hover:not(:disabled) { background: #16a34a; transform: translateY(-2px); box-shadow: 0 10px 20px -5px rgba(22, 163, 74, 0.4); }
@@ -109,6 +105,5 @@
 
 @media (max-width: 600px) {
   .pj-form-row { grid-template-columns: 1fr; gap: 0; }
-  .pj-budget-grid { grid-template-columns: repeat(2, 1fr); }
   .pj-modal-container { padding: 2rem 1.5rem; }
 }

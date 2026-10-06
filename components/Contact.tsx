@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import { SITE } from '@/lib/site';
 
 export default function Contact() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -21,10 +22,11 @@ export default function Contact() {
     setError('');
     setSubmitting(true);
     
-    const enquiryType = subject === 'Project inquiry' ? 'project' : 'general';
-    const payload = enquiryType === 'project' 
-      ? { enquiryType, firstName, lastName, email, projectDescription: message }
-      : { enquiryType, name: `${firstName} ${lastName}`.trim(), email, message };
+    const enquiryType = subject === 'Project enquiry' ? 'project' : 'general';
+    const common = { subject, source: 'Home page contact form' };
+    const payload = enquiryType === 'project'
+      ? { ...common, enquiryType, firstName, lastName, email, projectDescription: message }
+      : { ...common, enquiryType, name: `${firstName} ${lastName}`.trim(), email, message };
 
     try {
       const response = await fetch('/api/contact', {
@@ -154,19 +156,21 @@ export default function Contact() {
               <div className="icon">
                 <svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z" /><polyline points="4,4 12,13 20,4" /></svg>
               </div>
-              hello@rivuletduo.com
+              {SITE.email}
             </div>
-            <div className="contact-detail">
-              <div className="icon">
-                <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" /></svg>
+            {SITE.phone && (
+              <div className="contact-detail">
+                <div className="icon">
+                  <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" /></svg>
+                </div>
+                {SITE.phone}
               </div>
-              +1 (555) 000-0000
-            </div>
+            )}
             <div className="contact-detail">
               <div className="icon">
                 <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" /></svg>
               </div>
-              San Francisco, CA
+              {SITE.location}
             </div>
           </div>
         </div>
@@ -200,7 +204,7 @@ export default function Contact() {
                 <label>Subject</label>
                 <select value={subject} onChange={(e) => setSubject(e.target.value)}>
                   <option value="" disabled>Choose a topic</option>
-                  <option>Project inquiry</option>
+                  <option>Project enquiry</option>
                   <option>Partnership</option>
                   <option>General question</option>
                   <option>Other</option>

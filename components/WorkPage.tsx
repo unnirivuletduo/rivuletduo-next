@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import Cursor from '@/components/Cursor';
 import type { WorkListItem as CmsWorkListItem } from '@/lib/cms';
+import Footer from '@/components/Footer';
+import { yearsInBusiness } from '@/lib/site';
 
 type WorkItem = {
   id: string;
@@ -17,87 +19,163 @@ type WorkItem = {
   featured?: boolean;
   canvasId: string;
   visualType: 'ecommerce' | 'dashboard' | 'brand' | 'webapp' | 'landing' | 'platform';
+  image?: string;
 };
 
 const works: WorkItem[] = [
   {
-    id: 'verdant',
-    href: '/work/verdant-goods',
+    id: 'grab-a-rental-car',
+    href: '/work/grab-a-rental-car',
     num: '01',
-    year: '2023',
-    tag: 'Shopify · Brand',
-    title: 'Verdant Goods',
-    desc: 'A sustainable goods store rebuilt from the ground up.',
-    services: ['E-Commerce', 'UI / UX Design', 'SEO & Performance'],
-    category: 'E-Commerce',
-    featured: true,
-    canvasId: 'wcverdant',
-    visualType: 'ecommerce',
-  },
-  {
-    id: 'flowmetrics',
-    href: '/work/flowmetrics',
-    num: '02',
-    year: '2023',
-    tag: 'Dashboard · React',
-    title: 'FlowMetrics',
-    desc: 'A real-time analytics dashboard nobody expected to love.',
-    services: ['Frontend Dev', 'UI / UX Design', 'Full-Stack'],
-    category: 'SaaS',
-    canvasId: 'wcflowmetrics',
-    visualType: 'dashboard',
-  },
-  {
-    id: 'celadon',
-    href: '/work/celadon-studio',
-    num: '03',
-    year: '2022',
-    tag: 'Next.js · Motion',
-    title: 'Celadon Studio',
-    desc: 'A creative studio website that is itself a piece of craft.',
-    services: ['UI / UX Design', 'Frontend Dev', 'CMS & Support'],
-    category: 'Brand',
-    canvasId: 'wcceladon',
-    visualType: 'brand',
-  },
-  {
-    id: 'heliostack',
-    href: '/work/heliostack',
-    num: '04',
-    year: '2024',
-    tag: 'Full-Stack · React',
-    title: 'Heliostack',
-    desc: 'A project management platform built for solar installation teams.',
-    services: ['Full-Stack', 'UI / UX Design', 'DevOps'],
-    category: 'Web App',
-    canvasId: 'wcheliostack',
-    visualType: 'webapp',
-  },
-  {
-    id: 'kova',
-    href: '/work/kova-finance',
-    num: '05',
-    year: '2024',
-    tag: 'Landing · Next.js',
-    title: 'Kova Finance',
-    desc: 'A fintech landing page that converts like a sales team.',
-    services: ['UI / UX Design', 'Frontend Dev', 'SEO & Performance'],
-    category: 'Fintech',
-    canvasId: 'wckova',
-    visualType: 'landing',
-  },
-  {
-    id: 'arbor',
-    href: '/work/arbor-platform',
-    num: '06',
-    year: '2023',
-    tag: 'Full-Stack · SaaS',
-    title: 'Arbor Platform',
-    desc: 'A carbon tracking platform for mid-market businesses.',
-    services: ['Full-Stack', 'UI / UX Design', 'CMS & Support'],
-    category: 'Platform',
-    canvasId: 'wcarbor',
+    year: '2025',
+    tag: 'Car Rental · Booking Platform',
+    title: 'Grab A Rental Car',
+    desc: 'An online booking platform for an Auckland car rental company — vehicle listings, quotes, Stripe payments and a custom operations dashboard.',
+    services: ['Web Design', 'Custom Software', 'E-Commerce', 'SEO'],
+    category: 'Booking Platform',
+    canvasId: 'wcgrabarental',
     visualType: 'platform',
+    image: '/work/grab-a-rental-car/home.webp',
+  },
+  {
+    id: 'event-display',
+    href: '/work/event-display',
+    num: '02',
+    year: '2026',
+    tag: 'LED Screen Hire · WooCommerce',
+    title: 'Event Display',
+    desc: 'A rental and quoting site for a NZ LED screen hire company — choose a display by size, pick rental dates and request a quote.',
+    services: ['Web Design', 'E-Commerce', 'Custom Software', 'SEO'],
+    category: 'Booking Platform',
+    canvasId: 'wceventdisplay',
+    visualType: 'platform',
+    image: '/work/event-display/home.webp',
+  },
+  {
+    id: 'baby-cart',
+    href: '/work/baby-cart',
+    num: '03',
+    year: '2026',
+    tag: 'E-Commerce · WooCommerce',
+    title: 'Baby Cart',
+    desc: 'A New Zealand online store for baby gear — 100+ products across 10+ categories, Stripe, Apple Pay and Afterpay, NZ-wide delivery and a custom management dashboard.',
+    services: ['Web Design', 'E-Commerce', 'Custom Software', 'SEO'],
+    category: 'E-Commerce',
+    canvasId: 'wcbabycart',
+    visualType: 'ecommerce',
+    image: '/work/baby-cart/home.webp',
+  },
+  {
+    id: 'bworth',
+    href: '/work/bworth',
+    num: '04',
+    year: '2025',
+    tag: 'Outdoor Living · Product Showcase',
+    title: 'Bworth',
+    desc: 'A product showcase and lead-generation site for a NZ outdoor living company — 18 products, a comparison tool and free onsite quote requests.',
+    services: ['Web Design', 'Web Development', 'SEO'],
+    category: 'Product Showcase',
+    canvasId: 'wcbworth',
+    visualType: 'landing',
+    image: '/work/bworth/home.webp',
+  },
+  {
+    id: 'brand-alchemy',
+    href: '/work/brand-alchemy',
+    num: '05',
+    year: '2025',
+    tag: 'Creative Agency · Next.js',
+    title: 'Brand Alchemy',
+    desc: 'A motion-led Next.js website for a NZ creative and brand agency — video storytelling, animated typography, and service and industry pages.',
+    services: ['Web Development', 'UI/UX Design', 'SEO'],
+    category: 'Creative Agency',
+    canvasId: 'wcbrandalchemy',
+    visualType: 'brand',
+    image: '/work/brand-alchemy/home.webp',
+  },
+  {
+    id: 'craft-shed',
+    href: '/work/craft-shed',
+    num: '06',
+    year: '2026',
+    tag: 'Blinds & Outdoor Living · WordPress',
+    title: 'Craft Shed',
+    desc: 'A lead-generation site for a NZ blinds, shutters and outdoor living company — 17 products in two collections with free in-home quote requests.',
+    services: ['Web Design', 'Web Development', 'SEO'],
+    category: 'Product Showcase',
+    canvasId: 'wccraftshed',
+    visualType: 'landing',
+    image: '/work/craft-shed/home.webp',
+  },
+  {
+    id: 'earthy',
+    href: '/work/earthy',
+    num: '07',
+    year: '2025',
+    tag: 'Eco Products · WordPress',
+    title: 'Earthy',
+    desc: 'A product catalogue site for a NZ eco-friendly cleaning brand — seven product categories, a sustainability blog and offices nationwide.',
+    services: ['Web Development', 'SEO'],
+    category: 'Product Showcase',
+    canvasId: 'wcearthy',
+    visualType: 'brand',
+    image: '/work/earthy/home.webp',
+  },
+  {
+    id: 'unicorn-accounting',
+    href: '/work/unicorn-accounting',
+    num: '08',
+    year: '2026',
+    tag: 'Accounting Firm · WordPress',
+    title: 'Unicorn Accounting',
+    desc: 'A trust-building site for Henderson chartered accountants — designed as a React prototype, built as a fully editable WordPress theme.',
+    services: ['UI/UX Design', 'Web Development', 'SEO'],
+    category: 'Professional Services',
+    canvasId: 'wcunicorn',
+    visualType: 'landing',
+    image: '/work/unicorn-accounting/home.webp',
+  },
+  {
+    id: 'the-concreator',
+    href: '/work/the-concreator',
+    num: '09',
+    year: '2025',
+    tag: 'Architecture Studio · WordPress',
+    title: 'The Concreator',
+    desc: 'A portfolio site for an architecture and interior design studio — animated project showcases, service pages and video media.',
+    services: ['Web Development', 'UI/UX Design', 'SEO'],
+    category: 'Professional Services',
+    canvasId: 'wcconcreator',
+    visualType: 'brand',
+    image: '/work/the-concreator/home.webp',
+  },
+  {
+    id: 'nz-motorcycle-movers',
+    href: '/work/nz-motorcycle-movers',
+    num: '10',
+    year: '2024',
+    tag: 'Transport & Logistics · WordPress',
+    title: 'NZ Motorcycle Movers',
+    desc: 'A website and online tracking system for a nationwide motorcycle transport company — quotes, delivery scheduling and rego tracking.',
+    services: ['Web Design', 'Web Development', 'Custom Software'],
+    category: 'Transport & Logistics',
+    canvasId: 'wcnzmm',
+    visualType: 'platform',
+    image: '/work/nz-motorcycle-movers/home.webp',
+  },
+  {
+    id: 'unique-movers',
+    href: '/work/unique-movers',
+    num: '11',
+    year: '2024',
+    tag: 'Removals · Custom PHP',
+    title: 'Unique Movers',
+    desc: 'A fast, custom PHP website for an Auckland moving company — five service pages and a detailed online enquiry form.',
+    services: ['Web Design', 'Web Development', 'SEO'],
+    category: 'Transport & Logistics',
+    canvasId: 'wcuniquemovers',
+    visualType: 'landing',
+    image: '/work/unique-movers/home.webp',
   },
 ];
 
@@ -409,11 +487,11 @@ export default function WorkPage({ works: cmsWorks }: WorkPageProps = {}) {
             <h1>Work we&apos;re<br /><em>proud of</em></h1>
           </div>
           <div>
-            <p className="h-sub">Six projects across e-commerce, SaaS, brand, and platform — each one a reflection of the same obsessive standard of craft.</p>
+            <p className="h-sub">Websites, online stores and custom software we have designed and built for businesses in New Zealand and beyond.</p>
             <div className="hero-stats">
-              <div className="hs-item"><div className="hs-n">06</div><div className="hs-l">Featured projects</div></div>
-              <div className="hs-item"><div className="hs-n">48+</div><div className="hs-l">Total delivered</div></div>
-              <div className="hs-item"><div className="hs-n">2022–24</div><div className="hs-l">Span</div></div>
+              <div className="hs-item"><div className="hs-n">{String(worksData.length).padStart(2, '0')}</div><div className="hs-l">Featured projects</div></div>
+              <div className="hs-item"><div className="hs-n">{yearsInBusiness()}yr</div><div className="hs-l">Experience</div></div>
+              <div className="hs-item"><div className="hs-n">NZ</div><div className="hs-l">Based</div></div>
             </div>
           </div>
         </div>
@@ -421,7 +499,7 @@ export default function WorkPage({ works: cmsWorks }: WorkPageProps = {}) {
 
       <div className="ticker-wrap">
         <div className="ticker">
-          {['Verdant Goods', 'FlowMetrics', 'Celadon Studio', 'Heliostack', 'Kova Finance', 'Arbor Platform', 'Verdant Goods', 'FlowMetrics', 'Celadon Studio', 'Heliostack', 'Kova Finance', 'Arbor Platform'].map((item, idx) => (
+          {[...worksData, ...worksData, ...worksData, ...worksData].map((w) => w.title).map((item, idx) => (
             <span className="ticker-item" key={idx}>{item}<span className="tdot" /></span>
           ))}
         </div>
@@ -436,7 +514,7 @@ export default function WorkPage({ works: cmsWorks }: WorkPageProps = {}) {
       <div className="work-grid" id="workGrid">
         {worksData.map((work) => (
           <a href={work.href} className={`wcard ${work.featured ? 'featured' : ''}`} key={work.id} data-category={work.category}>
-            <div className="wcard-canvas-wrap"><canvas id={work.canvasId} /><div className="wcard-canvas-overlay" /></div>
+            <div className="wcard-canvas-wrap">{work.image ? <img className="wcard-img" src={work.image} alt={`${work.title} website`} loading="lazy" /> : <canvas id={work.canvasId} />}<div className="wcard-canvas-overlay" /></div>
             <div className="wcard-num">{work.num}</div><div className="wcard-year">{work.year}</div>
             <div className="wcard-body">
               <div className="wcard-tag">{work.tag}</div>
@@ -454,47 +532,11 @@ export default function WorkPage({ works: cmsWorks }: WorkPageProps = {}) {
       <section className="w-cta">
         <div className="wc-label rv">Start Something New</div>
         <h2 className="wc-h2 rv rv1">Your project<br />could be <em>next</em></h2>
-        <p className="wc-sub rv rv2">We take on a small number of projects at a time. When you work with Rivuletduo, you get our full attention.</p>
+        <p className="wc-sub rv rv2">Tell us about your website, app or software idea. We&apos;ll get back to you within 24 hours with honest advice and clear next steps.</p>
         <div className="wc-btns rv rv3"><a className="btn-g" href="#project" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event("open-project-modal")); }}>Start a Project</a><a className="btn-ghost" href="/services">View Services</a></div>
       </section>
 
-      <footer id="work-footer" className="site-footer">
-        <div className="footer-col footer-brand">
-          <a href="/" className="flogo" aria-label="Rivuletduo home"><img src="/rivulet-logo.svg" alt="Rivuletduo" className="brand-logo-footer" /></a>
-          <p className="footer-caption">Designing and building memorable digital experiences with precision and care.</p>
-          <div className="fcopy">© 2026 Rivuletduo. All rights reserved.</div>
-        </div>
-        <div className="footer-col">
-          <div className="fhead">Menu</div>
-          <ul className="flinks">
-            <li><a href="/about">About</a></li>
-            <li><a href="/work">Work</a></li>
-            <li><a href="/contact">Contact</a></li>
-          </ul>
-        </div>
-        <div className="footer-col">
-          <div className="fhead">Services</div>
-          <ul className="flinks">
-            <li><a href="/services">Web Design</a></li>
-            <li><a href="/services">UI/UX Design</a></li>
-            <li><a href="/services">Web Development</a></li>
-            <li><a href="/services">SEO</a></li>
-          </ul>
-        </div>
-        <div className="footer-col">
-          <div className="fhead">Contact</div>
-          <ul className="flinks">
-            <li><a href="mailto:hello@rivuletduo.com">hello@rivuletduo.com</a></li>
-            <li><a href="tel:+15550000000">+1 (555) 000-0000</a></li>
-            <li><span className="fmeta">New Zealand</span></li>
-          </ul>
-          <div className="f-socials">
-            <a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a>
-            <a href="https://linkedin.com" target="_blank" rel="noreferrer">LinkedIn</a>
-            <a href="https://behance.net" target="_blank" rel="noreferrer">Behance</a>
-          </div>
-        </div>
-      </footer>
+      <Footer id="work-footer" />
     </>
   );
 }

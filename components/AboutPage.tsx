@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Cursor from '@/components/Cursor';
 import type { AboutContent } from '@/lib/cms';
+import Footer from '@/components/Footer';
 
 export default function AboutPage({ content }: { content: AboutContent }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -433,31 +434,6 @@ export default function AboutPage({ content }: { content: AboutContent }) {
         }
       }
 
-      {
-        const track = document.getElementById('tl-track');
-        const items = Array.from(document.querySelectorAll('.tl-item'));
-        if (track) {
-          const io = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) track.classList.add('on');
-            });
-          }, { threshold: 0.1 });
-          io.observe(track);
-          cleanups.push(() => io.disconnect());
-        }
-        items.forEach((item) => {
-          const io2 = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                item.classList.add('on');
-                io2.disconnect();
-              }
-            });
-          }, { threshold: 0.4 });
-          io2.observe(item);
-          cleanups.push(() => io2.disconnect());
-        });
-      }
 
       {
         const vals = document.querySelectorAll('.val');
@@ -560,7 +536,7 @@ export default function AboutPage({ content }: { content: AboutContent }) {
         <div className="hero-vignette2" />
 
         <div className="hero-copy">
-          <div className="h-eyebrow">About the Studio</div>
+          <div className="h-eyebrow">About Rivuletduo</div>
           <h1 dangerouslySetInnerHTML={{ __html: content.hero.headline }} />
           <p className="h-sub" dangerouslySetInnerHTML={{ __html: content.hero.subheadline }} />
         </div>
@@ -579,7 +555,7 @@ export default function AboutPage({ content }: { content: AboutContent }) {
 
       <div className="ticker-wrap">
         <div className="ticker">
-          {content.tickerItems.map((item, idx) => (
+          {[...content.tickerItems, ...content.tickerItems].map((item, idx) => (
             <span key={idx} className="ticker-item">{item}<span className="tdot" /></span>
           ))}
         </div>
@@ -633,66 +609,31 @@ export default function AboutPage({ content }: { content: AboutContent }) {
         </div>
       </section>
 
-      <section id="team">
-        <div className="label rv">The People</div>
-        <h2 className="rv rv1">Meet the <i>duo</i></h2>
-        <div className="team-intro rv rv2"><p>Two people. Complementary strengths. A shared standard of care that runs through every project we touch.</p></div>
-        <div className="team-grid">
-          {content.team.map((t, idx) => (
-            <div className={`tcard rv rv${(idx % 2) + 1}`} key={idx}>
-              <div className="tcard-vis"><canvas className="tcard-canvas" id={`tc${idx + 1}`} /><div className="tcard-overlay" /></div>
-              <div className="tcard-info">
-                <div className="tcard-role">{t.role}</div>
-                <div className="tcard-name">{t.name}</div>
-                <p className="tcard-bio" dangerouslySetInnerHTML={{ __html: t.bio }} />
-                <div className="tcard-skills">{t.skills.map(s => <span key={s} className="tskill">{s}</span>)}</div>
+      {content.team.length > 0 && (
+        <section id="team">
+          <div className="label rv">The People</div>
+          <h2 className="rv rv1">Meet the <i>founders</i></h2>
+          <div className="team-intro rv rv2"><p>The people behind Rivuletduo — and the standard of care that runs through every project we take on.</p></div>
+          <div className="team-grid">
+            {content.team.map((t, idx) => (
+              <div className={`tcard rv rv${(idx % 2) + 1}`} key={idx}>
+                <div className="tcard-vis"><canvas className="tcard-canvas" id={`tc${idx + 1}`} /><div className="tcard-overlay" /></div>
+                <div className="tcard-info">
+                  <div className="tcard-role">{t.role}</div>
+                  <div className="tcard-name">{t.name}</div>
+                  <p className="tcard-bio" dangerouslySetInnerHTML={{ __html: t.bio }} />
+                  <div className="tcard-skills">{t.skills.map(s => <span key={s} className="tskill">{s}</span>)}</div>
+                </div>
+                <div className="tcard-social">
+                  <div className="tsoc"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z" /><rect x="2" y="9" width="4" height="12" /><circle cx="4" cy="4" r="2" /></svg></div>
+                  <div className="tsoc"><svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22" /></svg></div>
+                </div>
               </div>
-              <div className="tcard-social">
-                <div className="tsoc"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z" /><rect x="2" y="9" width="4" height="12" /><circle cx="4" cy="4" r="2" /></svg></div>
-                <div className="tsoc"><svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22" /></svg></div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+            ))}
+          </div>
+        </section>
+      )}
 
-      <section id="timeline">
-        <div className="label rv">Our Journey</div>
-        <h2 className="rv rv1">Built <i>over time</i></h2>
-        <div className="tl-track" id="tl-track">
-          <div className="tl-line" />
-          {content.timeline.map((item, idx) => {
-            const isLeft = idx % 2 === 0;
-            return (
-              <div className="tl-item" key={idx}>
-                <div className="tl-left">
-                  {isLeft && (
-                    <>
-                      <div className="tl-year">{item.year}</div>
-                      <div className="tl-content">
-                        <div className="tl-title">{item.title}</div>
-                        <p className="tl-desc">{item.desc}</p>
-                      </div>
-                    </>
-                  )}
-                </div>
-                <div className="tl-center"><div className="tl-dot" /></div>
-                <div className="tl-right">
-                  {!isLeft && (
-                    <>
-                      <div className="tl-year">{item.year}</div>
-                      <div className="tl-content">
-                        <div className="tl-title">{item.title}</div>
-                        <p className="tl-desc">{item.desc}</p>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
 
       <section id="philosophy">
         <span className="phil-mark rv">&quot;</span>
@@ -722,7 +663,7 @@ export default function AboutPage({ content }: { content: AboutContent }) {
         <div className="cta-inner">
           <div className="label rv" style={{ justifyContent: 'center' }}>Work With Us</div>
           <h2 className="rv rv1">Ready to <i>build</i><br />something real?</h2>
-          <p className="rv rv2">Tell us about your project. We take on a small number of clients at a time — so when you work with Rivuletduo, you get our full attention.</p>
+          <p className="rv rv2">Tell us about your project — a new website, a mobile app or custom software. We&apos;ll get back to you within 24 hours with honest advice and clear next steps.</p>
           <div className="cta-btns rv rv3">
             <a className="btn-g" href="#project" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event("open-project-modal")); }}>Start a Project</a>
             <a className="btn-ghost" href="/work">See Our Work</a>
@@ -730,43 +671,7 @@ export default function AboutPage({ content }: { content: AboutContent }) {
         </div>
       </section>
 
-      <footer id="about-footer" className="site-footer">
-        <div className="footer-col footer-brand">
-          <a href="/" className="flogo" aria-label="Rivuletduo home"><img src="/rivulet-logo.svg" alt="Rivuletduo" className="brand-logo-footer" /></a>
-          <p className="footer-caption">Designing and building memorable digital experiences with precision and care.</p>
-          <div className="fcopy">© 2026 Rivuletduo. All rights reserved.</div>
-        </div>
-        <div className="footer-col">
-          <div className="fhead">Menu</div>
-          <ul className="flinks">
-            <li><a href="/about">About</a></li>
-            <li><a href="/work">Work</a></li>
-            <li><a href="/contact">Contact</a></li>
-          </ul>
-        </div>
-        <div className="footer-col">
-          <div className="fhead">Services</div>
-          <ul className="flinks">
-            <li><a href="/services">Web Design</a></li>
-            <li><a href="/services">UI/UX Design</a></li>
-            <li><a href="/services">Web Development</a></li>
-            <li><a href="/services">SEO</a></li>
-          </ul>
-        </div>
-        <div className="footer-col">
-          <div className="fhead">Contact</div>
-          <ul className="flinks">
-            <li><a href="mailto:hello@rivuletduo.com">hello@rivuletduo.com</a></li>
-            <li><a href="tel:+15550000000">+1 (555) 000-0000</a></li>
-            <li><span className="fmeta">New Zealand</span></li>
-          </ul>
-          <div className="f-socials">
-            <a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a>
-            <a href="https://linkedin.com" target="_blank" rel="noreferrer">LinkedIn</a>
-            <a href="https://behance.net" target="_blank" rel="noreferrer">Behance</a>
-          </div>
-        </div>
-      </footer>
+      <Footer id="about-footer" />
 
       
     </>

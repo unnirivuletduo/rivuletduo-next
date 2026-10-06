@@ -430,7 +430,8 @@ canvas#c {
   80% { top: 52px; opacity: 0.2; }
   100% { top: 52px; opacity: 0; }
 }
-.ticker-wrap {
+/* Home banner ticker only — other pages style their own .ticker-wrap in page CSS */
+#banner .ticker-wrap {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -507,6 +508,7 @@ canvas#c {
   transition: background 0.3s;
   background: #fff;
 }
+a.svc { display: block; color: inherit; text-decoration: none; }
 .svc:hover { background: var(--bg3); }
 .svc::before {
   content: '';
@@ -572,6 +574,7 @@ canvas#c {
   justify-content: flex-end;
   transition: border-color 0.3s, box-shadow 0.3s;
 }
+a.wcard { text-decoration: none; }
 .wcard:hover { border-color: var(--lime-d); box-shadow: 0 4px 24px rgba(21, 128, 61, 0.08); }
 .wcard-bg {
   position: absolute;
@@ -1428,3 +1431,25 @@ body #contact-footer.site-footer .f-socials a:hover {
     gap: 1.5rem;
   }
 }
+
+/* Home work grid: with an odd number of projects, the first card spans the full width */
+@media (min-width: 961px) {
+  #work .wcard:first-child:nth-last-child(odd) { grid-column: 1 / -1; aspect-ratio: 21 / 9; }
+}
+
+/* Partner credit in the footer brand column */
+footer.site-footer p.footer-partner {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+}
+footer.site-footer p.footer-partner a {
+  color: var(--lime-soft);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(74, 222, 128, 0.4);
+  transition: border-color 0.2s;
+}
+footer.site-footer p.footer-partner a:hover { border-bottom-color: var(--lime-soft); }
+
+#work .work-more { margin-top: 2.5rem; text-align: center; }

@@ -4,8 +4,9 @@ import ServicesPage from '@/components/ServicesPage';
 import { getServicesPageData } from '@/lib/cms';
 
 export const metadata: Metadata = {
-  title: 'Services — Rivuletduo',
-  description: 'Explore Rivuletduo services across design, development, branding, SEO, animation, and 3D experiences.',
+  title: 'Software Development, Web Design & SEO Services | Rivuletduo',
+  description: 'Custom software, web and mobile app development, e-commerce, web design, branding and SEO from Rivuletduo, a New Zealand software development company.',
+  alternates: { canonical: '/services' },
 };
 
 export default async function ServicesRoute() {

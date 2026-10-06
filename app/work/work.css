@@ -77,3 +77,9 @@ h1 em{display:block;color:var(--lime-d)!important}
 .btn-ghost{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;padding:.9rem 2.4rem;background:transparent;color:var(--lime-d);border:1px solid var(--soft-green);cursor:none;transition:border-color .2s,color .2s,transform .18s;font-family:'Instrument Sans',sans-serif;text-decoration:none}
 .btn-ghost:hover{border-color:var(--lime-d);transform:translateY(-2px)}
 @media(max-width:900px){#work-nav{padding:1.2rem 1.5rem}#work-nav .nav-links{display:none}.hero-inner{grid-template-columns:1fr;padding:0 1.5rem}.hero-stats{display:none}.hero-watermark{display:none}.filter-bar{padding:2rem 1.5rem}.work-grid{grid-template-columns:1fr;padding:2rem 1.5rem 4rem}.wcard.featured{grid-column:unset}.w-cta{padding:5rem 1.5rem}.wc-btns{flex-direction:column;align-items:center}#work-footer{padding:2rem 1.5rem;flex-direction:column;text-align:center}#work-footer .flinks{justify-content:center}}
+
+.wcard-img{display:block;width:100%;height:100%;object-fit:cover;object-position:top center}
+/* Home-page card shape in globals.css must not apply to Work page cards */
+#workGrid .wcard{aspect-ratio:auto;padding:0;flex-direction:initial;justify-content:initial}
+/* With an odd number of projects, the first card spans the full width (same look as .featured) */
+@media(min-width:901px){#workGrid .wcard:first-child:nth-last-child(odd){grid-column:1/-1}#workGrid .wcard:first-child:nth-last-child(odd) .wcard-canvas-wrap{aspect-ratio:21/9}#workGrid .wcard:first-child:nth-last-child(odd) .wcard-title{font-size:clamp(2.2rem,5vw,4rem)}}

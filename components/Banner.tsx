@@ -1,11 +1,12 @@
 'use client';
 import { useEffect, useRef } from 'react';
 import type { HomeBannerContent } from '@/lib/cms';
+import { SITE, yearsInBusiness } from '@/lib/site';
 
 const TICKER_ITEMS = [
-  'React & Next.js', 'Tailwind & Motion', 'Node & Express',
-  'PostgreSQL & Supabase', 'UI / UX Design', 'API Architecture',
-  'Performance Optimisation', 'SEO & Analytics',
+  'Custom Software', 'Web Applications', 'Website Development',
+  'Mobile Apps', 'E-Commerce', 'SEO & Analytics',
+  'UI / UX Design', 'Cloud & API Integration', 'Maintenance & Support',
 ];
 
 type BannerProps = {
@@ -293,15 +294,15 @@ export default function Banner({ content }: BannerProps = {}) {
       <div id="ov" />
 
       <div className="hero">
-        <span className="badge">{content?.badge ?? 'Est. 2024 · Web Dev Studio'}</span>
+        <span className="badge">{content?.badge ?? `Est. ${SITE.foundedYear} · Software Development · New Zealand`}</span>
         <h1 className="headline">
           {content?.headlineLine1 ?? 'We Build'}
           <br />
-          <em>{content?.headlineEmphasis ?? 'Digital'}</em>
+          <em>{content?.headlineEmphasis ?? 'Software'}</em>
           <br />
-          {content?.headlineLine3 ?? 'Experiences'}
+          {content?.headlineLine3 ?? 'That Scales'}
         </h1>
-        <p className="sub">{content?.subcopy ?? 'From pixel-perfect interfaces to scalable full-stack systems — we craft web products that feel as good as they perform.'}</p>
+        <p className="sub">{content?.subcopy ?? 'Rivuletduo is a New Zealand software development company. We design, build and grow custom software, websites, mobile apps and online stores — with SEO and performance built in from day one.'}</p>
         <div className="cta-row">
           <a href="/work" className="btn-primary">See Our Work</a>
           <a href="/contact" className="btn-ghost">Get in Touch</a>
@@ -309,11 +310,11 @@ export default function Banner({ content }: BannerProps = {}) {
       </div>
 
       <div className="stats">
-        <div className="stat"><span className="stat-n">48+</span><span className="stat-l">Projects</span></div>
+        <div className="stat"><span className="stat-n">{yearsInBusiness()}yr</span><span className="stat-l">Experience</span></div>
         <div className="stat-div" />
-        <div className="stat"><span className="stat-n">5★</span><span className="stat-l">Avg Rating</span></div>
+        <div className="stat"><span className="stat-n">4+</span><span className="stat-l">Countries Served</span></div>
         <div className="stat-div" />
-        <div className="stat"><span className="stat-n">3yr</span><span className="stat-l">Experience</span></div>
+        <div className="stat"><span className="stat-n">NZ</span><span className="stat-l">Based</span></div>
       </div>
 
       <a href="#services" className="scroll-btn">

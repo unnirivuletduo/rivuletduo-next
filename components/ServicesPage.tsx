@@ -3,6 +3,8 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import Cursor from '@/components/Cursor';
 import type { ServiceCategory as CmsServiceCategory } from '@/lib/cms';
+import Footer from '@/components/Footer';
+import { yearsInBusiness } from '@/lib/site';
 
 type Service = {
   num: string;
@@ -31,36 +33,44 @@ const categories: Category[] = [
     desc: 'Visual systems that communicate, convert and endure.',
     services: [
       {
-        num: '01 / 08',
-        title: 'Web Designing',
-        desc: 'Smart designs complementing your brand — intuitive, engaging websites built with creative flair and the latest technology to establish your online presence.',
-        tags: ['Figma', 'HTML/CSS', 'Responsive'],
+        num: '01 / 10',
+        title: 'Web Design',
+        desc: 'Websites designed around your customers and goals — clear messaging, intuitive navigation and a strong first impression that turns visitors into enquiries.',
+        tags: ['Figma', 'UX Strategy', 'SEO-ready'],
         href: '/services/webdesign',
         icon: <svg viewBox="0 0 52 52"><rect x="4" y="8" width="44" height="30" rx="2" /><path d="M4 18h44" /><circle cx="10" cy="13" r="2" /><circle cx="17" cy="13" r="2" /><circle cx="24" cy="13" r="2" /><path d="M12 38l4 6h20l4-6" /></svg>,
       },
       {
-        num: '02 / 08',
-        title: 'UI Designing',
-        desc: 'Flawless digital interfaces that make lasting impressions. User experience at the core — every element earns its place and every interaction feels inevitable.',
-        tags: ['Figma', 'Prototyping', 'Design Systems'],
+        num: '02 / 10',
+        title: 'UI/UX Design',
+        desc: 'Research-backed user experience and polished interfaces for web apps, software and mobile products — so people understand your product at a glance.',
+        tags: ['User Research', 'Prototyping', 'Design Systems'],
         href: '/services/ui',
         icon: <svg viewBox="0 0 52 52"><rect x="8" y="8" width="36" height="36" rx="3" /><rect x="14" y="14" width="10" height="10" rx="1" /><rect x="28" y="14" width="10" height="10" rx="1" /><rect x="14" y="28" width="10" height="10" rx="1" /><rect x="28" y="28" width="10" height="10" rx="1" /></svg>,
       },
       {
-        num: '03 / 08',
-        title: 'Overall Branding',
-        desc: 'Declare your identity to the world. Presentations, letterheads, brochures, flyers, invoices, employee badges — every brand touchpoint, unified.',
-        tags: ['Identity', 'Print', 'Brand Systems'],
+        num: '03 / 10',
+        title: 'Branding & Identity',
+        desc: 'Complete identity systems — logo, colour, typography and guidelines — that keep your business consistent across web, apps, social and print.',
+        tags: ['Brand Strategy', 'Identity', 'Guidelines'],
         href: '/services/branding',
         icon: <svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="18" /><path d="M26 8v36M8 26h36" /><ellipse cx="26" cy="26" rx="10" ry="18" /></svg>,
       },
       {
-        num: '04 / 08',
-        title: 'Logo Designing',
-        desc: "First impressions matter. Our designers craft impressive, unique logos that express your company's strength and set your brand a notch above the rest.",
-        tags: ['Branding', 'Illustration', 'Identity'],
+        num: '04 / 10',
+        title: 'Logo Design',
+        desc: 'Distinctive, versatile logos delivered as a full suite of versions and file formats, ready for screens, signage and print.',
+        tags: ['Concepts', 'Icon Design', 'All Formats'],
         href: '/services/logo',
         icon: <svg viewBox="0 0 52 52"><polygon points="26,6 32,20 48,20 36,30 40,46 26,36 12,46 16,30 4,20 20,20" /></svg>,
+      },
+      {
+        num: '05 / 10',
+        title: 'Responsive Web Design',
+        desc: 'Mobile-first websites and web apps that adapt perfectly to every phone, tablet and desktop — and rank better on Google because of it.',
+        tags: ['Mobile-first', 'Cross-device', 'Mobile SEO'],
+        href: '/services/responsive',
+        icon: <svg viewBox="0 0 52 52"><rect x="4" y="10" width="44" height="30" rx="2" /><rect x="12" y="16" width="14" height="18" rx="1" /><rect x="30" y="20" width="10" height="10" rx="1" /></svg>,
       },
     ],
   },
@@ -72,91 +82,42 @@ const categories: Category[] = [
     desc: 'Production-grade code built to scale and endure.',
     services: [
       {
-        num: '05 / 08',
-        title: 'Web Development',
-        desc: 'Unique, brand-centric design solutions using the latest technologies. Our developers render high-quality services tailored to your exact requirements.',
-        tags: ['React', 'Next.js', 'Node.js'],
+        num: '06 / 10',
+        title: 'Custom Software & Web App Development',
+        desc: 'Bespoke web applications, customer portals, dashboards, APIs and integrations — built around how your business works and owned by you.',
+        tags: ['React / Next.js', 'Node.js', 'PostgreSQL'],
         href: '/services/webdev',
         icon: <svg viewBox="0 0 52 52"><polyline points="16,20 6,26 16,32" /><polyline points="36,20 46,26 36,32" /><line x1="22" y1="36" x2="30" y2="16" /></svg>,
       },
       {
-        num: '06 / 08',
+        num: '07 / 10',
         title: 'Mobile App Development',
-        desc: 'iOS, Android, and HTML5 apps that are both functional and visually stunning. Extensive experience meeting individual business needs without compromise.',
+        desc: 'iOS and Android apps built from one React Native codebase — from UX design and back-end to App Store and Google Play launch.',
         tags: ['iOS', 'Android', 'React Native'],
         href: '/services/mobile',
         icon: <svg viewBox="0 0 52 52"><rect x="16" y="4" width="20" height="44" rx="3" /><line x1="16" y1="12" x2="36" y2="12" /><line x1="16" y1="40" x2="36" y2="40" /><circle cx="26" cy="44" r="1.5" /></svg>,
       },
       {
-        num: '07 / 08',
+        num: '08 / 10',
         title: 'E-Commerce Development',
-        desc: 'Conversion-optimised storefronts that actually sell. We customise platforms for full e-commerce capability and revamp existing sites for modern performance.',
+        desc: 'Online stores on Shopify, WooCommerce or custom platforms, with secure payments, shipping, inventory and analytics set up from day one.',
         tags: ['Shopify', 'WooCommerce', 'Custom'],
         href: '/services/ecommerce',
         icon: <svg viewBox="0 0 52 52"><path d="M8 10h4l5 20h24l4-14H16" /><circle cx="22" cy="38" r="3" /><circle cx="38" cy="38" r="3" /></svg>,
       },
       {
-        num: '08 / 08',
+        num: '09 / 10',
         title: 'Search Engine Optimisation',
-        desc: 'Increase targeted traffic and grow to the next phase. Core Web Vitals and technical SEO baked in from day one — not patched on at the end.',
-        tags: ['Lighthouse', 'Analytics', 'Core Web Vitals'],
+        desc: 'Technical SEO, keyword research, on-page optimisation, local search and Core Web Vitals — so the right customers find you on Google.',
+        tags: ['Technical SEO', 'Local SEO', 'Core Web Vitals'],
         href: '/services/seo',
         icon: <svg viewBox="0 0 52 52"><circle cx="22" cy="22" r="14" /><line x1="32" y1="32" x2="46" y2="46" /><path d="M16 18l4 4 8-8" /></svg>,
       },
-    ],
-  },
-  {
-    id: 'cat3',
-    num: '03 —',
-    titlePrefix: 'Creative',
-    titleEm: '& Motion',
-    desc: 'Animation and visual design that commands attention.',
-    services: [
       {
-        num: '09 / 12',
-        title: 'Animations',
-        desc: 'Bringing masterpieces to life. Animations personify words and ideas, leading to effective communication between you and your customers.',
-        tags: ['GSAP', 'Three.js', 'Motion'],
-        href: '/services/animation',
-        icon: <svg viewBox="0 0 52 52"><path d="M10 26 Q16 10 26 26 Q36 42 42 26" /><circle cx="10" cy="26" r="2.5" /><circle cx="26" cy="26" r="2.5" /><circle cx="42" cy="26" r="2.5" /></svg>,
-      },
-      {
-        num: '10 / 12',
-        title: '3D Animation & Modeling',
-        desc: 'Nothing beats the charm of 3D. Our animation team, bubbling with innovative ideas, presents your product at its absolute best. Leaving clients spellbound is our forte.',
-        tags: ['Blender', 'Three.js', 'WebGL'],
-        href: '/services/3d',
-        icon: <svg viewBox="0 0 52 52"><path d="M26 6l20 12v16L26 46 6 34V18z" /><path d="M26 6v40M6 18l20 12 20-12" /></svg>,
-      },
-      {
-        num: '11 / 12',
-        title: 'Whiteboard Animation',
-        desc: 'Complex features communicated effortlessly. As the story unfurls with the aid of voiceover, an impacting link is formed with clients that converts.',
-        tags: ['Explainer', 'Voiceover', 'Story'],
-        href: '/services/whiteboard',
-        icon: <svg viewBox="0 0 52 52"><rect x="6" y="8" width="40" height="28" rx="2" /><path d="M6 22h40" /><path d="M16 36l-4 8h28l-4-8" /><path d="M14 16 Q20 14 26 16 Q32 18 38 16" strokeWidth="1.4" /></svg>,
-      },
-      {
-        num: '12 / 12',
-        title: 'Graphic Designing',
-        desc: 'Creating a lasting impression is a one-time opportunity. We guarantee unique, credible, and emotive graphic design that best reflects your brand.',
-        tags: ['Illustrator', 'Print', 'Digital'],
-        href: '/services/graphic',
-        icon: <svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="16" /><path d="M26 10v32M10 26h32" /><path d="M14 14l24 24M38 14L14 38" /></svg>,
-      },
-      {
-        num: '05 / 12',
-        title: 'Responsive Web Design',
-        desc: 'Be future-ready. Ensure websites adapt to every device — desktop, tablet, or smartphone. Screen size is no longer a hindrance with Rivulet Duo.',
-        tags: ['Mobile-first', 'CSS Grid', 'PWA'],
-        href: '/services/responsive',
-        icon: <svg viewBox="0 0 52 52"><rect x="4" y="10" width="44" height="30" rx="2" /><rect x="12" y="16" width="14" height="18" rx="1" /><rect x="30" y="20" width="10" height="10" rx="1" /></svg>,
-      },
-      {
-        num: '06 / 12',
+        num: '10 / 10',
         title: 'Corporate Websites',
-        desc: 'Going beyond. We assist mega corporations in achieving their objectives and take great pride in doing so. Your trust is priceless and we promise to safeguard it.',
-        tags: ['Enterprise', 'CMS', 'Scalable'],
+        desc: 'Professional, high-trust websites for established organisations, with role-based editing, accessibility, security and integrations built in.',
+        tags: ['Enterprise CMS', 'Accessibility', 'Security'],
         href: '/services/corporate',
         icon: <svg viewBox="0 0 52 52"><rect x="8" y="16" width="36" height="30" rx="2" /><path d="M18 16V12a8 8 0 0116 0v4" /><path d="M26 28v6" /><circle cx="26" cy="26" r="3" /></svg>,
       },
@@ -391,7 +352,7 @@ export default function ServicesPage({ categories: cmsCategories }: ServicesPage
 
       <div className="ticker-wrap">
         <div className="ticker">
-          {['Web Design', 'UI/UX', 'Mobile Apps', 'E-Commerce', 'SEO', 'Branding', 'Animation', '3D Modeling', 'Web Design', 'UI/UX', 'Mobile Apps', 'E-Commerce', 'SEO', 'Branding', 'Animation', '3D Modeling'].map((item, idx) => (
+          {['Custom Software', 'Web Design', 'UI/UX', 'Mobile Apps', 'E-Commerce', 'SEO', 'Branding', 'Corporate Websites', 'Custom Software', 'Web Design', 'UI/UX', 'Mobile Apps', 'E-Commerce', 'SEO', 'Branding', 'Corporate Websites'].map((item, idx) => (
             <span className="ticker-item" key={idx}>{item}<span className="tdot" /></span>
           ))}
         </div>
@@ -401,13 +362,13 @@ export default function ServicesPage({ categories: cmsCategories }: ServicesPage
         <div className="rv">
           <div className="label">About our work</div>
           <h2>End-to-end digital <i>craft</i> — nothing left to chance</h2>
-          <p>Rivuletduo is a two-person studio with a singular obsession: building web experiences that perform as beautifully as they look. Every service we offer is a discipline we&apos;ve refined through years of shipping real products for real clients.</p>
+          <p>Rivuletduo is a New Zealand software development company. From custom software and mobile apps to websites, online stores and SEO, every service is delivered by one team — from the first workshop through to launch and beyond.</p>
         </div>
         <div className="intro-stats rv rv2">
-          <div className="istat"><span className="istat-num">48+</span><span className="istat-label">Projects Shipped</span></div>
-          <div className="istat"><span className="istat-num">100%</span><span className="istat-label">Client Satisfaction</span></div>
-          <div className="istat"><span className="istat-num">6yr</span><span className="istat-label">Studio Experience</span></div>
-          <div className="istat"><span className="istat-num">3x</span><span className="istat-label">Avg. Performance Gain</span></div>
+          <div className="istat"><span className="istat-num">{yearsInBusiness()}yr</span><span className="istat-label">Experience</span></div>
+          <div className="istat"><span className="istat-num">10</span><span className="istat-label">Services</span></div>
+          <div className="istat"><span className="istat-num">4+</span><span className="istat-label">Countries Served</span></div>
+          <div className="istat"><span className="istat-num">NZ</span><span className="istat-label">Based</span></div>
         </div>
       </div>
 
@@ -440,12 +401,12 @@ export default function ServicesPage({ categories: cmsCategories }: ServicesPage
       <div className="feature-banner rv">
         <div>
           <p className="fb-eyebrow">Why Rivuletduo</p>
-          <h2 className="fb-heading">Two minds.<br />One <i>obsession</i>.</h2>
-          <p className="fb-body">We&apos;re not an agency — we&apos;re a two-person studio. Every project gets the full, undivided attention of both founders. No junior hand-offs, no cookie-cutter solutions. Just focused, expert craft from start to finish.</p>
+          <h2 className="fb-heading">One team.<br />One <i>standard</i>.</h2>
+          <p className="fb-body">From the first workshop to launch and beyond, your project is handled by one dedicated team — designers, developers and SEO specialists working together. No hand-offs between agencies, no cookie-cutter solutions. Just focused, expert work from start to finish.</p>
           <a href="#project" className="fb-cta" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event("open-project-modal")); }}>Start a conversation <svg viewBox="0 0 12 12"><path d="M1 11L11 1M1 1h10v10" /></svg></a>
         </div>
         <div className="fb-list">
-          <div className="fb-item"><div className="fb-dot" /><div><div className="fb-item-title">Direct founder access</div><div className="fb-item-desc">You speak to the people actually building your product — every time.</div></div></div>
+          <div className="fb-item"><div className="fb-dot" /><div><div className="fb-item-title">Direct access to your team</div><div className="fb-item-desc">You talk directly to the people designing and building your product — every time.</div></div></div>
           <div className="fb-item"><div className="fb-dot" /><div><div className="fb-item-title">No scope creep surprises</div><div className="fb-item-desc">Transparent scoping, fixed milestones, and clear deliverables from day one.</div></div></div>
           <div className="fb-item"><div className="fb-dot" /><div><div className="fb-item-title">Post-launch partnership</div><div className="fb-item-desc">We stay long after go-live — for training, support, and continued growth.</div></div></div>
           <div className="fb-item"><div className="fb-dot" /><div><div className="fb-item-title">Performance by default</div><div className="fb-item-desc">Speed, accessibility, and SEO are not add-ons — they&apos;re baked into every build.</div></div></div>
@@ -473,43 +434,7 @@ export default function ServicesPage({ categories: cmsCategories }: ServicesPage
         </div>
       </div>
 
-      <footer id="services-footer" className="site-footer">
-        <div className="footer-col footer-brand">
-          <a href="/" className="flogo" aria-label="Rivuletduo home"><img src="/rivulet-logo.svg" alt="Rivuletduo" className="brand-logo-footer" /></a>
-          <p className="footer-caption">Designing and building memorable digital experiences with precision and care.</p>
-          <div className="fcopy">© 2026 Rivuletduo. All rights reserved.</div>
-        </div>
-        <div className="footer-col">
-          <div className="fhead">Menu</div>
-          <ul className="flinks">
-            <li><a href="/about">About</a></li>
-            <li><a href="/work">Work</a></li>
-            <li><a href="/contact">Contact</a></li>
-          </ul>
-        </div>
-        <div className="footer-col">
-          <div className="fhead">Services</div>
-          <ul className="flinks">
-            <li><a href="/services">Web Design</a></li>
-            <li><a href="/services">UI/UX Design</a></li>
-            <li><a href="/services">Web Development</a></li>
-            <li><a href="/services">SEO</a></li>
-          </ul>
-        </div>
-        <div className="footer-col">
-          <div className="fhead">Contact</div>
-          <ul className="flinks">
-            <li><a href="mailto:hello@rivuletduo.com">hello@rivuletduo.com</a></li>
-            <li><a href="tel:+15550000000">+1 (555) 000-0000</a></li>
-            <li><span className="fmeta">New Zealand</span></li>
-          </ul>
-          <div className="f-socials">
-            <a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a>
-            <a href="https://linkedin.com" target="_blank" rel="noreferrer">LinkedIn</a>
-            <a href="https://behance.net" target="_blank" rel="noreferrer">Behance</a>
-          </div>
-        </div>
-      </footer>
+      <Footer id="services-footer" />
     </>
   );
 }

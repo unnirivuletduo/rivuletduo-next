@@ -8,9 +8,10 @@ type ContactPayload = {
   email: string;
   phone?: string;
   services?: string[];
-  budget?: string;
   projectDescription?: string;
   message?: string;
+  subject?: string;
+  source?: string;
 };
 
 function asString(value: unknown) {
@@ -53,9 +54,10 @@ export async function POST(request: NextRequest) {
     email,
     phone: asString(raw.phone),
     services: asStringArray(raw.services),
-    budget: asString(raw.budget),
     projectDescription: asString(raw.projectDescription),
     message: asString(raw.message),
+    subject: asString(raw.subject).slice(0, 100),
+    source: asString(raw.source).slice(0, 100),
   };
 
   if (enquiryType === 'project') {

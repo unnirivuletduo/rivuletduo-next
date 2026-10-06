@@ -4,40 +4,40 @@ import type { ServiceCategory } from '@/lib/cms';
 
 const services = [
   {
-    n: '01', title: 'UI / UX Design',
-    desc: 'Interfaces crafted for clarity and flow. Every interaction is intentional, every screen earns its place.',
-    tags: ['Figma', 'Prototyping', 'Systems'],
-    icon: <svg viewBox="0 0 32 32"><rect x="3" y="6" width="26" height="20" rx="2" /><path d="M10 16l4 4 8-8" /></svg>,
+    n: '01', title: 'Custom Software Development', href: '/services/webdev',
+    desc: 'Web applications, client portals, dashboards and internal tools built around how your business actually works — secure, scalable and easy to maintain.',
+    tags: ['React', 'Node.js', 'PostgreSQL'],
+    icon: <svg viewBox="0 0 32 32"><polyline points="11,10 5,16 11,22" /><polyline points="21,10 27,16 21,22" /><path d="M18 7l-4 18" /></svg>,
   },
   {
-    n: '02', title: 'Frontend Dev',
-    desc: 'High-performance, accessible code in React and Next.js. Fast, semantic, and built to endure.',
-    tags: ['React', 'Next.js', 'Three.js'],
-    icon: <svg viewBox="0 0 32 32"><polyline points="5,22 11,11 17,17 23,7" /><circle cx="23" cy="7" r="2" /></svg>,
+    n: '02', title: 'Website Design & Development', href: '/services/webdesign',
+    desc: 'Fast, responsive business websites that look sharp on every screen and turn visitors into enquiries — easy for your team to update.',
+    tags: ['Next.js', 'WordPress', 'Responsive'],
+    icon: <svg viewBox="0 0 32 32"><rect x="4" y="6" width="24" height="20" rx="2" /><path d="M4 12h24" /><path d="M9 18h9M9 22h6" /></svg>,
   },
   {
-    n: '03', title: 'Full-Stack',
-    desc: 'From APIs to databases, we handle the entire stack so you can focus entirely on your vision.',
-    tags: ['Node.js', 'PostgreSQL', 'GraphQL'],
-    icon: <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="10" /><path d="M16 6v20M6 16h20" /></svg>,
+    n: '03', title: 'Mobile App Development', href: '/services/mobile',
+    desc: 'iOS and Android apps that feel native, perform smoothly and connect cleanly to your existing systems.',
+    tags: ['iOS', 'Android', 'React Native'],
+    icon: <svg viewBox="0 0 32 32"><rect x="9" y="3" width="14" height="26" rx="2" /><path d="M14 25h4" /></svg>,
   },
   {
-    n: '04', title: 'E-Commerce',
-    desc: 'Conversion-optimised storefronts on Shopify or custom platforms — built to scale.',
-    tags: ['Shopify', 'WooCommerce'],
+    n: '04', title: 'E-Commerce Solutions', href: '/services/ecommerce',
+    desc: 'Online stores on Shopify, WooCommerce or fully custom platforms — built to convert, simple to manage and ready to scale.',
+    tags: ['Shopify', 'WooCommerce', 'Custom'],
     icon: <svg viewBox="0 0 32 32"><rect x="5" y="12" width="22" height="16" rx="2" /><path d="M11 12V9a5 5 0 0110 0v3" /></svg>,
   },
   {
-    n: '05', title: 'SEO & Performance',
-    desc: 'Core Web Vitals and technical SEO baked in from day one — not patched on at the end.',
-    tags: ['Lighthouse', 'Analytics'],
-    icon: <svg viewBox="0 0 32 32"><path d="M6 24l7-7 5 5 9-12" /></svg>,
+    n: '05', title: 'SEO & Performance', href: '/services/seo',
+    desc: 'Technical SEO, on-page optimisation, local search and Core Web Vitals — so the right customers find you on Google, and your site loads fast when they do.',
+    tags: ['Technical SEO', 'Local SEO', 'Analytics'],
+    icon: <svg viewBox="0 0 32 32"><circle cx="14" cy="14" r="8" /><path d="M20 20l7 7" /><path d="M10 16l3-3 2 2 3-4" /></svg>,
   },
   {
-    n: '06', title: 'CMS & Support',
-    desc: 'Sanity, Contentful, or WordPress — editorial systems your team will actually enjoy.',
-    tags: ['Sanity', 'Contentful'],
-    icon: <svg viewBox="0 0 32 32"><rect x="4" y="4" width="10" height="10" rx="1" /><rect x="18" y="4" width="10" height="10" rx="1" /><rect x="4" y="18" width="10" height="10" rx="1" /><rect x="18" y="18" width="10" height="10" rx="1" /></svg>,
+    n: '06', title: 'UI/UX Design & Branding', href: '/services/ui',
+    desc: 'User research, interface design and brand identity that make your product clear, consistent and memorable.',
+    tags: ['Figma', 'Prototyping', 'Brand Identity'],
+    icon: <svg viewBox="0 0 32 32"><rect x="3" y="6" width="26" height="20" rx="2" /><path d="M10 16l4 4 8-8" /></svg>,
   },
 ];
 
@@ -52,6 +52,7 @@ export default function Services({ items }: ServicesProps = {}) {
       title: service.title,
       desc: service.desc,
       tags: service.tags,
+      href: service.href,
       icon: null,
     }))
     : services;
@@ -113,7 +114,7 @@ export default function Services({ items }: ServicesProps = {}) {
       <h2 className="section-h2 rv rv1">What we <em>build</em></h2>
       <div className="services-grid rv rv2">
         {servicesData.map((s) => (
-          <div className="svc" key={s.n}>
+          <a className="svc" href={s.href} key={s.n}>
             <div className="svc-n">{s.n}</div>
             <div className="svc-ico">{s.icon ?? <svg viewBox="0 0 32 32"><rect x="4" y="6" width="24" height="20" rx="2" /><path d="M4 14h24" /><path d="M10 22l4-4 3 3 5-6" /></svg>}</div>
             <h3>{s.title}</h3>
@@ -121,7 +122,7 @@ export default function Services({ items }: ServicesProps = {}) {
             <div className="svc-tags">
               {s.tags.map(t => <span className="svc-tag" key={t}>{t}</span>)}
             </div>
-          </div>
+          </a>
         ))}
       </div>
     </section>

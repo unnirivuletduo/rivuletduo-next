@@ -3,6 +3,23 @@
 import { useEffect, useState } from 'react';
 import Cursor from '@/components/Cursor';
 import type { ServiceDetail as CmsServiceDetail } from '@/lib/cms';
+import Footer from '@/components/Footer';
+import { yearsInBusiness } from '@/lib/site';
+import { fallbackServiceDetails as services } from '@/lib/details-data';
+import { serviceContent, defaultServiceContent, type Heading } from '@/lib/service-content';
+
+const FEATURE_ICONS = [
+  <svg key="icon-0" viewBox="0 0 40 40"><rect x="3" y="6" width="34" height="24" rx="2" /></svg>,
+  <svg key="icon-1" viewBox="0 0 40 40"><rect x="4" y="6" width="22" height="28" rx="2" /></svg>,
+  <svg key="icon-2" viewBox="0 0 40 40"><circle cx="20" cy="20" r="12" /></svg>,
+  <svg key="icon-3" viewBox="0 0 40 40"><path d="M8 32l8-10 6 6 8-12 6 8" /></svg>,
+  <svg key="icon-4" viewBox="0 0 40 40"><path d="M12 28V16a8 8 0 0116 0v12" /></svg>,
+  <svg key="icon-5" viewBox="0 0 40 40"><path d="M6 20L14 12 20 18 26 10 34 20" /></svg>,
+];
+
+function HeadingText({ h }: { h: Heading }) {
+  return <>{h[0]}<i>{h[1]}</i>{h[2] ?? ''}</>;
+}
 
 type ServiceData = {
   slug: string;
@@ -13,22 +30,6 @@ type ServiceData = {
   tagline: string;
 };
 
-const services: ServiceData[] = [
-  { slug: 'webdesign', title: 'Web', titleEm: 'Designing', badge: 'Design & Interface', num: '01', tagline: 'Smart designs that complement your brand and help you realise your dreams — intuitive, engaging, and built for the web world.' },
-  { slug: 'ui', title: 'UI', titleEm: 'Designing', badge: 'Design & Interface', num: '02', tagline: 'Flawless digital interfaces where every interaction is intentional and every screen earns its place.' },
-  { slug: 'branding', title: 'Overall', titleEm: 'Branding', badge: 'Design & Identity', num: '03', tagline: 'Declare your identity to the world. Every touchpoint in your brand system, unified and memorable.' },
-  { slug: 'logo', title: 'Logo', titleEm: 'Designing', badge: 'Design & Identity', num: '04', tagline: 'First impressions matter. Unique logos that set your brand apart and stay recognizable.' },
-  { slug: 'webdev', title: 'Web', titleEm: 'Development', badge: 'Engineering', num: '05', tagline: 'Production-grade code built to scale, perform, and endure over time.' },
-  { slug: 'mobile', title: 'Mobile App', titleEm: 'Development', badge: 'Engineering', num: '06', tagline: 'iOS, Android, and cross-platform apps that are functional, fast, and visually polished.' },
-  { slug: 'ecommerce', title: 'E-Commerce', titleEm: 'Development', badge: 'Engineering', num: '07', tagline: 'Conversion-focused storefronts that look premium and sell reliably at scale.' },
-  { slug: 'seo', title: 'SEO &', titleEm: 'Performance', badge: 'Growth', num: '08', tagline: 'Technical SEO and Core Web Vitals baked in from day one — maximum visibility and speed.' },
-  { slug: 'animation', title: 'Animations &', titleEm: 'Motion', badge: 'Creative', num: '09', tagline: 'Motion systems that add clarity, emotion, and impact to your product story.' },
-  { slug: '3d', title: '3D Animation', titleEm: '& Modeling', badge: 'Creative', num: '10', tagline: 'Immersive 3D experiences and product visuals that leave a lasting impression.' },
-  { slug: 'whiteboard', title: 'Whiteboard', titleEm: 'Animation', badge: 'Creative', num: '11', tagline: 'Complex ideas explained through compelling whiteboard storytelling and voice-led flow.' },
-  { slug: 'graphic', title: 'Graphic', titleEm: 'Designing', badge: 'Creative', num: '12', tagline: 'Unique, credible, and emotive graphics that reflect your brand with consistency.' },
-  { slug: 'responsive', title: 'Responsive', titleEm: 'Web Design', badge: 'Design & Interface', num: '13', tagline: 'Screen size is never a blocker. Every layout adapts gracefully across devices.' },
-  { slug: 'corporate', title: 'Corporate', titleEm: 'Websites', badge: 'Enterprise', num: '14', tagline: 'High-trust corporate web experiences aligned with business goals and governance needs.' },
-];
 
 function getService(slug: string, list: ServiceData[]) {
   return list.find((s) => s.slug === slug) || list[0];
@@ -43,6 +44,10 @@ export default function ServiceDetailPage({ slug, services: cmsServices }: Servi
   const [menuOpen, setMenuOpen] = useState(false);
   const serviceCatalog = (cmsServices && cmsServices.length > 0 ? cmsServices : services) as ServiceData[];
   const service = getService(slug, serviceCatalog);
+  const content = serviceContent[service.slug] ?? defaultServiceContent;
+  const related = content.related
+    .map((r) => serviceCatalog.find((x) => x.slug === r))
+    .filter((x): x is ServiceData => Boolean(x));
 
   useEffect(() => {
     document.body.classList.toggle('menu-open', menuOpen);
@@ -237,11 +242,11 @@ export default function ServiceDetailPage({ slug, services: cmsServices }: Servi
             <h1>{service.title}<br /><i>{service.titleEm}</i></h1>
             <p className="hero-tagline">{service.tagline}</p>
             <div className="hero-meta">
-              <div className="hero-meta-item"><span className="hero-meta-num">48+</span><span className="hero-meta-label">Sites Delivered</span></div>
+              <div className="hero-meta-item"><span className="hero-meta-num">{yearsInBusiness()}yr</span><span className="hero-meta-label">Experience</span></div>
               <div className="hero-divider" />
-              <div className="hero-meta-item"><span className="hero-meta-num">100%</span><span className="hero-meta-label">Satisfaction Rate</span></div>
+              <div className="hero-meta-item"><span className="hero-meta-num">4+</span><span className="hero-meta-label">Countries Served</span></div>
               <div className="hero-divider" />
-              <div className="hero-meta-item"><span className="hero-meta-num">6yr</span><span className="hero-meta-label">Studio Experience</span></div>
+              <div className="hero-meta-item"><span className="hero-meta-num">NZ</span><span className="hero-meta-label">Based</span></div>
             </div>
             <div className="hero-btns"><a href="#project" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event("open-project-modal")); }} className="btn-g">Start this project</a><a href="/services" className="btn-ghost">All services</a></div>
           </div>
@@ -251,8 +256,8 @@ export default function ServiceDetailPage({ slug, services: cmsServices }: Servi
               <div className="hvc-label">Service {service.num} — {service.badge}</div>
               <div className="hvc-icon"><svg viewBox="0 0 80 80"><rect x="6" y="12" width="68" height="46" rx="3" /><path d="M6 26h68" /><circle cx="15" cy="19" r="3" /><circle cx="24" cy="19" r="3" /><circle cx="33" cy="19" r="3" /><rect x="14" y="34" width="22" height="16" rx="1" /><line x1="44" y1="34" x2="66" y2="34" /><line x1="44" y1="40" x2="66" y2="40" /><line x1="44" y1="46" x2="58" y2="46" /><path d="M14 58l6 10h44l6-10" /></svg></div>
               <div className="hvc-name">{service.title} {service.titleEm}</div>
-              <div className="hvc-desc">Professional delivery with strong design logic and measurable outcomes.</div>
-              <div className="hvc-tags"><span className="hvc-tag">Figma</span><span className="hvc-tag">React</span><span className="hvc-tag">Responsive</span><span className="hvc-tag">Performance</span></div>
+              <div className="hvc-desc">{content.cardDesc}</div>
+              <div className="hvc-tags">{content.cardTags.map((t) => <span className="hvc-tag" key={t}>{t}</span>)}</div>
               <div className="hvc-num">{service.num}</div>
             </div>
           </div>
@@ -260,38 +265,30 @@ export default function ServiceDetailPage({ slug, services: cmsServices }: Servi
       </section>
 
       <div className="overview rv">
-        <div><div className="ov-label">Overview</div><h2>Where <i>brand</i> meets the web</h2></div>
+        <div><div className="ov-label">Overview</div><h2><HeadingText h={content.overviewHeading} /></h2></div>
         <div className="overview-body">
-          <p>Looking for a team to build your next digital experience? You are at the right place. Rivuletduo creates high-quality, intuitive interfaces that complement your brand.</p>
-          <p>Using modern technology and clear product thinking, we design and build experiences that are fast, maintainable, and conversion-oriented across every screen.</p>
-          <p>We treat each assignment as an opportunity to grow your online prospects and deliver tangible business impact.</p>
-          <div className="overview-quote">&quot;Capable of developing high-quality, user-friendly web experiences, our team is sure to leave you amazed.&quot;</div>
+          {content.overview.map((para) => <p key={para}>{para}</p>)}
+          <div className="overview-quote">&quot;{content.quote}&quot;</div>
         </div>
       </div>
 
       <section className="features-section">
         <div className="section-label rv">What&apos;s included</div>
-        <h2 className="rv">Everything your site <i>needs to succeed</i></h2>
+        <h2 className="rv"><HeadingText h={content.featuresHeading} /></h2>
         <div className="feat-grid">
-          <div className="feat-card"><div className="feat-icon"><svg viewBox="0 0 40 40"><rect x="3" y="6" width="34" height="24" rx="2" /></svg></div><h4>Custom Page Design</h4><p>No templates. Every page crafted to your brand and goals.</p></div>
-          <div className="feat-card"><div className="feat-icon"><svg viewBox="0 0 40 40"><rect x="4" y="6" width="22" height="28" rx="2" /></svg></div><h4>Fully Responsive</h4><p>Pixel-perfect on desktop, tablet, and mobile devices.</p></div>
-          <div className="feat-card"><div className="feat-icon"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="12" /></svg></div><h4>Interactive Elements</h4><p>Motion and interactions that keep visitors engaged longer.</p></div>
-          <div className="feat-card"><div className="feat-icon"><svg viewBox="0 0 40 40"><path d="M8 32l8-10 6 6 8-12 6 8" /></svg></div><h4>SEO-Ready Structure</h4><p>Semantic architecture and performance-first foundations.</p></div>
-          <div className="feat-card"><div className="feat-icon"><svg viewBox="0 0 40 40"><path d="M12 28V16a8 8 0 0116 0v12" /></svg></div><h4>CMS Integration</h4><p>Content systems your team can manage confidently.</p></div>
-          <div className="feat-card"><div className="feat-icon"><svg viewBox="0 0 40 40"><path d="M6 20L14 12 20 18 26 10 34 20" /></svg></div><h4>Performance Optimised</h4><p>Core Web Vitals and Lighthouse tuned from the start.</p></div>
+          {content.features.map((f, i) => (
+            <div className="feat-card" key={f.title}><div className="feat-icon">{FEATURE_ICONS[i % FEATURE_ICONS.length]}</div><h4>{f.title}</h4><p>{f.desc}</p></div>
+          ))}
         </div>
       </section>
 
       <section className="process-section">
         <div className="proc-inner">
-          <div className="proc-head rv"><div className="label">How we work</div><h2>Our web design <i>process</i></h2></div>
+          <div className="proc-head rv"><div className="label">How we work</div><h2><HeadingText h={content.processHeading} /></h2></div>
           <div className="proc-steps">
-            <div className="proc-step-item"><div className="psi-num"><div className="psi-dot" /></div><div className="psi-content"><h4>Discovery & Research</h4><p>Understanding business context, users, and constraints before execution.</p></div></div>
-            <div className="proc-step-item"><div className="psi-num"><div className="psi-dot" /></div><div className="psi-content"><h4>Information Architecture</h4><p>Sitemaps and flows that help users find what they need quickly.</p></div></div>
-            <div className="proc-step-item"><div className="psi-num"><div className="psi-dot" /></div><div className="psi-content"><h4>Wireframes & Prototype</h4><p>Interactive validation of structure and intent before development.</p></div></div>
-            <div className="proc-step-item"><div className="psi-num"><div className="psi-dot" /></div><div className="psi-content"><h4>Visual Design</h4><p>Pixel-perfect interfaces, reusable systems, and motion guidelines.</p></div></div>
-            <div className="proc-step-item"><div className="psi-num"><div className="psi-dot" /></div><div className="psi-content"><h4>Build & QA</h4><p>Production-grade implementation tested across devices and browsers.</p></div></div>
-            <div className="proc-step-item"><div className="psi-num"><div className="psi-dot" /></div><div className="psi-content"><h4>Launch & Handoff</h4><p>Deployment, training, documentation, and post-launch support.</p></div></div>
+            {content.process.map((step) => (
+              <div className="proc-step-item" key={step.title}><div className="psi-num"><div className="psi-dot" /></div><div className="psi-content"><h4>{step.title}</h4><p>{step.desc}</p></div></div>
+            ))}
           </div>
         </div>
       </section>
@@ -300,71 +297,28 @@ export default function ServiceDetailPage({ slug, services: cmsServices }: Servi
         <div className="section-label rv">Technologies</div>
         <h2 className="rv">Tools we <i>build with</i></h2>
         <div className="tech-grid">
-          {['Figma', 'React', 'Next.js', 'Three.js', 'GSAP', 'Sanity', 'Tailwind', 'Vercel'].map((t) => (
-            <div className="tech-item" key={t}><div className="tech-dot" /><div className="tech-name">{t}</div><div className="tech-role">Technology</div></div>
+          {content.tech.map((t) => (
+            <div className="tech-item" key={t.name}><div className="tech-dot" /><div className="tech-name">{t.name}</div><div className="tech-role">{t.role}</div></div>
           ))}
         </div>
       </section>
-
-      <div className="testimonial-block rv">
-        <div className="tblock-inner">
-          <p className="tblock-quote">Rivuletduo transformed our online presence. Beautiful, fast, and our conversions jumped 40% in the first month after launch.</p>
-          <div className="tblock-author"><div className="tblock-av">AR</div><div><div className="tblock-name">Arjun Rajan</div><div className="tblock-role">Founder, Verdant Goods</div></div></div>
-        </div>
-      </div>
 
       <section className="related-section">
         <div className="section-label rv">Related services</div>
         <h2 className="rv">You might also <i>need</i></h2>
         <div className="related-grid">
-          <a href="/services/ui" className="rel-card rv"><div className="rel-num">02</div><h4>UI Designing</h4><p>Flawless digital interfaces where every interaction is intentional.</p><div className="rel-arrow">Explore <svg viewBox="0 0 12 12"><path d="M1 11L11 1M1 1h10v10" /></svg></div></a>
-          <a href="/services/webdev" className="rel-card rv"><div className="rel-num">05</div><h4>Web Development</h4><p>From design to deployment — production-grade code built to scale.</p><div className="rel-arrow">Explore <svg viewBox="0 0 12 12"><path d="M1 11L11 1M1 1h10v10" /></svg></div></a>
-          <a href="/services/seo" className="rel-card rv"><div className="rel-num">08</div><h4>SEO & Performance</h4><p>Core Web Vitals and technical SEO built in from day one.</p><div className="rel-arrow">Explore <svg viewBox="0 0 12 12"><path d="M1 11L11 1M1 1h10v10" /></svg></div></a>
+          {related.map((r) => (
+            <a href={`/services/${r.slug}`} className="rel-card rv" key={r.slug}><div className="rel-num">{r.num}</div><h4>{r.title} {r.titleEm}</h4><p>{(serviceContent[r.slug] ?? defaultServiceContent).cardDesc}</p><div className="rel-arrow">Explore <svg viewBox="0 0 12 12"><path d="M1 11L11 1M1 1h10v10" /></svg></div></a>
+          ))}
         </div>
       </section>
 
       <div className="page-cta">
-        <h2>Ready to build your<br />next <i>website?</i></h2>
+        <h2>{content.ctaHeading[0]}<br /><i>{content.ctaHeading[1]}</i></h2>
         <div className="cta-btns"><a href="#project" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event("open-project-modal")); }} className="btn-g">Start this project</a><a href="/services" className="btn-ghost">All services</a></div>
       </div>
 
-      <footer id="sd-footer" className="site-footer">
-        <div className="footer-col footer-brand">
-          <a href="/" className="flogo" aria-label="Rivuletduo home"><img src="/rivulet-logo.svg" alt="Rivuletduo" className="brand-logo-footer" /></a>
-          <p className="footer-caption">Designing and building memorable digital experiences with precision and care.</p>
-          <div className="fcopy">© 2026 Rivuletduo. All rights reserved.</div>
-        </div>
-        <div className="footer-col">
-          <div className="fhead">Menu</div>
-          <ul className="flinks">
-            <li><a href="/about">About</a></li>
-            <li><a href="/work">Work</a></li>
-            <li><a href="/contact">Contact</a></li>
-          </ul>
-        </div>
-        <div className="footer-col">
-          <div className="fhead">Services</div>
-          <ul className="flinks">
-            <li><a href="/services">Web Design</a></li>
-            <li><a href="/services">UI/UX Design</a></li>
-            <li><a href="/services">Web Development</a></li>
-            <li><a href="/services">SEO</a></li>
-          </ul>
-        </div>
-        <div className="footer-col">
-          <div className="fhead">Contact</div>
-          <ul className="flinks">
-            <li><a href="mailto:hello@rivuletduo.com">hello@rivuletduo.com</a></li>
-            <li><a href="tel:+15550000000">+1 (555) 000-0000</a></li>
-            <li><span className="fmeta">New Zealand</span></li>
-          </ul>
-          <div className="f-socials">
-            <a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a>
-            <a href="https://linkedin.com" target="_blank" rel="noreferrer">LinkedIn</a>
-            <a href="https://behance.net" target="_blank" rel="noreferrer">Behance</a>
-          </div>
-        </div>
-      </footer>
+      <Footer id="sd-footer" />
     </>
   );
 }

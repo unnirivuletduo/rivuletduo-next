@@ -48,9 +48,9 @@ const steps = [
     arc: 'M-50 60 L 80 20 L 200 80 L 320 15 L 440 70 L 560 25 L 680 65 L 800 30 L 950 60',
   },
   {
-    n: '04', title: 'Launch & Support',
-    desc: 'Smooth handoff, comprehensive training, and ongoing support baked into every engagement. We stay long after go-live — for good.',
-    tags: ['Deploy', 'Training', 'Support'],
+    n: '04', title: 'Launch & Grow',
+    desc: 'Deployment, SEO setup, analytics and training, with ongoing support baked into every engagement. We stay long after go-live to help you grow.',
+    tags: ['Deploy', 'SEO', 'Support'],
     icon: (
       <svg viewBox="0 0 72 72">
         <circle className="ic" cx="36" cy="36" r="32" />

@@ -6,22 +6,61 @@ const ArrowIcon = () => (
   <svg viewBox="0 0 12 12"><path d="M1 11L11 1M1 1h10v10" /></svg>
 );
 
-const projects = [
+// Card backgrounds: brand gradients until project screenshots are added (set `image`).
+const projects: { num: string; tag: string; title: string; href: string; image?: string; gradient: string }[] = [
   {
-    num: '01', tag: 'E-commerce · Shopify', title: 'Verdant Goods',
-    bgImage: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1600&q=80',
+    num: '01', tag: 'Car Rental · Booking Platform', title: 'Grab A Rental Car', href: '/work/grab-a-rental-car',
+    image: '/work/grab-a-rental-car/home.webp',
+    gradient: 'linear-gradient(135deg, #052e16 0%, #166534 55%, #4ade80 140%)',
   },
   {
-    num: '02', tag: 'SaaS · Dashboard', title: 'FlowMetrics',
-    bgImage: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1600&q=80',
+    num: '02', tag: 'LED Screen Hire · WooCommerce', title: 'Event Display', href: '/work/event-display',
+    image: '/work/event-display/home.webp',
+    gradient: 'linear-gradient(135deg, #052e16 0%, #166534 50%, #6ee7b7 150%)',
   },
   {
-    num: '03', tag: 'Brand · Next.js', title: 'Celadon Studio',
-    bgImage: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1600&q=80',
+    num: '03', tag: 'E-Commerce · WooCommerce', title: 'Baby Cart', href: '/work/baby-cart',
+    image: '/work/baby-cart/home.webp',
+    gradient: 'linear-gradient(135deg, #14532d 0%, #15803d 50%, #86efac 140%)',
   },
   {
-    num: '04', tag: 'Web App · React', title: 'Heliostack',
-    bgImage: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1600&q=80',
+    num: '04', tag: 'Outdoor Living · Product Showcase', title: 'Bworth', href: '/work/bworth',
+    image: '/work/bworth/home.webp',
+    gradient: 'linear-gradient(135deg, #052e16 0%, #15803d 60%, #bbf7d0 150%)',
+  },
+  {
+    num: '05', tag: 'Creative Agency · Next.js', title: 'Brand Alchemy', href: '/work/brand-alchemy',
+    image: '/work/brand-alchemy/home.webp',
+    gradient: 'linear-gradient(135deg, #14532d 0%, #166534 45%, #a7f3d0 150%)',
+  },
+  {
+    num: '06', tag: 'Blinds & Outdoor Living · WordPress', title: 'Craft Shed', href: '/work/craft-shed',
+    image: '/work/craft-shed/home.webp',
+    gradient: 'linear-gradient(135deg, #052e16 0%, #14532d 50%, #86efac 160%)',
+  },
+  {
+    num: '07', tag: 'Eco Products · WordPress', title: 'Earthy', href: '/work/earthy',
+    image: '/work/earthy/home.webp',
+    gradient: 'linear-gradient(135deg, #14532d 0%, #15803d 55%, #d9f99d 160%)',
+  },
+  {
+    num: '08', tag: 'Accounting Firm · WordPress', title: 'Unicorn Accounting', href: '/work/unicorn-accounting',
+    image: '/work/unicorn-accounting/home.webp',
+    gradient: 'linear-gradient(135deg, #052e16 0%, #166534 55%, #bbf7d0 150%)',
+  },
+  {
+    num: '09', tag: 'Architecture Studio · WordPress', title: 'The Concreator', href: '/work/the-concreator',
+    gradient: 'linear-gradient(135deg, #14532d 0%, #166534 50%, #a7f3d0 160%)',
+  },
+  {
+    num: '10', tag: 'Transport & Logistics · WordPress', title: 'NZ Motorcycle Movers', href: '/work/nz-motorcycle-movers',
+    image: '/work/nz-motorcycle-movers/home.webp',
+    gradient: 'linear-gradient(135deg, #052e16 0%, #15803d 55%, #bbf7d0 150%)',
+  },
+  {
+    num: '11', tag: 'Removals · Custom PHP', title: 'Unique Movers', href: '/work/unique-movers',
+    image: '/work/unique-movers/home.webp',
+    gradient: 'linear-gradient(135deg, #14532d 0%, #15803d 50%, #86efac 150%)',
   },
 ];
 
@@ -29,15 +68,30 @@ type WorkProps = {
   items?: WorkListItem[];
 };
 
+// Projects featured on the home page, in display order. The Work page lists every project.
+const HOME_PROJECTS = [
+  '/work/grab-a-rental-car',
+  '/work/baby-cart',
+  '/work/event-display',
+  '/work/craft-shed',
+  '/work/unicorn-accounting',
+];
+
 export default function Work({ items }: WorkProps = {}) {
-  const projectsData = items && items.length > 0
-    ? items.slice(0, 4).map((item, idx) => ({
-      num: item.num || String(idx + 1).padStart(2, '0'),
+  const source = items && items.length > 0
+    ? items.map((item, idx) => ({
+      num: item.num,
       tag: item.tag,
       title: item.title,
-      bgImage: projects[idx % projects.length].bgImage,
+      href: item.href,
+      image: projects.find((p) => p.href === item.href)?.image,
+      gradient: projects[idx % projects.length].gradient,
     }))
     : projects;
+  const projectsData = HOME_PROJECTS
+    .map((href) => source.find((p) => p.href === href))
+    .filter((p): p is (typeof source)[number] => Boolean(p))
+    .map((p, idx) => ({ ...p, num: String(idx + 1).padStart(2, '0') }));
 
   useEffect(() => {
     const cards = document.querySelectorAll('.wcard');
@@ -107,15 +161,16 @@ export default function Work({ items }: WorkProps = {}) {
       <h2 className="section-h2 rv rv1">Projects we&apos;re <em>proud of</em></h2>
       <div className="work-grid">
         {projectsData.map((p, i) => (
-          <div className={`wcard rv rv${(i % 2) + 1}`} key={p.num}>
-            <div className="wcard-bg" style={{ backgroundImage: `url(${p.bgImage})` }} />
+          <a href={p.href} className={`wcard rv rv${(i % 2) + 1}`} key={p.num}>
+            <div className="wcard-bg" style={{ backgroundImage: p.image ? `url(${p.image})` : p.gradient }} />
             <span className="wcard-num">{p.num}</span>
             <div className="wtag">{p.tag}</div>
             <h3>{p.title}</h3>
             <div className="warr"><ArrowIcon /></div>
-          </div>
+          </a>
         ))}
       </div>
+      <div className="work-more rv"><a href="/work" className="btn-ghost">View all work</a></div>
     </section>
   );
 }

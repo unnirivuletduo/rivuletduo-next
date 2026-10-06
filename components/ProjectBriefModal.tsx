@@ -7,7 +7,6 @@ export default function ProjectBriefModal() {
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState(1);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
-  const [budget, setBudget] = useState('');
   const [desc, setDesc] = useState('');
   const [projectFirstName, setProjectFirstName] = useState('');
   const [projectLastName, setProjectLastName] = useState('');
@@ -50,12 +49,12 @@ export default function ProjectBriefModal() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           enquiryType: 'project',
+          source: 'Start a Project pop-up',
           firstName: projectFirstName.trim(),
           lastName: projectLastName.trim(),
           email: projectEmail.trim(),
           phone: projectPhone.trim(),
           services: selectedServices,
-          budget,
           projectDescription: desc.trim(),
         }),
       });
@@ -112,7 +111,7 @@ export default function ProjectBriefModal() {
                     <div className="pj-field"><label>Last name <span className="req">*</span></label><input type="text" placeholder="Morgan" value={projectLastName} onChange={(e) => setProjectLastName(e.target.value)} /></div>
                   </div>
                   <div className="pj-field"><label>Email address <span className="req">*</span></label><input type="email" placeholder="alex@example.com" value={projectEmail} onChange={(e) => setProjectEmail(e.target.value)} /></div>
-                  <div className="pj-field"><label>Phone</label><input type="tel" placeholder="+1 (555) 000-0000" value={projectPhone} onChange={(e) => setProjectPhone(e.target.value)} /></div>
+                  <div className="pj-field"><label>Phone</label><input type="tel" placeholder="+64 21 123 4567" value={projectPhone} onChange={(e) => setProjectPhone(e.target.value)} /></div>
                   {projectError && <p className="pj-error">{projectError}</p>}
                   <div className="pj-form-nav"><span className="pj-step-count"><b>01</b> / 03</span><button className="pj-btn-next" onClick={() => validateStepOne() ? setStep(2) : setProjectError('Please add first name, last name, and a valid email.')}>Next — Project Info →</button></div>
                 </>
@@ -122,14 +121,8 @@ export default function ProjectBriefModal() {
                 <>
                   <div className="pj-field"><label>Services you&apos;re interested in <span className="req">*</span></label></div>
                   <div className="pj-svc-checks">
-                    {['Web Design', 'UI/UX Design', 'Web Development', 'Mobile App', 'E-Commerce', 'Branding', 'SEO', 'Animation / 3D'].map((s) => (
+                    {['Custom Software', 'Web Design', 'Mobile App', 'E-Commerce', 'SEO', 'UI/UX Design', 'Branding & Logo', 'Corporate Website'].map((s) => (
                       <div key={s} className={`pj-svc-check ${selectedServices.includes(s) ? 'checked' : ''}`} onClick={() => toggleService(s)}><div className="pj-svc-check-box" />{s}</div>
-                    ))}
-                  </div>
-                  <div className="pj-field"><label>Estimated budget</label></div>
-                  <div className="pj-budget-grid">
-                    {['< $2k', '$2k–$5k', '$5k–$10k', '$10k–$20k', '$20k+', "Let's discuss"].map((b) => (
-                      <div key={b} className={`pj-budget-opt ${budget === b ? 'sel' : ''}`} onClick={() => setBudget(b)}>{b}</div>
                     ))}
                   </div>
                   <div className="pj-form-nav"><button className="pj-btn-prev" onClick={() => setStep(1)}>← Back</button><span className="pj-step-count"><b>02</b> / 03</span><button className="pj-btn-next" onClick={() => setStep(3)}>Next — Tell us more →</button></div>

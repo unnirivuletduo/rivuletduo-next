@@ -90,3 +90,6 @@
 #wd-footer .fcopy{font-family:'Space Mono',monospace;font-size:.62rem;color:rgba(255,255,255,.22)}
 .rv{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}.rv.on{opacity:1;transform:none}
 @media(max-width:960px){#wd-nav{padding:1.2rem 1.5rem}#wd-nav .nav-links{display:none}.breadcrumb{padding:6rem 1.5rem 0}.project-hero{padding:2rem 1.5rem 4rem}.ph-inner{grid-template-columns:1fr;gap:2.5rem}.ph-card{display:none}.metrics-band{grid-template-columns:1fr 1fr}.overview{grid-template-columns:1fr;padding:4rem 1.5rem}.showcase{padding:0 1.5rem 4rem}.sc-grid{grid-template-columns:1fr}.tech-section{padding:4rem 1.5rem}.tech-grid{grid-template-columns:repeat(3,1fr)}.testimonial{padding:4rem 1.5rem}.project-nav{grid-template-columns:1fr}.pnav-item+.pnav-item{border-left:none;border-top:1px solid var(--border)}.pnav-item,.pnav-item.next{padding:2rem 1.5rem}.back-to-work{padding:2rem 1.5rem}#wd-footer{padding:2rem 1.5rem;flex-direction:column;text-align:center}}
+
+.sc-img{display:block;width:100%;height:auto}
+.sc-grid.has-screens .sc-item:last-child:nth-child(odd){grid-column:1/-1}

@@ -4,7 +4,7 @@ import type { HomeTestimonial } from '@/lib/cms';
 
 const testimonials = [
   { initials: 'AR', text: 'Rivuletduo transformed our online presence. Beautiful, fast, and our conversions jumped 40% in the first month.', name: 'Arjun Rajan', role: 'Founder, Verdant Goods' },
-  { initials: 'SM', text: 'A complex dashboard in two weeks, on budget, zero compromise on quality. Genuinely impressive duo.', name: 'Sofia Mercer', role: 'CTO, FlowMetrics' },
+  { initials: 'SM', text: 'A complex dashboard in two weeks, on budget, zero compromise on quality. Genuinely impressive team.', name: 'Sofia Mercer', role: 'CTO, FlowMetrics' },
   { initials: 'DK', text: 'Felt like having an in-house team. Communication was clear, feedback welcomed, and the result exceeded expectations.', name: 'Devika Kumar', role: 'Creative Director, Celadon Studio' },
   { initials: 'JT', text: "I've worked with bigger agencies — Rivuletduo care more. It shows in every single detail of the final site.", name: 'James Tan', role: 'Founder, Heliostack' },
 ];
